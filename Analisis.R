@@ -1,11 +1,13 @@
+# Cargar paquetes----
 library(tidyverse)
 library(readxl)
 
+# Cargar datos----
 
-# Cargar datos
+## Eye-tracking----
 dat_et <- read_excel("Datos/BD-ET-CUC-UB.xlsx", 
                      sheet = "CUC-UB") |> 
-  select(-c(Participant, Condicion, TOI, Interval, AOI, AOI_Global, Respuesta, Number_of_mouse_clicks...17, Time_to_first_mouse_click...18, AOI_respuesta)) |> 
+  select(-c(Participant, Condicion, TOI, Interval, Media_respuesta, AOI, AOI_Global, Respuesta, Number_of_mouse_clicks...17, Time_to_first_mouse_click...18, AOI_respuesta)) |> 
   rename(ID = Recording,
          University = UNIVERSIDAD,
          Stimulus = Media,
@@ -15,7 +17,6 @@ dat_et <- read_excel("Datos/BD-ET-CUC-UB.xlsx",
          TDF = Total_duration_of_whole_fixations,
          NF = Number_of_whole_fixations,
          TFF = Time_to_first_whole_fixation,
-         Response_code = Media_respuesta,
          NMC = Number_of_mouse_clicks...21,
          TFMC = Time_to_first_mouse_click...22) |> 
   mutate(across(where(is.character), as.factor)) |>
@@ -27,9 +28,13 @@ dat_et <- read_excel("Datos/BD-ET-CUC-UB.xlsx",
                                    "Long term" = "LP"),
          Sexual_dimorphism = fct_recode(Sexual_dimorphism,
                                         "Feminized" = "Feminizado",
-                                        "Masculinized" = "Masculinizado"))
+                                        "Masculinized" = "Masculinizado")) |>
+  mutate(Stimulus = ifelse(Sexual_dimorphism == "Feminized", paste0(str_sub(str_replace(Stimulus, ".* - ", ""), 1, 2), "F"), 
+                           ifelse(Sexual_dimorphism == "Masculinized", paste0(str_sub(str_replace(Stimulus, ".* - ", ""), 1, 2), "M"), 
+                                  Stimulus)))
 
-# Sin calcular puntajes totales de instrumentos, para ver consistencia interna
+## Cuestionarios----
+### Sin calcular puntajes totales de instrumentos, para ver consistencia interna
 quests <- read_excel("Datos/Cuestionario Datos Sociodemográficos  (Disponibilidad) (respuestas) (1).xlsx", 
                      sheet = "Respuestas de formulario 1") |> 
   select(-c(Invitado, `Servicios ayuda`, `Correos cierre`)) |>
@@ -86,7 +91,7 @@ quests <- read_excel("Datos/Cuestionario Datos Sociodemográficos  (Disponibilid
          Victim_of_armed_conflict = "Victima conflicto armado",
          Control_question_1 = "Sin leer",
          Control_question_2 = "Broma")
-
+### Con puntajes totales de instrumentos, menos columnas
 quests_fin <- quests |> 
   mutate_at(vars(starts_with("Escasez alimentaria")),
             ~recode(.,
@@ -100,9 +105,11 @@ quests_fin <- quests |>
          Self_perception = sum(across(starts_with("SP_"))),
          Perceived_security = sum(across(starts_with("Seguridad "))),
          Food_insecurity = sum(across(starts_with("Escasez alimentaria")))) |> 
-  select(!starts_with("autoestima_"))
+  select(!starts_with("autoestima_")) |> 
+  mutate(across(where(is.character), as.factor))
   
-
+## Evaluación subjestiva de rostros----
+### Formato ancho
 eval <- read_excel("Datos/Evaluación subjetiva rostros (Respuestas).xlsx") |> 
   select(-c(123:124)) |> 
   rowwise() |> 
@@ -112,22 +119,79 @@ eval <- read_excel("Datos/Evaluación subjetiva rostros (Respuestas).xlsx") |>
          Attractiveness_feminized = sum(across(ends_with("F Atr")))) |> 
   rename(Date = "Marca temporal",
          ID = "Escribe tu código de participante")
+### Formato largo
+eval_long <- left_join(eval |> 
+                         select(-c(123:126)) |> 
+                         select(!ends_with(" Mas")) |> 
+                         pivot_longer(cols = ends_with("Atr"),
+                                      names_to = "Stimulus",
+                                      values_to = "Attractiveness") |> 
+                         mutate(Stimulus = str_remove_all(Stimulus, " Atr")), 
+                       eval |> 
+                         select(-c(123:126)) |> 
+                         select(!ends_with(" Atr")) |> 
+                         pivot_longer(cols = ends_with("Mas"),
+                                      names_to = "Stimulus",
+                                      values_to = "Masculinity") |> 
+                         mutate(Stimulus = str_remove_all(Stimulus, " Mas")))
 
+## Disponibilidad de recursos----
+reg <- rbind(read_excel("Datos/Registro Participantes Disponibilidad de Recursos.xlsx", 
+                        sheet = "UB") |> 
+               mutate(University = "UB"),
+             read_excel("Datos/Registro Participantes Disponibilidad de Recursos.xlsx", 
+                        sheet = "CUC") |> 
+               mutate(University = "CUC")) |> 
+  select(-c(Grupo, `Entrega de kit`, `Protocolo de bioseguridad`, `Requisitos previos al registro`, Consentimiento,
+            `Código de evaluador`:`Código auxiliar que reclutó`)) |>
+  rename(Date = "Fecha de registro",
+         ID = "Codigo del Participante",
+         Condition = "Condicion",
+         Calibration = "Calibración",
+         Gaze_perc = "% Gaze",
+         Condition_happiness = "Q Feliz",
+         Condition_physical_safety = "Q Segura físicamente",
+         Condition_healthy = "Q Saludable",
+         Condition_economic_security = "Q Segura económicamente",
+         Body_temperature = "Temperatura",
+         Ovulation_test = "Test de ovulación",
+         Saliva_pre = "Recolección de saliva pre",
+         Saliva_pre_time = "Hora...18",
+         Eye_tracking = "Rastreo Ocular",
+         Subjective_evaluation = "Evaluación subjetiva",
+         Sociodemographic_questionnaire = "Cuestionario sociodemográfico",
+         Saliva_post = "Recolección de saliva post",
+         Saliva_post_time = "Hora...23",
+         Notes = "Observaciones") |>
+  mutate(Condition = fct_recode(Condition, 
+                                "Low" = "Baja",
+                                "High" = "Alta"),
+         Calibration = fct_recode(Calibration, 
+                                  "<=0.5" = "<0.5 (menor a 0.5)",
+                                  ">0.5" = ">0.5 (mayor a 0.5)",
+                                  "<=0.5" = "0.5 (igual a 0.5)",
+                                  NULL = "Selecciona")) |> 
+  mutate_all(~str_replace_all(., "SI", "Yes")) |> 
+  mutate_all(~str_replace_all(., "NO", "No")) |> 
+  mutate_all(~str_replace_all(., "INCOMPLETO", "No")) |>
+  mutate_all(~str_replace_all(., "Recuperado", "Data recovered")) |> 
+  mutate_all(~str_replace_all(., "RECUPERADO", "Data recovered")) |> 
+  mutate_all(~na_if(., "Selecciona")) |> 
+  mutate_all(~na_if(., "N/A"))
 
-eval_atr <- eval |> 
-  select(-c(123:126)) |> 
-  select(!ends_with(" Mas")) |> 
-  pivot_longer(cols = ends_with("Atr"),
-               names_to = "Stimulus",
-               values_to = "Attractiveness") |> 
-  mutate(Stimulus = str_remove_all(Stimulus, " Atr"))
+# Base de datos final----
+dat <- dat_et |> 
+  left_join(quests_fin, by = "ID", multiple = "all") 
+  
+dat2 <- dat |> 
+    left_join(eval_long, by = c("ID", "Stimulus"), multiple = "all") 
 
-eval_mas <- eval |> 
-  select(-c(123:126)) |> 
-  select(!ends_with(" Atr")) |> 
-  pivot_longer(cols = ends_with("Mas"),
-               names_to = "Stimulus",
-               values_to = "Masculinity") |> 
-  mutate(Stimulus = str_remove_all(Stimulus, " Mas"))
+# setdiff(levels(dat_et$ID), levels(quests_fin$ID))
 
-eval_long <- left_join(eval_atr, eval_mas)
+library(lmerTest)
+library(emmeans)
+
+mod <- lmer(TDF ~ Condition * Relationship.x * Sexual_dimorphism + (1 | ID) + (1 | Stimulus), data = dat2)
+anova(mod)
+
+emmeans(mod, pairwise ~ Condition + Relationship.x + Sexual_dimorphism)
