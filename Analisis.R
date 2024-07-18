@@ -1,6 +1,9 @@
 # Cargar paquetes----
+library(car)
 library(tidyverse)
 library(readxl)
+library(lmerTest)
+library(emmeans)
 
 # Cargar datos----
 
@@ -31,7 +34,8 @@ dat_et <- read_excel("Datos/BD-ET-CUC-UB.xlsx",
                                         "Masculinized" = "Masculinizado")) |>
   mutate(Stimulus = ifelse(Sexual_dimorphism == "Feminized", paste0(str_sub(str_replace(Stimulus, ".* - ", ""), 1, 2), "F"), 
                            ifelse(Sexual_dimorphism == "Masculinized", paste0(str_sub(str_replace(Stimulus, ".* - ", ""), 1, 2), "M"), 
-                                  Stimulus)))
+                                  Stimulus)),
+         Choice = ifelse(NMC == 0, "No", "Yes"))
 
 ## Cuestionarios----
 ### Sin calcular puntajes totales de instrumentos, para ver consistencia interna
@@ -46,7 +50,7 @@ quests <- read_excel("Datos/Cuestionario Datos Sociodemográficos  (Disponibilid
          Sex = Sexo,
          Gender = Genero,
          Sexual_orientation = OS,
-         Relationship = "Pareja actual",
+         Relationship_current = "Pareja actual",
          Relationship_duration = DuracionR,
          Relationship_status = EstadoR,
          Partner_sex = SexoParejaActual,
@@ -91,13 +95,14 @@ quests <- read_excel("Datos/Cuestionario Datos Sociodemográficos  (Disponibilid
          Victim_of_armed_conflict = "Victima conflicto armado",
          Control_question_1 = "Sin leer",
          Control_question_2 = "Broma")
+
 ### Con puntajes totales de instrumentos, menos columnas
-quests_fin <- quests |> 
-  mutate_at(vars(starts_with("Escasez alimentaria")),
-            ~recode(.,
-                    "Nunca" =  0,
-                    "Rara vez/algunas veces" = 1,
-                    "Casi siempre" = 2)) |> 
+quests_fin <- quests %>% 
+  mutate(across(starts_with("Escasez alimentaria"),
+                ~recode(.,
+                        "Nunca" =  0,
+                        "Rara vez/algunas veces" = 1,
+                        "Casi siempre" = 2))) |> 
   rowwise() |> 
   mutate(Self_esteem = sum(autoestima_I1, 5-autoestima_I2, autoestima_I3, autoestima_I4,
                            autoestima_I5, 5-autoestima_I6, autoestima_I7, 5-autoestima_I8, 
@@ -120,7 +125,7 @@ eval <- read_excel("Datos/Evaluación subjetiva rostros (Respuestas).xlsx") |>
   rename(Date = "Marca temporal",
          ID = "Escribe tu código de participante")
 ### Formato largo
-eval_long <- left_join(eval |> 
+eval_long <- left_join(eval |>
                          select(-c(123:126)) |> 
                          select(!ends_with(" Mas")) |> 
                          pivot_longer(cols = ends_with("Atr"),
@@ -181,17 +186,62 @@ reg <- rbind(read_excel("Datos/Registro Participantes Disponibilidad de Recursos
 
 # Base de datos final----
 dat <- dat_et |> 
-  left_join(quests_fin, by = "ID", multiple = "all") 
-  
-dat2 <- dat |> 
-    left_join(eval_long, by = c("ID", "Stimulus"), multiple = "all") 
+  left_join(quests_fin, by = c("ID"), multiple = "all") |>
+  left_join(eval_long, by = c("ID", "Stimulus"), multiple = "all") |> 
+  left_join(reg, by = c("ID", "University", "Condition"), multiple = "all") 
 
-# setdiff(levels(dat_et$ID), levels(quests_fin$ID))
+# Model 1: TDF----
 
-library(lmerTest)
-library(emmeans)
+mod1 <- lmer(TDF ~ Condition * Relationship * Sexual_dimorphism + (1 | ID) + (1 | Stimulus), data = dat)
+anova(mod1)
 
-mod <- lmer(TDF ~ Condition * Relationship.x * Sexual_dimorphism + (1 | ID) + (1 | Stimulus), data = dat2)
-anova(mod)
+## Contrastes post-hoc----
 
-emmeans(mod, pairwise ~ Condition + Relationship.x + Sexual_dimorphism)
+### Efecto principal: Sexual_dimorphism----
+emmeans(mod1, pairwise ~ Sexual_dimorphism)
+emmip(mod1, ~ Sexual_dimorphism, CIs = TRUE)
+
+### Interacción: Condition:Sexual_dimorphism ----
+emmeans(mod1, pairwise ~ Sexual_dimorphism | Condition)
+emmip(mod1, ~ Sexual_dimorphism | Condition, CIs = TRUE)
+
+### Interacción: Relationship:Sexual_dimorphism----
+emmeans(mod1, pairwise ~ Relationship | Sexual_dimorphism)
+emmip(mod1, ~ Relationship | Sexual_dimorphism, CIs = TRUE)
+
+
+# Model 2: Choice----
+
+# Selecionar participantes con al menos 80% (48) respuestas 
+select80 <- dat |> 
+  filter(Choice == "Yes") |> 
+  group_by(ID, Sexual_dimorphism, Relationship, Condition, Choice) |> 
+  summarise(Choice = n()) |> 
+  group_by(ID) |> 
+  summarise(Choice_count = sum(Choice)) |> 
+  filter(Choice_count >= 48)
+
+dat_choice_yes <- dat |> 
+  filter(Choice == "Yes") |> 
+  group_by(ID, Sexual_dimorphism, Relationship, Condition, Choice) |> 
+  summarise(Choice = n()) |> 
+  filter(ID %in% select80$ID)
+
+mod2 <- lm(Choice ~ Condition * Relationship * Sexual_dimorphism, data = dat_choice_yes)
+Anova(mod2, type = 3)
+
+## Contrastes post-hoc----
+
+### Efecto principal: Relationship----
+emmeans(mod2, pairwise ~ Relationship)
+emmip(mod2, ~ Relationship, CIs = TRUE)
+
+### Interacción: Sexual_dimorphism ----
+emmeans(mod2, pairwise ~ Sexual_dimorphism)
+emmip(mod2, ~ Sexual_dimorphism, CIs = TRUE)
+
+### Interacción: Relationship:Sexual_dimorphism----
+emmeans(mod2, pairwise ~ Relationship | Sexual_dimorphism)
+emmip(mod2, ~ Relationship | Sexual_dimorphism, CIs = TRUE)
+
+
