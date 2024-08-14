@@ -52,7 +52,9 @@ corr.stars <- function(x) {
 ## Eye-tracking----
 dat_et <- read_excel("Datos/BD-ET-CUC-UB.xlsx", 
                      sheet = "CUC-UB") |> 
-  select(-c(Participant, Condicion, TOI, Interval, Media_respuesta, AOI, AOI_Global, Respuesta, Number_of_mouse_clicks...17, Time_to_first_mouse_click...18, AOI_respuesta)) |> 
+  select(-c(Participant, Condicion, TOI, Interval, Media_respuesta, AOI, 
+            AOI_Global, Respuesta, Number_of_mouse_clicks...17, 
+            Time_to_first_mouse_click...18, AOI_respuesta)) |> 
   rename(ID = Recording,
          University = UNIVERSIDAD,
          Stimulus = Media,
@@ -63,7 +65,8 @@ dat_et <- read_excel("Datos/BD-ET-CUC-UB.xlsx",
          NF = Number_of_whole_fixations,
          TFF = Time_to_first_whole_fixation,
          NMC = Number_of_mouse_clicks...21,
-         TFMC = Time_to_first_mouse_click...22) |> 
+         TFMC = Time_to_first_mouse_click...22,
+         DFF = Duration_first_fixation) |> 
   mutate(across(where(is.character), as.factor)) |>
   mutate(Condition = fct_recode(Condition, 
                                 "Low" = "BAJA",
@@ -339,8 +342,32 @@ dat <- dat_int |>
   filter(Control_question_1 == "No" & Control_question_2 == "No") |> 
   filter(Sexual_orientation %in% 
            c("Exclusively heterosexual",  
-             "Predominantly heterosexual"))
+             "Predominantly heterosexual")) |> 
+  mutate(Stimulus = str_remove_all(Stimulus, "F")) |> 
+  mutate(Stimulus = str_remove_all(Stimulus, "M"))
 
+## Base de datos diferencia masculinizado - feminizado----
+    # Por participante, estímulo y relación
+dat_diff <- dat |> 
+  group_by(ID, 
+           Stimulus, 
+           Condition, 
+           Relationship,
+           Ovulating , 
+           Sexual_orientation,
+           Freq_partner_physical_violence,
+           Freq_partner_sexual_violence,
+           Freq_partner_infidelity,
+           Relationship_current,
+           Men_perceived_as_danger_to_partner) |> 
+  summarise(DFF_dif = DFF[Sexual_dimorphism == "Masculinized"] - DFF[Sexual_dimorphism == "Feminized"],
+            TDF_dif = TDF[Sexual_dimorphism == "Masculinized"] - TDF[Sexual_dimorphism == "Feminized"],
+            NF_dif = NF[Sexual_dimorphism == "Masculinized"] - NF[Sexual_dimorphism == "Feminized"],
+            TFF_dif = TFF[Sexual_dimorphism == "Masculinized"] - TFF[Sexual_dimorphism == "Feminized"],
+            NMC_dif = NMC[Sexual_dimorphism == "Masculinized"] - NMC[Sexual_dimorphism == "Feminized"],
+            TFMC_dif = TFMC[Sexual_dimorphism == "Masculinized"] - TFMC[Sexual_dimorphism == "Feminized"],
+            TFMC_dif = TFMC[Sexual_dimorphism == "Masculinized"] - TFMC[Sexual_dimorphism == "Feminized"])
+  
 ### Tamaño de muestra----
 n_filtrado <- dat |> 
   summarise(n = n_distinct(ID))
@@ -365,8 +392,19 @@ desc_quest <- quests_fin |>
          Perceived_country_safety:Freq_robery,
          Men_perceived_as_danger_to_children:Victim_of_violence,
          Victim_of_gender_violence:Victim_of_armed_conflict,
-         Self_esteem:Food_insecurity) |> 
-  mutate(across(where(is.character), as.factor))
+         Self_esteem:Food_insecurity,
+         "Escasez alimentaria1":"Escasez alimentaria5") |> 
+  mutate(across(starts_with("Escasez alimentaria"),
+                ~recode(.,
+                        "0" = "Never",
+                        "1" = "Rarely/sometimes",
+                        "2" = "Almost always"))) |> 
+  mutate(across(where(is.character), as.factor)) |> 
+  mutate(across(starts_with("Escasez alimentaria"),
+                ~factor(.,
+                        levels = c("Never",
+                                   "Rarely/sometimes",
+                                   "Almost always"))))
 
 ### Sociodemographic numeric----
 desc_quest |> 
@@ -387,7 +425,7 @@ desc_quest |>
 
 ### Sociodemographic categorical----
 desc_quest |> 
-  select(ID, Condition, where(is.factor), City) |> 
+  select(ID, Condition, where(is.factor), City, -starts_with("Escasez alimentaria")) |> 
   pivot_longer(City:Victim_of_armed_conflict,
                names_to = "Variable",
                values_to = "Value") |> 
@@ -459,8 +497,8 @@ ggarrange(desc_quest |>
             labs(x = NULL, y = NULL),
           desc_quest |> 
             select(ID, Condition, Socioeconomic_level, Electricity, Internet_access, Internet_use,
-                   TV, Hospital_access) |> 
-            pivot_longer(Socioeconomic_level:Hospital_access,
+                   TV) |> 
+            pivot_longer(Socioeconomic_level:TV,
                          names_to = "Variable",
                          values_to = "Value") |> 
             mutate(Variable = str_replace_all(Variable, "_", " ")) |> 
@@ -480,6 +518,86 @@ ggarrange(desc_quest |>
           common.legend = TRUE,
           legend = "bottom",
           labels = "auto")       
+
+## Health-related factors----
+ggarrange(desc_quest |>
+            select(ID, Condition, Freq_illness, SP_health) |>
+            pivot_longer(Freq_illness:SP_health,
+                         names_to = "Variable",
+                         values_to = "Value") |> 
+            mutate(Variable = str_replace_all(Variable, "_", " ")) |>
+            mutate(Variable = str_replace_all(Variable, "Freq", "Frequency of")) |>
+            mutate(Variable = str_replace_all(Variable, "SP", "Self-perceived")) |>
+            mutate(Value = as.numeric(Value)) |> 
+            ggplot(aes(x = Value, fill = Condition, color = Condition)) +
+            geom_density(alpha = 0.3) +
+            facet_wrap(~Variable) +
+            stat_summary(aes(xintercept = after_stat(x), y = 0),
+                         fun = mean, geom = "vline", orientation = "y") +
+            labs(x = NULL, y = NULL),
+          desc_quest |> 
+            pivot_longer(Hospital_access,
+                         names_to = "Variable",
+                         values_to = "Value") |> 
+            mutate(Variable = str_replace_all(Variable, "_", " ")) |> 
+            ggplot(aes(y = Value, fill = Condition, color = Condition)) +
+            geom_bar(alpha = 0.3, position = position_dodge()) +
+            geom_text(aes(label = scales::percent(after_stat(prop), accuracy = 0.1)),
+                      vjust = "inward",
+                      position = position_dodge(.9),
+                      stat = "prop",
+                      color = "black",
+                      size = 2.5) +
+            facet_wrap(~Variable, scales = "free") +
+            scale_y_discrete(labels = label_wrap(20)) +
+            theme(axis.text.y = element_text(size = 8)) +
+            labs(x = NULL, y = NULL),
+          widths = c(2, 1),
+          common.legend = TRUE,
+          legend = "bottom",
+          labels = "auto")
+
+## Food security factors----
+ggarrange(desc_quest |>
+            select(ID, Condition, "Escasez alimentaria1":"Escasez alimentaria5") |> 
+            pivot_longer("Escasez alimentaria1":"Escasez alimentaria5",
+                         names_to = "Variable",
+                         values_to = "Value") |> 
+            mutate(Variable = str_replace_all(Variable, "Escasez alimentaria", "")) |> 
+            mutate(Variable = str_replace_all(Variable, "1", "1. Smaller food portions")) |>
+            mutate(Variable = str_replace_all(Variable, "2", "2. Reduced number of meals")) |>
+            mutate(Variable = str_replace_all(Variable, "3", "3. Food scarcity at home")) |>
+            mutate(Variable = str_replace_all(Variable, "4", "4. Sleeping with hunger")) |>
+            mutate(Variable = str_replace_all(Variable, "5", "5. Day and night without eating")) |>
+            ggplot(aes(y = Value, fill = Condition, color = Condition)) +
+            geom_bar(alpha = 0.3, position = position_dodge()) +
+            geom_text(aes(label = scales::percent(after_stat(prop), accuracy = 0.1)),
+                      vjust = "inward",
+                      position = position_dodge(.9),
+                      stat = "prop",
+                      color = "black",
+                      size = 2.5) +
+            facet_wrap(~Variable, scales = "free") +
+            scale_y_discrete(labels = label_wrap(20)) +
+            theme(axis.text.y = element_text(size = 8)) +
+            labs(x = NULL, y = NULL, title = "Items"),
+          desc_quest |>
+            select(ID, Condition, Food_insecurity) |>
+            pivot_longer(Food_insecurity,
+                         names_to = "Variable",
+                         values_to = "Value") |> 
+            mutate(Value = as.numeric(Value)) |> 
+            mutate(Variable = str_replace_all(Variable, "_", " ")) |>
+            ggplot(aes(x = Value, fill = Condition, color = Condition)) +
+            geom_density(alpha = 0.3) +
+            facet_wrap(~Variable) +
+            stat_summary(aes(xintercept = after_stat(x), y = 0),
+                         fun = mean, geom = "vline", orientation = "y") +
+            labs(x = NULL, y = NULL, title = "Total"),
+          widths = c(3, 1),
+          common.legend = TRUE,
+          legend = "bottom",
+          labels = "auto")
 
 ## Hormonal factors----
 ggarrange(reg_fin |>
@@ -520,7 +638,7 @@ ggarrange(reg_fin |>
 
 ## Psychological factors----
 desc_quest |>
-  select(ID, Condition, starts_with("SP_")) |>
+  select(ID, Condition, starts_with("SP_"), -SP_health) |>
   pivot_longer(where(is.numeric),
                names_to = "Variable",
                values_to = "Value") |> 
@@ -704,7 +822,7 @@ quests_fin |>
   ggcorr(label = TRUE,
          label_round = 2)
 
-### Correlations table----
+### Correlations table (general)----
 desc_quest |> 
   left_join(reg_fin |> 
               select(ID, Body_temperature), 
@@ -728,14 +846,14 @@ desc_quest |>
   slice(-1) |> 
   kable(digits = 2,
         booktabs = TRUE,
-        align = c("l", rep("c", 22)),
+        align = c("l", rep("c", 20)),
         linesep = "",
         caption = "Correlations between XXXXXX",
         escape = FALSE) |>
   kable_styling(latex_options = c("HOLD_position"),
                 font_size = 5) |>
   column_spec(1, width = "1.2cm") |>
-  column_spec(2:23, width = "0.7cm") |>
+  column_spec(2:21, width = "0.7cm") |>
   add_header_above(c(" ", 
                      "Age" = 1, 
                      "Health" = 1,
@@ -753,6 +871,52 @@ desc_quest |>
            escape = FALSE) |>
   landscape()
 
+### Correlations table (fixations, subjective evaluations and violence)----
+dat_main_corr <- dat |> 
+  select(ID, Condition, Relationship,
+         TDF, DFF, NF,
+         Masculinity, Attractiveness,
+         Partner_attractiveness:Partner_masculinity,
+         ends_with("_safety"), Freq_robery,
+         starts_with("Freq_partner_")) |> 
+  group_by(ID, Condition, Relationship) |> 
+  summarise_all(mean)
+
+dat_main_corr |> 
+  filter(Condition == "High") |> 
+  ungroup() |> 
+  select(TDF:Freq_partner_infidelity) |> 
+  rename_with(~str_replace_all(., "_", " ")) |> 
+  rename_with(~str_replace_all(., "Freq", "Frequency of")) |>
+  rename_with(~str_replace_all(., "Frequency of partner", "Partner")) |>
+  corr.stars() |>
+  rownames_to_column(var = " ") |> 
+  slice(-1) |> 
+  kable(digits = 2,
+        booktabs = TRUE,
+        align = c("l", rep("c", 17)),
+        linesep = "",
+        caption = "Correlations between XXXXXX",
+        escape = FALSE) |>
+  kable_styling(latex_options = c("HOLD_position")) |>
+  column_spec(1, width = "1.2cm") |>
+  column_spec(2:21, width = "0.7cm") |>
+  add_header_above(c(" ", 
+                     "Age" = 1, 
+                     "Health" = 1,
+                     "Self-perceived conditions" = 7,
+                     "Current/last partner\nperception" = 3,
+                     "Perceived context\nviolence" = 6,
+                     "Frequency of partner\nviolence" = 2),
+                   bold = TRUE) |> 
+  footnote(general = paste0("Values represent Pearson correlation coefficients ($r$). ",
+                            "For significance, $^{\\\\dagger}p$ < 0.1, *$p$ < 0.05, ",
+                            "**$p$ < 0.01, ***$p$ < 0.001. ",
+                            "Significant correlations are in bold."),
+           threeparttable = TRUE,
+           footnote_as_chunk = TRUE,
+           escape = FALSE) |>
+  landscape()
 
 # Manipulation check----
 ## Resource availability----
