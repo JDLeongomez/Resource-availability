@@ -344,7 +344,8 @@ dat <- dat_int |>
            c("Exclusively heterosexual",  
              "Predominantly heterosexual")) |> 
   mutate(Stimulus = str_remove_all(Stimulus, "F")) |> 
-  mutate(Stimulus = str_remove_all(Stimulus, "M"))
+  mutate(Stimulus = str_remove_all(Stimulus, "M")) |> 
+  ungroup()
 
 ## Base de datos diferencia masculinizado - feminizado----
     # Por participante, estímulo y relación
@@ -359,14 +360,13 @@ dat_diff <- dat |>
            Freq_partner_sexual_violence,
            Freq_partner_infidelity,
            Relationship_current,
-           Men_perceived_as_danger_to_partner) |> 
+           Men_perceived_as_danger_to_partner,
+           Men_perceived_as_danger_to_children) |> 
   summarise(DFF_dif = DFF[Sexual_dimorphism == "Masculinized"] - DFF[Sexual_dimorphism == "Feminized"],
             TDF_dif = TDF[Sexual_dimorphism == "Masculinized"] - TDF[Sexual_dimorphism == "Feminized"],
-            NF_dif = NF[Sexual_dimorphism == "Masculinized"] - NF[Sexual_dimorphism == "Feminized"],
-            TFF_dif = TFF[Sexual_dimorphism == "Masculinized"] - TFF[Sexual_dimorphism == "Feminized"],
-            NMC_dif = NMC[Sexual_dimorphism == "Masculinized"] - NMC[Sexual_dimorphism == "Feminized"],
-            TFMC_dif = TFMC[Sexual_dimorphism == "Masculinized"] - TFMC[Sexual_dimorphism == "Feminized"],
-            TFMC_dif = TFMC[Sexual_dimorphism == "Masculinized"] - TFMC[Sexual_dimorphism == "Feminized"])
+            NF_dif = NF[Sexual_dimorphism == "Masculinized"] - NF[Sexual_dimorphism == "Feminized"]) |> 
+  ungroup() |> 
+  mutate(across(where(is.character), as.factor))
   
 ### Tamaño de muestra----
 n_filtrado <- dat |> 
@@ -894,7 +894,7 @@ dat_main_corr |>
   slice(-1) |> 
   kable(digits = 2,
         booktabs = TRUE,
-        align = c("l", rep("c", 17)),
+        align = c("l", rep("c", 20)),
         linesep = "",
         caption = "Correlations between XXXXXX",
         escape = FALSE) |>
@@ -917,6 +917,64 @@ dat_main_corr |>
            footnote_as_chunk = TRUE,
            escape = FALSE) |>
   landscape()
+
+### Correlations between sociocontextual factors and fixations----
+dat_diff_short <- dat_diff |> 
+  rename("PPV" = "Freq_partner_physical_violence",
+         "PSV" = "Freq_partner_sexual_violence",      
+         "PI" = "Freq_partner_infidelity",
+         "MDP" = "Men_perceived_as_danger_to_partner", 
+         "MDC" = "Men_perceived_as_danger_to_children",
+         "DFF" = "DFF_dif",
+         "TDF" = "TDF_dif",
+         "NF" = "NF_dif")
+
+Rst_Cl <- dat_diff_short |> 
+  select(where(is.numeric), Relationship, Condition) |> 
+  filter(Relationship == "Short term" & Condition == "Low")
+
+Rst_Ch <- dat_diff_short |> 
+  select(where(is.numeric), Relationship, Condition) |> 
+  filter(Relationship == "Short term" & Condition == "High")
+
+Rlt_Cl <- dat_diff_short |> 
+  select(where(is.numeric), Relationship, Condition) |> 
+  filter(Relationship == "Long term" & Condition == "Low")
+
+Rlt_Ch <- dat_diff_short |> 
+  select(where(is.numeric), Relationship, Condition) |> 
+  filter(Relationship == "Long term" & Condition == "High")
+
+ggarrange(ggcorr(Rst_Cl[,1:8],
+                 geom = "blank", label = TRUE, label_size = 3,
+                 hjust = 0.75, label_round = 3) +
+            geom_point(size = 10, aes(color = coefficient > 0, alpha = abs(coefficient) > 0.5)) +
+            scale_alpha_manual(values = c("TRUE" = 0.3, "FALSE" = 0.05)) +
+            guides(color = FALSE, alpha = FALSE) +
+            labs(subtitle = "Low condition, short-term"),
+          ggcorr(Rst_Ch[,1:8], 
+                 geom = "blank", label = TRUE, label_size = 3,
+                 hjust = 0.75, label_round = 3) +
+            geom_point(size = 10, aes(color = coefficient > 0, alpha = abs(coefficient) > 0.5)) +
+            scale_alpha_manual(values = c("TRUE" = 0.3, "FALSE" = 0.05)) +
+            guides(color = FALSE, alpha = FALSE) +
+            labs(subtitle = "High condition, short-term"),
+          ggcorr(Rlt_Cl[,1:8],
+                 geom = "blank", label = TRUE, label_size = 3,
+                 hjust = 0.75, label_round = 3) +
+            geom_point(size = 10, aes(color = coefficient > 0, alpha = abs(coefficient) > 0.5)) +
+            scale_alpha_manual(values = c("TRUE" = 0.3, "FALSE" = 0.05)) +
+            guides(color = FALSE, alpha = FALSE) +
+            labs(subtitle = "Low condition, long-term"),
+          ggcorr(Rlt_Ch[,1:8],
+                 geom = "blank", label = TRUE, label_size = 3,
+                 hjust = 0.75, label_round = 3) +
+            geom_point(size = 10, aes(color = coefficient > 0, alpha = abs(coefficient) > 0.5)) +
+            scale_alpha_manual(values = c("TRUE" = 0.3, "FALSE" = 0.05)) +
+            guides(color = FALSE, alpha = FALSE) +
+            labs(subtitle = "High condition, long-term"),
+          common.legend = TRUE,
+          legend = "bottom")
 
 # Manipulation check----
 ## Resource availability----
@@ -951,13 +1009,13 @@ Anova(mod_attr, type = 3)
 # Model 1: TFF----
 
 ## Data----
-dat_m1 <- dat |> 
-  select(TFF, Condition, Relationship, Sexual_dimorphism,
-         Ovulating, Sexual_orientation, ID, Stimulus, Relationship_current) |> 
+dat_m1 <- dat_diff |> 
+  select(DFF_dif, Condition, Relationship, Ovulating, Sexual_orientation, 
+         ID, Stimulus, Relationship_current) |> 
   drop_na()
 ### Partnered participants----
 dat_m1_ptnr <- dat_m1 |>
-  filter(Relationship_current == "Sí")
+  filter(Relationship_current == "Yes")
 ### Single participants----
 dat_m1_sngl <- dat_m1 |>
   filter(Relationship_current == "No")
@@ -966,55 +1024,68 @@ dat_m1_sngl <- dat_m1 |>
 
 
 
-## Model 1: TFF General---- 
-mod1 <- lmer(TFF ~ Condition * Relationship * Sexual_dimorphism + 
-               Ovulating + Sexual_orientation +
+## Model 1: DFF General---- 
+mod1 <- lmer(DFF_dif ~ Condition * Relationship * Sexual_orientation +
+               Ovulating +
                (1 | ID) + (1 | Stimulus), 
              data = dat_m1,
              na.action = "na.fail")
 anova(mod1)
 
-## Model 1: TFF Partnered---- 
+emmip(mod1, ~Relationship, CIs = TRUE)
+
+## Model 1: DFF Partnered---- 
 
 # opt_mod1_ptnr <- allFit(mod1_ptnr)
 # opt_mod1_ptnr_OK <- opt_mod1_ptnr[sapply(opt_mod1_ptnr, is, "merMod")]
 # lapply(opt_mod1_ptnr_OK, function(x) x@optinfo$conv$lme4$messages)
 
-mod1_ptnr <- lmer(TFF ~ Condition * Relationship * Sexual_dimorphism + 
-                    Ovulating + Sexual_orientation +
+mod1_ptnr <- lmer(DFF_dif ~ Condition * Relationship * Sexual_orientation +
+                    Ovulating + 
                     (1 | ID) + (1 | Stimulus), 
-                  data = dat_m1_ptnr,
-                  control = lmerControl(optimizer = "bobyqa"))
+                  data = dat_m1_ptnr)
 
 anova(mod1_ptnr)
 
-## Model 1: TFF Single---- 
-mod1_sngl <- lmer(TFF ~ Condition * Relationship * Sexual_dimorphism + 
-                    Ovulating + Sexual_orientation +
+### Contrastes post-hoc----
+
+#### Efecto principal: Relationship----
+emmeans(mod1_ptnr, pairwise ~ Relationship)
+emmip(mod1_ptnr, ~ Relationship, CIs = TRUE, type = "response")
+
+## Model 1: DFF Single---- 
+mod1_sngl <- lmer(DFF_dif ~ Condition * Relationship * Sexual_orientation +
+                    Ovulating +
                     (1 | ID) + (1 | Stimulus), 
                   data = dat_m1_sngl)
 
 anova(mod1_sngl)
 
+### Contrastes post-hoc----
+
+#### Interacción: Condition:Relationship:Sexual_orientation----
+emmeans(mod1_sngl, pairwise ~ Relationship | Condition + Sexual_orientation, type = "response")
+emmip(mod1_sngl, ~ Relationship | Condition + Sexual_orientation, CIs = TRUE, type = "response")
+
 # Model 2: TDF----
 
 ## Data----
-dat_m2 <- dat |> 
-  select(TDF, Condition, Relationship, Sexual_dimorphism,
-         Ovulating, Sexual_orientation, ID, Stimulus, Relationship_current,
+dat_m2 <- dat_diff |> 
+  select(TDF_dif, Condition, Relationship, Ovulating, Sexual_orientation, 
+         ID, Stimulus, Relationship_current,
          Freq_partner_physical_violence, Freq_partner_sexual_violence,
          Freq_partner_infidelity) |> 
   drop_na()
 ### Partnered participants----
 dat_m2_ptnr <- dat_m2 |>
-  filter(Relationship_current == "Sí")
+  filter(Relationship_current == "Yes")
 ### Single participants----
 dat_m2_sngl <- dat_m2 |>
   filter(Relationship_current == "No")
 
 ## Model 2: TDF General----
-mod2 <- lmer(TDF ~ Condition * Relationship * Sexual_dimorphism + 
-               Ovulating + Sexual_orientation +
+mod2 <- lmer(TDF_dif ~ Condition * Relationship * Sexual_orientation +
+               Ovulating +
                (1 | ID) + (1 | Stimulus), 
              data = dat_m2,
              na.action = "na.fail")
@@ -1022,125 +1093,204 @@ anova(mod2)
 
 ### Contrastes post-hoc----
 
-#### Efecto principal: Sexual_dimorphism----
-emmeans(mod2, pairwise ~ Sexual_dimorphism)
-emmip(mod2, ~ Sexual_dimorphism, CIs = TRUE, type = "response")
-
-#### Interacción: Condition:Sexual_dimorphism ----
-emmeans(mod2, pairwise ~ Sexual_dimorphism | Condition)
-emmip(mod2, ~ Sexual_dimorphism | Condition, CIs = TRUE, type = "response")
-
-#### Interacción: Condition:Sexual_orientation ----
+#### Efecto principal: Sexual_orientation ----
 emmeans(mod2, pairwise ~ Sexual_orientation)
 emmip(mod2, ~ Sexual_orientation, CIs = TRUE, type = "response")
 
-#### Interacción: Relationship:Sexual_dimorphism----
-emmeans(mod2, pairwise ~ Relationship | Sexual_dimorphism)
-emmip(mod2, ~ Relationship | Sexual_dimorphism, CIs = TRUE, type = "response")
+#### Interacción: Condition:Relationship:Sexual_orientation----
+emmeans(mod2, pairwise ~ Relationship | Condition + Sexual_orientation, type = "response")
+emmip(mod2, ~ Relationship | Condition + Sexual_orientation, CIs = TRUE, type = "response")
+
+
 
 ## Model 2: TDF Partnered----
-mod2_ptnr <- lmer(TDF ~ Condition * Relationship * Sexual_dimorphism + 
-                    Ovulating + Sexual_orientation +
+mod2_ptnr <- lmer(TDF_dif ~ Condition * Relationship * Sexual_orientation +
+                    Ovulating +
                     (1 | ID) + (1 | Stimulus), 
                   data = dat_m2_ptnr,
                   na.action = "na.fail")
 anova(mod2_ptnr)
 
-### FALTA AGREGAR OTROS POST-HOCS!!----
+### Contrastes post-hoc----
+
+#### Interacción: Relationship:Sexual_orientation----
+emmeans(mod2_ptnr, pairwise ~ Relationship | Sexual_orientation, type = "response")
+emmip(mod2_ptnr, ~ Relationship | Sexual_orientation, CIs = TRUE, type = "response")
+
+
+
 
 ## Model 2: TDF Single----
-mod2_sngl <- lmer(TDF ~ Condition * Relationship * Sexual_dimorphism + 
-                    Ovulating + Sexual_orientation +
+mod2_sngl <- lmer(TDF_dif ~ Condition * Relationship * Sexual_orientation +
+                    Ovulating +
                     (1 | ID) + (1 | Stimulus), 
                   data = dat_m2_sngl,
                   na.action = "na.fail")
 anova(mod2_sngl)
 
-### FALTA AGREGAR OTROS POST-HOCS!!----
+### Contrastes post-hoc----
+
+#### Efecto principal: Relationship ----
+emmeans(mod2_sngl, pairwise ~ Relationship)
+emmip(mod2_sngl, ~ Relationship, CIs = TRUE, type = "response")
+
+#### Efecto principal: Sexual_orientation ----
+emmeans(mod2_sngl, pairwise ~ Sexual_orientation)
+emmip(mod2_sngl, ~ Sexual_orientation, CIs = TRUE, type = "response")
+
+#### Interacción: Condition:Relationship----
+emmeans(mod2_sngl, pairwise ~ Relationship | Condition, type = "response")
+emmip(mod2_sngl, ~ Relationship | Condition, CIs = TRUE, type = "response")
+
+#### Interacción: Condition:Relationship:Sexual_orientation----
+emmeans(mod2_sngl, pairwise ~ Relationship | Condition + Sexual_orientation, type = "response")
+emmip(mod2_sngl, ~ Relationship | Condition + Sexual_orientation, CIs = TRUE, type = "response")
 
 # Model 3: NF----
 
 ## Data----
-dat_m3 <- dat |> 
-  select(NF, Condition, Relationship, Sexual_dimorphism,
-         Ovulating, Sexual_orientation, ID, Stimulus, Relationship_current) |> 
+dat_m3 <- dat_diff |> 
+  select(NF_dif, Condition, Relationship, Ovulating, Sexual_orientation, 
+         ID, Stimulus, Relationship_current) |> 
   drop_na()
 ### Partnered participants----
 dat_m3_ptnr <- dat_m3 |>
-  filter(Relationship_current == "Sí")
+  filter(Relationship_current == "Yes")
 ### Single participants----
 dat_m3_sngl <- dat_m3 |>
   filter(Relationship_current == "No")
 
 ## Model 3: NF General----
-mod3 <- glmer(NF ~ Condition * Relationship * Sexual_dimorphism + 
-                Ovulating + Sexual_orientation +
+mod3 <- lmer(NF_dif ~ Condition * Relationship * Sexual_orientation + 
+                Ovulating +
                 (1 | ID) + (1 | Stimulus), 
-              family = "poisson",
               data = dat_m3)
 
-cbind(anova(mod3), 
-      Anova(mod3, type = 3) |> 
-        slice(-1))
+anova(mod3)
 
 check_model(mod3)
 
 ### Contrastes post-hoc----
 
+#### Efecto principal: Sexual_orientation ----
+emmeans(mod3, pairwise ~ Sexual_orientation)
+emmip(mod3, ~ Sexual_orientation, CIs = TRUE, type = "response")
+
 #### Interacción: Relationship:Sexual_dimorphism----
-emmeans(mod3, pairwise ~ Relationship | Sexual_dimorphism, type = "response")
-emmip(mod3, ~ Relationship | Sexual_dimorphism, CIs = TRUE, type = "response")
+emmeans(mod3, pairwise ~ Relationship | Sexual_orientation, type = "response")
+emmip(mod3, ~ Relationship | Sexual_orientation, CIs = TRUE, type = "response")
+
+
 
 ## Model 3: NF Partnered---- 
-mod3_ptnr <- glmer(NF ~ Condition * Relationship * Sexual_dimorphism + 
-                     Ovulating + Sexual_orientation +
-                     (1 | ID) + (1 | Stimulus), 
-                   family = "poisson", 
+mod3_ptnr <- lmer(NF_dif ~ Condition * Relationship * Sexual_orientation + 
+                    Ovulating +
+                    (1 | ID) + (1 | Stimulus), 
                    data = dat_m3_ptnr)
 
-cbind(anova(mod3_ptnr), 
-      Anova(mod3_ptnr, type = 3) |> 
-        slice(-1))
+anova(mod3_ptnr)
+
+### Contrastes post-hoc----
+
+#### Interacción: Relationship:Sexual_dimorphism----
+emmeans(mod3_ptnr, pairwise ~ Relationship | Sexual_orientation, type = "response")
+emmip(mod3_ptnr, ~ Relationship | Sexual_orientation, CIs = TRUE, type = "response")
+
 
 ## Model 3: NF Single---- 
-mod3_sngl <- glmer(NF ~ Condition * Relationship * Sexual_dimorphism + 
-                     Ovulating + Sexual_orientation +
+mod3_sngl <- lmer(NF_dif ~ Condition * Relationship * Sexual_orientation + 
+                     Ovulating +
                      (1 | ID) + (1 | Stimulus), 
-                   family = "poisson", 
-                   data = dat_m3_sngl)
+                  control=lmerControl(optimizer="bobyqa"),
+                  data = dat_m3_sngl)
 
-cbind(anova(mod3_sngl), 
-      Anova(mod3_sngl, type = 3) |> 
-        slice(-1))
+anova(mod3_sngl)
+
+### Contrastes post-hoc----
+
+#### Efecto principal: Relationship ----
+emmeans(mod3_sngl, pairwise ~ Relationship)
+emmip(mod3_sngl, ~ Relationship, CIs = TRUE, type = "response")
+
+#### Interacción: Condition:Relationship:Sexual_orientation----
+emmeans(mod3_sngl, pairwise ~ Relationship | Condition + Sexual_orientation, type = "response")
+emmip(mod3_sngl, ~ Relationship | Condition + Sexual_orientation, CIs = TRUE, type = "response")
+
+
+
+
+
+
+
 
 # Model 4: Choice----
 
 ## Data----
 dat_choice_yes  <- dat |> 
-  filter(Choice == "Yes") |> 
+  mutate(Choice = as.numeric(recode(Choice,
+                                    "Yes" =  "1",
+                                    "No" = "0"))) |> 
   group_by(ID, Sexual_dimorphism, Relationship, Condition, Choice, 
            Relationship_current, Ovulating, Sexual_orientation) |> 
-  summarise(Choice = n()) |> 
+  summarise(Choice = sum(Choice)) |> 
   group_by(ID, Sexual_dimorphism, Relationship, Condition, 
            Relationship_current, Ovulating, Sexual_orientation) |> 
   summarise(Choice_count = sum(Choice)) |> 
-  drop_na()
+  ungroup() |> 
+  group_by(ID, Relationship, Condition, 
+           Relationship_current, Ovulating, Sexual_orientation) |> 
+  summarise(Choice_dif = Choice_count[Sexual_dimorphism == "Masculinized"] - 
+              Choice_count[Sexual_dimorphism == "Feminized"]) |>
+  ungroup() |> 
+  mutate(across(where(is.character), as.factor),
+         Choice_dif_count = Choice_dif+30,
+         Choice_prop = (Choice_dif+30)/60)
 
 ### Partnered participants----
 dat_choice_yes_ptnr <- dat_choice_yes |>
-  filter(Relationship_current == "Sí")
+  filter(Relationship_current == "Yes")
 ### Single participants----
 dat_choice_yes_sngl <- dat_choice_yes |>
   filter(Relationship_current == "No")
 
 ## Model 4: Choice General----
-mod4 <- glm(Choice_count ~ Condition * Relationship * Sexual_dimorphism +
-              Ovulating + Sexual_orientation, 
+mod4 <- glm(Choice_dif_count ~ Condition * Relationship * Sexual_orientation +
+              Ovulating, 
             family = "poisson",
-            data = dat_choice_yes,
-            na.action = "na.fail")
+            data = dat_choice_yes)
 
 Anova(mod4, type = 3)
+check_distribution(mod4)
+check_model(mod4)
+
+
+library(betareg)
+fit_beta <- betareg(Choice_prop ~ Condition * Relationship * Sexual_orientation +
+                      Ovulating,
+                    data = dat_choice_yes)
+check_distribution(fit_beta)
+check_model(fit_beta)
+
+
+
+## Intento glmer----
+dat_choice_yes  <- dat |> 
+  mutate(Choice = as.numeric(recode(Choice,
+                                    "Yes" =  "1",
+                                    "No" = "0"))) |> 
+  group_by(ID, Stimulus, Sexual_dimorphism, Relationship, Condition, Choice, 
+           Relationship_current, Ovulating, Sexual_orientation) |> 
+  summarise(Choice = Choice)
+
+mod4 <- glmer(Choice ~ Condition * Relationship * Sexual_orientation + 
+                Ovulating +
+                (1 | ID) + (1 | Stimulus),
+            family = binomial,
+            data = dat_choice_yes)
+
+Anova(mod4, type = 3)
+check_distribution(mod4)
+check_model(mod4)
 
 ### Contrastes post-hoc----
 
