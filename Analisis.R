@@ -349,7 +349,7 @@ dat <- dat_int |>
 
 ## Base de datos diferencia masculinizado - feminizado----
     # Por participante, estímulo y relación
-dat_diff <- dat |> 
+dat_dif <- dat |> 
   group_by(ID, 
            Stimulus, 
            Condition, 
@@ -919,7 +919,7 @@ dat_main_corr |>
   landscape()
 
 ### Correlations between sociocontextual factors and fixations----
-dat_diff_short <- dat_diff |> 
+dat_dif_short <- dat_dif |> 
   rename("PPV" = "Freq_partner_physical_violence",
          "PSV" = "Freq_partner_sexual_violence",      
          "PI" = "Freq_partner_infidelity",
@@ -929,19 +929,19 @@ dat_diff_short <- dat_diff |>
          "TDF" = "TDF_dif",
          "NF" = "NF_dif")
 
-Rst_Cl <- dat_diff_short |> 
+Rst_Cl <- dat_dif_short |> 
   select(where(is.numeric), Relationship, Condition) |> 
   filter(Relationship == "Short term" & Condition == "Low")
 
-Rst_Ch <- dat_diff_short |> 
+Rst_Ch <- dat_dif_short |> 
   select(where(is.numeric), Relationship, Condition) |> 
   filter(Relationship == "Short term" & Condition == "High")
 
-Rlt_Cl <- dat_diff_short |> 
+Rlt_Cl <- dat_dif_short |> 
   select(where(is.numeric), Relationship, Condition) |> 
   filter(Relationship == "Long term" & Condition == "Low")
 
-Rlt_Ch <- dat_diff_short |> 
+Rlt_Ch <- dat_dif_short |> 
   select(where(is.numeric), Relationship, Condition) |> 
   filter(Relationship == "Long term" & Condition == "High")
 
@@ -1006,12 +1006,14 @@ Anova(mod_masc, type = 3)
 mod_attr <- lm(Attractiveness ~ Sexual_dimorphism * Relationship_current, data = eval_desc)
 Anova(mod_attr, type = 3)
 
-# Model 1: TFF----
+# Model 1: DFF----
 
 ## Data----
-dat_m1 <- dat_diff |> 
+dat_m1 <- dat_dif |> 
   select(DFF_dif, Condition, Relationship, Ovulating, Sexual_orientation, 
-         ID, Stimulus, Relationship_current) |> 
+         ID, Stimulus, Relationship_current,
+         Freq_partner_physical_violence, Freq_partner_sexual_violence,
+         Freq_partner_infidelity) |> 
   drop_na()
 ### Partnered participants----
 dat_m1_ptnr <- dat_m1 |>
@@ -1070,7 +1072,7 @@ emmip(mod1_sngl, ~ Relationship | Condition + Sexual_orientation, CIs = TRUE, ty
 # Model 2: TDF----
 
 ## Data----
-dat_m2 <- dat_diff |> 
+dat_m2 <- dat_dif |> 
   select(TDF_dif, Condition, Relationship, Ovulating, Sexual_orientation, 
          ID, Stimulus, Relationship_current,
          Freq_partner_physical_violence, Freq_partner_sexual_violence,
@@ -1149,9 +1151,11 @@ emmip(mod2_sngl, ~ Relationship | Condition + Sexual_orientation, CIs = TRUE, ty
 # Model 3: NF----
 
 ## Data----
-dat_m3 <- dat_diff |> 
+dat_m3 <- dat_dif |> 
   select(NF_dif, Condition, Relationship, Ovulating, Sexual_orientation, 
-         ID, Stimulus, Relationship_current) |> 
+         ID, Stimulus, Relationship_current,
+         Freq_partner_physical_violence, Freq_partner_sexual_violence,
+         Freq_partner_infidelity) |> 
   drop_na()
 ### Partnered participants----
 dat_m3_ptnr <- dat_m3 |>
@@ -1231,20 +1235,30 @@ dat_choice_yes  <- dat |>
                                     "Yes" =  "1",
                                     "No" = "0"))) |> 
   group_by(ID, Sexual_dimorphism, Relationship, Condition, Choice, 
-           Relationship_current, Ovulating, Sexual_orientation) |> 
+           Relationship_current, Ovulating, Sexual_orientation,
+           Freq_partner_physical_violence,
+           Freq_partner_sexual_violence,
+           Freq_partner_infidelity) |> 
   summarise(Choice = sum(Choice)) |> 
   group_by(ID, Sexual_dimorphism, Relationship, Condition, 
-           Relationship_current, Ovulating, Sexual_orientation) |> 
+           Relationship_current, Ovulating, Sexual_orientation,
+           Freq_partner_physical_violence,
+           Freq_partner_sexual_violence,
+           Freq_partner_infidelity) |> 
   summarise(Choice_count = sum(Choice)) |> 
   ungroup() |> 
   group_by(ID, Relationship, Condition, 
-           Relationship_current, Ovulating, Sexual_orientation) |> 
+           Relationship_current, Ovulating, Sexual_orientation,
+           Freq_partner_physical_violence,
+           Freq_partner_sexual_violence,
+           Freq_partner_infidelity) |> 
   summarise(Choice_dif = Choice_count[Sexual_dimorphism == "Masculinized"] - 
               Choice_count[Sexual_dimorphism == "Feminized"]) |>
   ungroup() |> 
   mutate(across(where(is.character), as.factor),
          Choice_dif_count = Choice_dif+30,
-         Choice_prop = (Choice_dif+30)/60)
+         Choice_prop = (Choice_dif+30)/60) |> 
+  drop_na()
 
 ### Partnered participants----
 dat_choice_yes_ptnr <- dat_choice_yes |>
@@ -1256,8 +1270,9 @@ dat_choice_yes_sngl <- dat_choice_yes |>
 ## Model 4: Choice General----
 mod4 <- glm(Choice_dif_count ~ Condition * Relationship * Sexual_orientation +
               Ovulating, 
-            family = "poisson",
-            data = dat_choice_yes)
+             family = "poisson",
+             data = dat_choice_yes,
+             na.action = "na.fail")
 
 Anova(mod4, type = 3)
 check_distribution(mod4)
@@ -1342,121 +1357,205 @@ emmip(mod4_sngl, Sexual_dimorphism ~ Relationship | Condition, CIs = TRUE, type 
 
 # Covariates and model selection----
 
-## Choice----
-### Data----
-dat_choice_yes_comp  <- dat |> 
-  filter(Choice == "Yes") |> 
-  group_by(ID, Sexual_dimorphism, Relationship, Condition, Choice, 
-           Freq_partner_physical_violence,
-           Freq_partner_sexual_violence,
-           Freq_partner_infidelity,
-           Relationship_current,
-           Men_perceived_as_danger_to_partner) |> 
-  summarise(Choice = n()) |> 
-  group_by(ID, Sexual_dimorphism, Relationship, Condition,
-           Freq_partner_physical_violence,
-           Freq_partner_sexual_violence,
-           Freq_partner_infidelity,
-           Relationship_current) |> 
-  summarise(Choice_count = sum(Choice))
 
-dat_choice_yes_comp_yes <- dat_choice_yes_comp |> 
-  filter(Relationship_current == "Sí")
 
-dat_choice_yes_comp_no <- dat_choice_yes_comp |> 
-  filter(Relationship_current == "No")
-
+## DFF----
 ### Model----
-mod4a <- glm(Choice_count ~ 
-               Condition * Relationship * Sexual_dimorphism * Freq_partner_physical_violence +
-               Condition * Relationship * Sexual_dimorphism * Freq_partner_sexual_violence +
-               Condition * Relationship * Sexual_dimorphism * Freq_partner_infidelity, 
-             family = "poisson",
-             data = dat_choice_yes_comp,
-             na.action = "na.fail")
-### Dredge---
-#tic()
-#dr_m4a <- dredge(mod4a,
-#                 fixed = ~Condition * Relationship * Sexual_dimorphism,
-#                 trace = 2)
-#toc()
-#plot(dr_m4a)
+mod1a <- lmer(DFF_dif ~ Condition * Relationship * Freq_partner_physical_violence +
+                Condition * Relationship * Freq_partner_sexual_violence +
+                Condition * Relationship * Freq_partner_infidelity + 
+                Condition * Relationship * Sexual_orientation +
+                (1 | ID) + (1 | Stimulus), 
+              data = dat_m1,
+              na.action = "na.fail")
 
-### Model partnered----
-mod4a_yes <- glm(Choice_count ~ 
-                   Condition * Relationship * Sexual_dimorphism * Freq_partner_physical_violence +
-                   Condition * Relationship * Sexual_dimorphism * Freq_partner_sexual_violence +
-                   Condition * Relationship * Sexual_dimorphism * Freq_partner_infidelity, 
-                 family = "poisson",
-                 data = dat_choice_yes_comp_yes,
-                 na.action = "na.fail")
-
-mod4_yes <- glm(Choice_count ~ 
-                  Condition * Relationship * Sexual_dimorphism, 
-                family = "poisson",
-                data = dat_choice_yes_comp_yes,
-                na.action = "na.fail")
-Anova(mod4_yes)
+anova(mod1a)
 
 ### Dredge---
-#dr_m4a_yes <- dredge(mod4a_yes,
-#                     fixed = ~Condition * Relationship * Sexual_dimorphism,
-#                     trace = 2)
-#
-#plot(dr_m4a_yes)
+tic()
+dr_m1a <- dredge(mod1a,
+                 fixed = ~Condition * Relationship,
+                 trace = 2)
+toc()
+plot(dr_m1a)
 
-### Model single----
-mod4a_no <- glm(Choice_count ~ 
-                  Condition * Relationship * Sexual_dimorphism * Freq_partner_physical_violence +
-                  Condition * Relationship * Sexual_dimorphism * Freq_partner_sexual_violence +
-                  Condition * Relationship * Sexual_dimorphism * Freq_partner_infidelity, 
-                family = "poisson",
-                data = dat_choice_yes_comp_no,
-                na.action = "na.fail")
+best_dr_m1a <- get.models(dr_m1a, subset = 1)[[1]]
 
-mod4_no <- glm(Choice_count ~ 
-                 Condition * Relationship * Sexual_dimorphism, 
-               family = "poisson",
-               data = dat_choice_yes_comp_no,
-               na.action = "na.fail")
-Anova(mod4_no)
+check_model(best_dr_m1a)
 
-### Dredge---
-#tic()
-#dr_m4a_no <- dredge(mod4a_no,
-#                    fixed = ~Condition * Relationship * Sexual_dimorphism,
-#                    trace = 2)
-#toc()
-#plot(dr_m4a_no)
+check_distribution(best_dr_m1a)
 
+bbmle::AICctab(mod1, best_dr_m1a,
+               base = TRUE, weights = TRUE)
 
-
-
+ggplot(cbind(best_dr_m1a@frame, predict(best_dr_m1a)), aes(x = DFF_dif, y = predict(best_dr_m1a))) +
+         geom_point(alpha = 0.5) +
+         geom_smooth(method = "lm") +
+         #facet_grid(Condition ~ Relationship) +
+         stat_cor(p.accuracy = 0.001, r.accuracy = 0.01, cor.coef.name = "rho", colour = "black") +
+         stat_regline_equation(label.y = 60, colour = "black", size = 3)
+         
 
 ## TDF----
 ### Model----
-tic()
-mod5a <- lmer(TDF ~ Condition * Relationship * Sexual_dimorphism * Freq_partner_physical_violence +
-                Condition * Relationship * Sexual_dimorphism * Freq_partner_sexual_violence +
-                Condition * Relationship * Sexual_dimorphism * Freq_partner_infidelity + 
-                #Ovulating + Sexual_orientation +
+mod2a <- lmer(TDF_dif ~ Condition * Relationship * Freq_partner_physical_violence +
+                Condition * Relationship * Freq_partner_sexual_violence +
+                Condition * Relationship * Freq_partner_infidelity + 
+                Condition * Relationship * Sexual_orientation +
                 (1 | ID) + (1 | Stimulus), 
               data = dat_m2,
               na.action = "na.fail")
-toc()
+
+anova(mod2a)
 
 ### Dredge---
-#tic()
-#dr_m5a <- dredge(mod5a,
-#                 fixed = ~Condition * Relationship * Sexual_dimorphism,
-#                 trace = 2)
-#toc()
-#plot(dr_m5a)
+tic()
+dr_m2a <- dredge(mod2a,
+                 fixed = ~Condition * Relationship,
+                 trace = 2)
+toc()
+plot(dr_m2a)
 
+best_dr_m2a <- get.models(dr_m2a, subset = 1)[[1]]
 
-mod2 <- lmer(TDF ~ Condition * Relationship * Sexual_dimorphism + 
-               Ovulating + Sexual_orientation +
-               (1 | ID) + (1 | Stimulus), 
-             data = dat_m2,
+check_model(best_dr_m2a)
+
+check_distribution(best_dr_m2a)
+
+bbmle::AICctab(mod2, best_dr_m2a,
+               base = TRUE, weights = TRUE)
+
+ggplot(cbind(best_dr_m2a@frame, predict(best_dr_m2a)), aes(x = TDF_dif, y = predict(best_dr_m2a))) +
+  geom_point(alpha = 0.5) +
+  geom_smooth(method = "lm") +
+  #facet_grid(Condition ~ Relationship) +
+  stat_cor(p.accuracy = 0.001, r.accuracy = 0.01, cor.coef.name = "rho", colour = "black") +
+  stat_regline_equation(label.y = 1000, colour = "black", size = 3)
+
+## NF----
+### Model----
+mod3a <- lmer(NF_dif ~ Condition * Relationship * Freq_partner_physical_violence +
+                Condition * Relationship * Freq_partner_sexual_violence +
+                Condition * Relationship * Freq_partner_infidelity + 
+                Condition * Relationship * Sexual_orientation +
+                (1 | ID) + (1 | Stimulus), 
+              data = dat_m3,
+              na.action = "na.fail")
+
+anova(mod3a)
+
+### Dredge---
+tic()
+dr_m3a <- dredge(mod3a,
+                 fixed = ~Condition * Relationship,
+                 trace = 2)
+toc()
+plot(dr_m3a)
+
+best_dr_m3a <- get.models(dr_m3a, subset = 1)[[1]]
+
+bbmle::AICctab(mod3, mod3a, best_dr_m3a,
+               base = TRUE, weights = TRUE)
+
+ggplot(cbind(best_dr_m3a@frame, predict(best_dr_m3a)), aes(x = NF_dif, y = predict(best_dr_m3a))) +
+  geom_hex(bins = 10, color = "white") +
+  scale_fill_gradient(low =  "#00AFBB", high = "#FC4E07") +
+  geom_smooth(method = "lm") +
+  #facet_grid(Condition ~ Relationship) +
+  stat_cor(p.accuracy = 0.001, r.accuracy = 0.01, cor.coef.name = "rho", colour = "black") +
+  stat_regline_equation(label.y = 0, colour = "black", size = 3)
+
+## Choice----
+### Model----
+mod4a <- glm(Choice_dif_count ~ 
+               Condition * Relationship * Freq_partner_physical_violence +
+               Condition * Relationship * Freq_partner_sexual_violence +
+               Condition * Relationship * Freq_partner_infidelity +
+               Condition * Relationship * Sexual_orientation, 
+             family = "poisson",
+             data = dat_choice_yes,
              na.action = "na.fail")
-anova(mod2)
+### Dredge---
+tic()
+dr_m4a <- dredge(mod4a,
+                 fixed = ~Condition * Relationship,
+                 trace = 2)
+toc()
+plot(dr_m4a)
+
+
+best_dr_m4a <- get.models(dr_m4a, subset = 1)[[1]]
+
+check_model(best_dr_m4a)
+
+check_distribution(best_dr_m4a)
+
+bbmle::AICctab(mod4, mod4a, best_dr_m4a,
+               base = TRUE, weights = TRUE)
+
+ggplot(cbind(best_dr_m4a$data, predict(best_dr_m4a)), aes(x = Choice_dif_count, y = predict(best_dr_m4a))) +
+  #geom_point() +
+  geom_hex(bins = 10, color = "white") +
+  scale_fill_gradient(low =  "#00AFBB", high = "#FC4E07") +
+  geom_smooth(method = "lm") +
+  #facet_grid(Condition ~ Relationship) +
+  stat_cor(p.accuracy = 0.001, r.accuracy = 0.01, cor.coef.name = "rho", colour = "black") +
+  stat_regline_equation(label.y = 4, colour = "black", size = 3)
+
+### Model partnered----
+mod4a_yes <- glm(Choice_dif_count ~ 
+                   Condition * Relationship * Freq_partner_physical_violence +
+                   Condition * Relationship * Freq_partner_sexual_violence +
+                   Condition * Relationship * Freq_partner_infidelity +
+                   Condition * Relationship * Sexual_orientation, 
+                 family = "poisson",
+                 data = dat_choice_yes_yes,
+                 na.action = "na.fail")
+
+Anova(mod4a_yes, type = 3)
+
+### Dredge---
+dr_m4a_yes <- dredge(mod4a_yes,
+                     fixed = ~Condition * Relationship,
+                     trace = 2)
+
+plot(dr_m4a_yes)
+
+### Model single----
+mod4a_no <- glm(Choice_dif_count ~ 
+                  Condition * Relationship * Freq_partner_physical_violence +
+                  Condition * Relationship * Freq_partner_sexual_violence +
+                  Condition * Relationship * Freq_partner_infidelity +
+                  Condition * Relationship * Sexual_orientation, 
+                family = "poisson",
+                data = dat_choice_yes_no,
+                na.action = "na.fail")
+
+Anova(mod4a_no)
+
+### Dredge---
+tic()
+dr_m4a_no <- dredge(mod4a_no,
+                    fixed = ~Condition * Relationship,
+                    trace = 2)
+toc()
+plot(dr_m4a_no)
+
+
+
+
+
+
+dat_corr_choice_TDF_dif <- dat_dif |> 
+  group_by(ID, Relationship, Condition) |> 
+  summarise(TDF_dif = mean(TDF_dif)) |> 
+  left_join(dat_choice_yes |> 
+              select(ID, Relationship, Condition, Choice_dif),
+            by = c("ID", "Relationship", "Condition"))
+
+ggplot(dat_corr_choice_TDF_dif, aes(x = Choice_dif, y = TDF_dif)) +
+  geom_point(alpha = 0.5) +
+  geom_smooth(method = "lm") +
+  facet_grid(Condition ~ Relationship) +
+  stat_cor(p.accuracy = 0.001, r.accuracy = 0.01, cor.coef.name = "rho", colour = "black") +
+  stat_regline_equation(label.y = 800, colour = "black", size = 3)
