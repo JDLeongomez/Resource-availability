@@ -1,5 +1,6 @@
 # Cargar paquetes----
 library(car)
+library(MASS)
 library(ggstats)
 library(tidyverse)
 library(ggpubr)
@@ -13,6 +14,8 @@ library(MuMIn)
 library(tictoc)
 library(GGally)
 library(scales) 
+library(factoextra)
+library(FactoMineR)
 
 # Functions----
 corr.stars <- function(x) {
@@ -234,6 +237,27 @@ quests <- read_excel("Datos/Cuestionario Datos Sociodemográficos  (Disponibilid
   mutate(across(where(is.character), ~replace(., . ==  "Indígena" , "Indigenous"))) |> 
   mutate(across(where(is.character), ~replace(., . ==  "No estoy segura" , "Unsure")))
 
+### PCA----
+
+quests_pca <- quests |> 
+  select(ID, 
+         Men_perceived_as_danger_to_partner, 
+         Men_perceived_as_danger_to_children) |> 
+  rename_with(~str_replace_all(., "Men_perceived_as_danger_to_", "")) |> 
+  rename_with(~str_to_sentence(.))
+
+pca_mpd <- PCA(quests_pca[,-1], graph = FALSE)
+summary(pca_mpd)
+
+mpd_scores <- data.frame(pca_mpd$ind$coord)$Dim.1
+
+ggarrange(fviz_eig(pca_mpd, addlabels = TRUE, barfill = "#00AFBB") +
+            labs(title = "PCA: Men perceived as danger to...",
+                 subtitle = "Scree plot"),
+          fviz_pca_var(pca_mpd, col.var = "#00AFBB") +
+            labs(title = NULL,
+                 subtitle = "Loadings"))
+
 ### Con puntajes totales de instrumentos, menos columnas
 quests_clean <- quests |>  
   mutate(across(starts_with("Escasez alimentaria"),
@@ -249,7 +273,10 @@ quests_clean <- quests |>
          Perceived_safety = sum(across(ends_with("_safety"))),
          Food_insecurity = sum(across(starts_with("Escasez alimentaria")))) |> 
   select(!starts_with("autoestima_")) |> 
-  mutate(across(where(is.character), as.factor)) 
+  mutate(across(where(is.character), as.factor)) |> 
+  bind_cols(Men_perceived_as_dangerous = mpd_scores)
+
+###
   
 ## Evaluación subjestiva de rostros----
 ### Formato ancho
@@ -360,8 +387,7 @@ dat_dif <- dat |>
            Freq_partner_sexual_violence,
            Freq_partner_infidelity,
            Relationship_current,
-           Men_perceived_as_danger_to_partner,
-           Men_perceived_as_danger_to_children) |> 
+           Men_perceived_as_dangerous) |> 
   summarise(DFF_dif = DFF[Sexual_dimorphism == "Masculinized"] - DFF[Sexual_dimorphism == "Feminized"],
             TDF_dif = TDF[Sexual_dimorphism == "Masculinized"] - TDF[Sexual_dimorphism == "Feminized"],
             NF_dif = NF[Sexual_dimorphism == "Masculinized"] - NF[Sexual_dimorphism == "Feminized"]) |> 
@@ -390,9 +416,9 @@ desc_quest <- quests_fin |>
          Relationship_status:Hormonal_contraception, Sexual_abuse,
          SP_happiness:Socioeconomic_level, 
          Perceived_country_safety:Freq_robery,
-         Men_perceived_as_danger_to_children:Victim_of_violence,
+         Victim_of_violence,
          Victim_of_gender_violence:Victim_of_armed_conflict,
-         Self_esteem:Food_insecurity,
+         Self_esteem:Men_perceived_as_dangerous,
          "Escasez alimentaria1":"Escasez alimentaria5") |> 
   mutate(across(starts_with("Escasez alimentaria"),
                 ~recode(.,
@@ -694,26 +720,18 @@ ggarrange(desc_quest |>
             labs(x = NULL, y = NULL),
           ggarrange(desc_quest |>
                       select(ID, Condition, 
-                             Men_perceived_as_danger_to_children,
-                             Men_perceived_as_danger_to_partner) |> 
-                      pivot_longer(Men_perceived_as_danger_to_children:Men_perceived_as_danger_to_partner,
+                             Men_perceived_as_dangerous) |> 
+                      pivot_longer(Men_perceived_as_dangerous,
                                    names_to = "Variable",
                                    values_to = "Value") |> 
-                      mutate(Value = as.factor(Value)) |> 
                       mutate(Variable = str_replace_all(Variable, 
-                                                        "Men_perceived_as_danger_to_", "")) |> 
+                                                        "_", " ")) |> 
                       mutate(Variable = str_to_sentence(Variable)) |> 
-                      ggplot(aes(y = Value, fill = Condition, color = Condition)) +
-                      geom_bar(alpha = 0.3, position = position_dodge()) +
-                      geom_text(aes(label = scales::percent(after_stat(prop), accuracy = 0.1)),
-                                vjust = "inward",
-                                position = position_dodge(.9),
-                                stat = "prop",
-                                color = "black",
-                                size = 2.5) +
-                      labs(title = "Men perceived as danger to...") +
+                      ggplot(aes(x = Value, fill = Condition, color = Condition)) +
+                      geom_density(alpha = 0.3) +
+                      labs(title = "Men perceived as dangerous") +
                       facet_wrap(~Variable, scales = "free") +
-                      scale_y_discrete(labels = label_wrap(20)) +
+                      #scale_y_discrete(labels = label_wrap(20)) +
                       theme(axis.text.y = element_text(size = 8)) +
                       labs(x = NULL, y = NULL),
                     desc_quest |>
@@ -923,8 +941,7 @@ dat_dif_short <- dat_dif |>
   rename("PPV" = "Freq_partner_physical_violence",
          "PSV" = "Freq_partner_sexual_violence",      
          "PI" = "Freq_partner_infidelity",
-         "MDP" = "Men_perceived_as_danger_to_partner", 
-         "MDC" = "Men_perceived_as_danger_to_children",
+         "MPD" = "Men_perceived_as_dangerous",
          "DFF" = "DFF_dif",
          "TDF" = "TDF_dif",
          "NF" = "NF_dif")
@@ -1013,7 +1030,7 @@ dat_m1 <- dat_dif |>
   select(DFF_dif, Condition, Relationship, Ovulating, Sexual_orientation, 
          ID, Stimulus, Relationship_current,
          Freq_partner_physical_violence, Freq_partner_sexual_violence,
-         Freq_partner_infidelity) |> 
+         Freq_partner_infidelity, Men_perceived_as_dangerous) |> 
   drop_na()
 ### Partnered participants----
 dat_m1_ptnr <- dat_m1 |>
@@ -1021,10 +1038,6 @@ dat_m1_ptnr <- dat_m1 |>
 ### Single participants----
 dat_m1_sngl <- dat_m1 |>
   filter(Relationship_current == "No")
-
-
-
-
 
 ## Model 1: DFF General---- 
 mod1 <- lmer(DFF_dif ~ Condition * Relationship * Sexual_orientation +
@@ -1076,7 +1089,7 @@ dat_m2 <- dat_dif |>
   select(TDF_dif, Condition, Relationship, Ovulating, Sexual_orientation, 
          ID, Stimulus, Relationship_current,
          Freq_partner_physical_violence, Freq_partner_sexual_violence,
-         Freq_partner_infidelity) |> 
+         Freq_partner_infidelity, Men_perceived_as_dangerous) |> 
   drop_na()
 ### Partnered participants----
 dat_m2_ptnr <- dat_m2 |>
@@ -1155,7 +1168,7 @@ dat_m3 <- dat_dif |>
   select(NF_dif, Condition, Relationship, Ovulating, Sexual_orientation, 
          ID, Stimulus, Relationship_current,
          Freq_partner_physical_violence, Freq_partner_sexual_violence,
-         Freq_partner_infidelity) |> 
+         Freq_partner_infidelity, Men_perceived_as_dangerous) |> 
   drop_na()
 ### Partnered participants----
 dat_m3_ptnr <- dat_m3 |>
@@ -1238,26 +1251,28 @@ dat_choice_yes  <- dat |>
            Relationship_current, Ovulating, Sexual_orientation,
            Freq_partner_physical_violence,
            Freq_partner_sexual_violence,
-           Freq_partner_infidelity) |> 
+           Freq_partner_infidelity,
+           Men_perceived_as_dangerous) |> 
   summarise(Choice = sum(Choice)) |> 
   group_by(ID, Sexual_dimorphism, Relationship, Condition, 
            Relationship_current, Ovulating, Sexual_orientation,
            Freq_partner_physical_violence,
            Freq_partner_sexual_violence,
-           Freq_partner_infidelity) |> 
+           Freq_partner_infidelity,
+           Men_perceived_as_dangerous) |> 
   summarise(Choice_count = sum(Choice)) |> 
   ungroup() |> 
   group_by(ID, Relationship, Condition, 
            Relationship_current, Ovulating, Sexual_orientation,
            Freq_partner_physical_violence,
            Freq_partner_sexual_violence,
-           Freq_partner_infidelity) |> 
+           Freq_partner_infidelity, 
+           Men_perceived_as_dangerous) |> 
   summarise(Choice_dif = Choice_count[Sexual_dimorphism == "Masculinized"] - 
               Choice_count[Sexual_dimorphism == "Feminized"]) |>
   ungroup() |> 
   mutate(across(where(is.character), as.factor),
-         Choice_dif_count = Choice_dif+30,
-         Choice_prop = (Choice_dif+30)/60) |> 
+         Choice_dif_count = Choice_dif+30) |> 
   drop_na()
 
 ### Partnered participants----
@@ -1268,96 +1283,47 @@ dat_choice_yes_sngl <- dat_choice_yes |>
   filter(Relationship_current == "No")
 
 ## Model 4: Choice General----
-mod4 <- glm(Choice_dif_count ~ Condition * Relationship * Sexual_orientation +
-              Ovulating, 
-             family = "poisson",
-             data = dat_choice_yes,
-             na.action = "na.fail")
+mod4 <- glm.nb(Choice_dif_count ~ Condition * Relationship * Sexual_orientation +
+                 Ovulating,
+               data = dat_choice_yes,
+               link = identity,
+               na.action = "na.fail")
 
-Anova(mod4, type = 3)
+summary(mod4, corr = FALSE)
+anova(mod4)
 check_distribution(mod4)
-check_model(mod4)
-
-
-library(betareg)
-fit_beta <- betareg(Choice_prop ~ Condition * Relationship * Sexual_orientation +
-                      Ovulating,
-                    data = dat_choice_yes)
-check_distribution(fit_beta)
-check_model(fit_beta)
-
-
-
-## Intento glmer----
-dat_choice_yes  <- dat |> 
-  mutate(Choice = as.numeric(recode(Choice,
-                                    "Yes" =  "1",
-                                    "No" = "0"))) |> 
-  group_by(ID, Stimulus, Sexual_dimorphism, Relationship, Condition, Choice, 
-           Relationship_current, Ovulating, Sexual_orientation) |> 
-  summarise(Choice = Choice)
-
-mod4 <- glmer(Choice ~ Condition * Relationship * Sexual_orientation + 
-                Ovulating +
-                (1 | ID) + (1 | Stimulus),
-            family = binomial,
-            data = dat_choice_yes)
-
-Anova(mod4, type = 3)
-check_distribution(mod4)
-check_model(mod4)
 
 ### Contrastes post-hoc----
 
-#### Efecto principal: Relationship----
-emmeans(mod4, pairwise ~ Relationship)
-emmip(mod4, ~ Relationship, CIs = TRUE, type = "response")
-
-#### Efecto principal: Sexual_dimorphism ----
-emmeans(mod4, pairwise ~ Sexual_dimorphism)
-emmip(mod4, ~ Sexual_dimorphism, CIs = TRUE, type = "response")
-
-#### Interacción: Condition:Sexual_dimorphism----
-emmeans(mod4, pairwise ~ Condition | Sexual_dimorphism)
-emmip(mod4, ~ Condition | Sexual_dimorphism, CIs = TRUE, type = "response")
-
-#### Interacción: Relationship:Sexual_dimorphism----
-emmeans(mod4, pairwise ~ Relationship | Sexual_dimorphism)
-emmip(mod4, ~ Relationship | Sexual_dimorphism, CIs = TRUE, type = "response")
-
-#### Interacción: Condition:Relationship:Sexual_dimorphism----
-emmeans(mod4, pairwise ~ Condition | Relationship + Sexual_dimorphism)
-emmip(mod4, ~ Condition | Relationship + Sexual_dimorphism, CIs = TRUE, type = "response")
+#### Efecto principal: Sexual_orientation----
+emmeans(mod4, pairwise ~ Relationship | Sexual_orientation)
+emmip(mod4, ~ Relationship | Sexual_orientation, CIs = TRUE, type = "response")
 
 ## Model 4: Choice Partnered---- 
-mod4_ptnr <- glm(Choice_count ~ Condition * Relationship * Sexual_dimorphism +
-                   Ovulating + Sexual_orientation, 
-                 family = "poisson",
-                 data = dat_choice_yes_ptnr,
-                 na.action = "na.fail")
+mod4_ptnr <- glm.nb(Choice_dif_count ~ Condition * Relationship * Sexual_orientation +
+                      Ovulating,
+                    data = dat_choice_yes_ptnr,
+                    link = identity,
+                    na.action = "na.fail")
 
-Anova(mod4_ptnr, type = 3)
-
-### FALTA AGREGAR POST-HOCS!!----
+anova(mod4_ptnr)
 
 ## Model 4: Choice Single---- 
-mod4_sngl <- glm(Choice_count ~ Condition * Relationship * Sexual_dimorphism +
-                   Ovulating + Sexual_orientation, 
-                 family = "poisson",
-                 data = dat_choice_yes_sngl,
-                 na.action = "na.fail")
+mod4_sngl <- glm.nb(Choice_dif_count ~ Condition * Relationship * Sexual_orientation +
+                      Ovulating,
+                    data = dat_choice_yes_sngl,
+                    link = identity,
+                    na.action = "na.fail")
 
-Anova(mod4_sngl, type = 3)
+anova(mod4)
 
-### FALTA AGREGAR OTROS POST-HOCS!!----
+### Contrastes post-hoc----
 
-#### Interacción: Condition:Relationship:Sexual_dimorphism----
-emmeans(mod4_sngl, pairwise ~ Relationship | Sexual_dimorphism + Condition)
-emmip(mod4_sngl, Sexual_dimorphism ~ Relationship | Condition, CIs = TRUE, type = "response")
+#### Efecto principal: Sexual_orientation----
+emmeans(mod4_sngl, pairwise ~ Sexual_orientation)
+emmip(mod4_sngl, ~ Sexual_orientation, CIs = TRUE, type = "response")
 
 # Covariates and model selection----
-
-
 
 ## DFF----
 ### Model----
@@ -1365,6 +1331,7 @@ mod1a <- lmer(DFF_dif ~ Condition * Relationship * Freq_partner_physical_violenc
                 Condition * Relationship * Freq_partner_sexual_violence +
                 Condition * Relationship * Freq_partner_infidelity + 
                 Condition * Relationship * Sexual_orientation +
+                Condition * Relationship * Men_perceived_as_dangerous +
                 (1 | ID) + (1 | Stimulus), 
               data = dat_m1,
               na.action = "na.fail")
@@ -1378,6 +1345,14 @@ dr_m1a <- dredge(mod1a,
                  trace = 2)
 toc()
 plot(dr_m1a)
+
+tic()
+pdr_m1a <- pdredge(mod1a,
+                 fixed = ~Condition * Relationship,
+                 trace = 2)
+toc()
+plot(pdr_m1a)
+plot(pdr_m1a)
 
 best_dr_m1a <- get.models(dr_m1a, subset = 1)[[1]]
 
