@@ -1346,14 +1346,6 @@ dr_m1a <- dredge(mod1a,
 toc()
 plot(dr_m1a)
 
-tic()
-pdr_m1a <- pdredge(mod1a,
-                 fixed = ~Condition * Relationship,
-                 trace = 2)
-toc()
-plot(pdr_m1a)
-plot(pdr_m1a)
-
 best_dr_m1a <- get.models(dr_m1a, subset = 1)[[1]]
 
 check_model(best_dr_m1a)
