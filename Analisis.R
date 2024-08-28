@@ -16,6 +16,7 @@ library(GGally)
 library(scales) 
 library(factoextra)
 library(FactoMineR)
+library(gtools)
 
 # Functions----
 corr.stars <- function(x) {
@@ -48,6 +49,58 @@ corr.stars <- function(x) {
   # remove last column and return the matrix (which is now a data frame)
   Rnew <- cbind(Rnew[1:length(Rnew) - 1])
   return(Rnew)
+}
+
+avgplot <- function(avgmod) {
+  # Create data frame with coefficients and proportion of models in which each term appears
+  xlb <- cbind(summary(avgmod)$coefmat.subset,
+               confint(avgmod, full = FALSE),
+               gather(as.data.frame(summary(avgmod)$coef.nmod)))
+  xlb$value <- xlb$value/max(xlb$value)
+  xlb$sig <- stars.pval(xlb$`Pr(>|z|)`)
+  xlb$sig[xlb$sig == "." ] <- "†"
+  # Replace and format term names from model tables
+  xlb$key <- str_replace_all(xlb$key, "_", " ")
+  xlb$key <- str_replace_all(xlb$key, "Freq", "Freq.")
+  xlb$key <- str_replace_all(xlb$key, ":", " × ")
+  xlb$key <- str_replace_all(xlb$key, "Low", " (Low)")
+  xlb$key <- str_replace_all(xlb$key, "Long term", " (Long term)")
+  xlb$key <- str_replace_all(xlb$key, "Predominantly heterosexual", " (Predominantly heterosexual)")
+  lvs <- as.character(unique(xlb$key))
+  xlb$key <- factor(xlb$key, levels = lvs)
+  #create data frame with number of averaged models
+  nMods <- data.frame(n = dim(avgmod$msTable)[1])
+  #create plot
+  bubplot <- ggplot(xlb, aes(x = key, y = Estimate)) +
+    geom_hline(yintercept = 0, color = "grey") +
+    geom_point(aes(size = value, color = value), alpha = 0.5) +
+    geom_errorbar(aes(ymin = `2.5 %`,
+                      ymax = `97.5 %`), 
+                  colour = "black", width=.1) +
+    geom_point(size = 1) +
+    theme_bw() +
+    labs(x = NULL, y = "Estimate") +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+    scale_size_continuous(range = c(2,8),
+                          breaks= seq(0, 1, by = 0.2)) +
+    guides(size = guide_legend(title = "Importance"),
+           color = guide_legend(title = "Importance")) +
+    scale_x_discrete(labels = levels(xlb$key),
+                     expand = c(0, 0.5)) +
+    scale_colour_gradient(low = "deepskyblue2", 
+                          high = "brown2",
+                          breaks= seq(0, 1, by = 0.2)) +
+    geom_text(aes(label = sig), y = xlb$`97.5 %`, vjust = -0.4) +
+    geom_text(data = nMods,
+              aes(x = Inf, 
+                  y = -Inf, 
+                  label = paste("Averaged models = ", n)),
+              fontface = "italic",
+              size = 3,
+              hjust = 1.1,
+              vjust = -0.5,
+              inherit.aes = FALSE)
+  return(bubplot)
 }
 
 # Cargar datos----
@@ -419,6 +472,9 @@ desc_quest <- quests_fin |>
          Victim_of_violence,
          Victim_of_gender_violence:Victim_of_armed_conflict,
          Self_esteem:Men_perceived_as_dangerous,
+         Freq_partner_physical_violence, Freq_partner_infidelity,
+         Partner_physical_violence, Partner_sexual_violence,
+         Freq_partner_sexual_violence,
          "Escasez alimentaria1":"Escasez alimentaria5") |> 
   mutate(across(starts_with("Escasez alimentaria"),
                 ~recode(.,
@@ -431,7 +487,6 @@ desc_quest <- quests_fin |>
                         levels = c("Never",
                                    "Rarely/sometimes",
                                    "Almost always"))))
-
 ### Sociodemographic numeric----
 desc_quest |> 
   select(ID, Condition, where(is.numeric)) |> 
@@ -1233,17 +1288,10 @@ emmip(mod3_sngl, ~ Relationship, CIs = TRUE, type = "response")
 emmeans(mod3_sngl, pairwise ~ Relationship | Condition + Sexual_orientation, type = "response")
 emmip(mod3_sngl, ~ Relationship | Condition + Sexual_orientation, CIs = TRUE, type = "response")
 
-
-
-
-
-
-
-
 # Model 4: Choice----
 
 ## Data----
-dat_choice_yes  <- dat |> 
+dat_m4  <- dat |> 
   mutate(Choice = as.numeric(recode(Choice,
                                     "Yes" =  "1",
                                     "No" = "0"))) |> 
@@ -1276,22 +1324,21 @@ dat_choice_yes  <- dat |>
   drop_na()
 
 ### Partnered participants----
-dat_choice_yes_ptnr <- dat_choice_yes |>
+dat_m4_ptnr <- dat_m4 |>
   filter(Relationship_current == "Yes")
 ### Single participants----
-dat_choice_yes_sngl <- dat_choice_yes |>
+dat_m4_sngl <- dat_m4 |>
   filter(Relationship_current == "No")
 
 ## Model 4: Choice General----
 mod4 <- glm.nb(Choice_dif_count ~ Condition * Relationship * Sexual_orientation +
                  Ovulating,
-               data = dat_choice_yes,
-               link = identity,
-               na.action = "na.fail")
+               family = "poisson",
+             data = dat_m4,
+             na.action = "na.fail")
 
 summary(mod4, corr = FALSE)
 anova(mod4)
-check_distribution(mod4)
 
 ### Contrastes post-hoc----
 
@@ -1302,7 +1349,7 @@ emmip(mod4, ~ Relationship | Sexual_orientation, CIs = TRUE, type = "response")
 ## Model 4: Choice Partnered---- 
 mod4_ptnr <- glm.nb(Choice_dif_count ~ Condition * Relationship * Sexual_orientation +
                       Ovulating,
-                    data = dat_choice_yes_ptnr,
+                    data = dat_m4_ptnr,
                     link = identity,
                     na.action = "na.fail")
 
@@ -1311,7 +1358,7 @@ anova(mod4_ptnr)
 ## Model 4: Choice Single---- 
 mod4_sngl <- glm.nb(Choice_dif_count ~ Condition * Relationship * Sexual_orientation +
                       Ovulating,
-                    data = dat_choice_yes_sngl,
+                    data = dat_m4_sngl,
                     link = identity,
                     na.action = "na.fail")
 
@@ -1327,11 +1374,11 @@ emmip(mod4_sngl, ~ Sexual_orientation, CIs = TRUE, type = "response")
 
 ## DFF----
 ### Model----
-mod1a <- lmer(DFF_dif ~ Condition * Relationship * Freq_partner_physical_violence +
-                Condition * Relationship * Freq_partner_sexual_violence +
-                Condition * Relationship * Freq_partner_infidelity + 
-                Condition * Relationship * Sexual_orientation +
-                Condition * Relationship * Men_perceived_as_dangerous +
+mod1a <- lmer(DFF_dif ~ Condition * Relationship * Sexual_orientation +
+                Freq_partner_physical_violence +
+                Freq_partner_sexual_violence +
+                Freq_partner_infidelity + 
+                Men_perceived_as_dangerous +
                 (1 | ID) + (1 | Stimulus), 
               data = dat_m1,
               na.action = "na.fail")
@@ -1339,36 +1386,46 @@ mod1a <- lmer(DFF_dif ~ Condition * Relationship * Freq_partner_physical_violenc
 anova(mod1a)
 
 ### Dredge---
-tic()
 dr_m1a <- dredge(mod1a,
                  fixed = ~Condition * Relationship,
                  trace = 2)
-toc()
 plot(dr_m1a)
 
-best_dr_m1a <- get.models(dr_m1a, subset = 1)[[1]]
+### Model average----
+avg_dr_m1a <- model.avg(dr_m1a, subset = delta <= 2, fit = TRUE)
+avgplot(avg_dr_m1a)
 
-check_model(best_dr_m1a)
+Freq_partner_physical_violence_levels <- c(mean(dat_m1$Freq_partner_physical_violence) - sd(dat_m1$Freq_partner_physical_violence),
+                                           mean(dat_m1$Freq_partner_physical_violence),
+                                           mean(dat_m1$Freq_partner_physical_violence) + sd(dat_m1$Freq_partner_physical_violence))
 
-check_distribution(best_dr_m1a)
+bla <- as.data.frame(emmeans(avg_dr_m1a,
+                      ~ Condition + Relationship + Sexual_orientation + Freq_partner_physical_violence,
+                      at = list(Freq_partner_physical_violence = Freq_partner_physical_violence_levels),
+                      data = dat_m1)) |> 
+  mutate(Freq_partner_physical_violence_levels = paste0(rep(c("-SD = ", "Mean = ", "+SD = "), each = 8),
+                                                 round(Freq_partner_physical_violence, 3))) |> 
+  mutate(Freq_partner_physical_violence_levels = fct_reorder(Freq_partner_physical_violence_levels,
+                                                             Freq_partner_physical_violence))
 
-bbmle::AICctab(mod1, best_dr_m1a,
-               base = TRUE, weights = TRUE)
-
-ggplot(cbind(best_dr_m1a@frame, predict(best_dr_m1a)), aes(x = DFF_dif, y = predict(best_dr_m1a))) +
-         geom_point(alpha = 0.5) +
-         geom_smooth(method = "lm") +
-         #facet_grid(Condition ~ Relationship) +
-         stat_cor(p.accuracy = 0.001, r.accuracy = 0.01, cor.coef.name = "rho", colour = "black") +
-         stat_regline_equation(label.y = 60, colour = "black", size = 3)
+ggplot(bla, aes(y = emmean, x = Relationship, color = Condition)) +
+  geom_point(position = position_dodge(0.9)) +
+  geom_errorbar(aes(ymin = emmean-SE,
+                    ymax = emmean+SE,
+                    group = Condition), 
+                colour = "black", 
+                width=.1,
+                position = position_dodge(0.9)) +
+  geom_point(size = 1) +
+  facet_grid(Sexual_orientation ~ Freq_partner_physical_violence_levels)
          
-
 ## TDF----
 ### Model----
-mod2a <- lmer(TDF_dif ~ Condition * Relationship * Freq_partner_physical_violence +
-                Condition * Relationship * Freq_partner_sexual_violence +
-                Condition * Relationship * Freq_partner_infidelity + 
-                Condition * Relationship * Sexual_orientation +
+mod2a <- lmer(TDF_dif ~ Condition * Relationship * Sexual_orientation +
+                Freq_partner_physical_violence +
+                Freq_partner_sexual_violence +
+                Freq_partner_infidelity + 
+                Men_perceived_as_dangerous +
                 (1 | ID) + (1 | Stimulus), 
               data = dat_m2,
               na.action = "na.fail")
@@ -1376,35 +1433,23 @@ mod2a <- lmer(TDF_dif ~ Condition * Relationship * Freq_partner_physical_violenc
 anova(mod2a)
 
 ### Dredge---
-tic()
 dr_m2a <- dredge(mod2a,
                  fixed = ~Condition * Relationship,
                  trace = 2)
-toc()
 plot(dr_m2a)
 
-best_dr_m2a <- get.models(dr_m2a, subset = 1)[[1]]
-
-check_model(best_dr_m2a)
-
-check_distribution(best_dr_m2a)
-
-bbmle::AICctab(mod2, best_dr_m2a,
-               base = TRUE, weights = TRUE)
-
-ggplot(cbind(best_dr_m2a@frame, predict(best_dr_m2a)), aes(x = TDF_dif, y = predict(best_dr_m2a))) +
-  geom_point(alpha = 0.5) +
-  geom_smooth(method = "lm") +
-  #facet_grid(Condition ~ Relationship) +
-  stat_cor(p.accuracy = 0.001, r.accuracy = 0.01, cor.coef.name = "rho", colour = "black") +
-  stat_regline_equation(label.y = 1000, colour = "black", size = 3)
+### Model average----
+####CORREGIR!!!!----
+avg_dr_m2a <- model.avg(dr_m2a, subset = delta <= 2, fit = TRUE)
+avgplot(avg_dr_m2a)
 
 ## NF----
 ### Model----
-mod3a <- lmer(NF_dif ~ Condition * Relationship * Freq_partner_physical_violence +
-                Condition * Relationship * Freq_partner_sexual_violence +
-                Condition * Relationship * Freq_partner_infidelity + 
-                Condition * Relationship * Sexual_orientation +
+mod3a <- lmer(NF_dif ~ Condition * Relationship * Sexual_orientation +
+                Freq_partner_physical_violence +
+                Freq_partner_sexual_violence +
+                Freq_partner_infidelity + 
+                Men_perceived_as_dangerous +
                 (1 | ID) + (1 | Stimulus), 
               data = dat_m3,
               na.action = "na.fail")
@@ -1412,114 +1457,104 @@ mod3a <- lmer(NF_dif ~ Condition * Relationship * Freq_partner_physical_violence
 anova(mod3a)
 
 ### Dredge---
-tic()
 dr_m3a <- dredge(mod3a,
                  fixed = ~Condition * Relationship,
                  trace = 2)
-toc()
 plot(dr_m3a)
 
-best_dr_m3a <- get.models(dr_m3a, subset = 1)[[1]]
-
-bbmle::AICctab(mod3, mod3a, best_dr_m3a,
-               base = TRUE, weights = TRUE)
-
-ggplot(cbind(best_dr_m3a@frame, predict(best_dr_m3a)), aes(x = NF_dif, y = predict(best_dr_m3a))) +
-  geom_hex(bins = 10, color = "white") +
-  scale_fill_gradient(low =  "#00AFBB", high = "#FC4E07") +
-  geom_smooth(method = "lm") +
-  #facet_grid(Condition ~ Relationship) +
-  stat_cor(p.accuracy = 0.001, r.accuracy = 0.01, cor.coef.name = "rho", colour = "black") +
-  stat_regline_equation(label.y = 0, colour = "black", size = 3)
+### Model average----
+avg_dr_m3a <- model.avg(dr_m3a, subset = delta <= 2, fit = TRUE)
+avgplot(avg_dr_m3a)
 
 ## Choice----
 ### Model----
-mod4a <- glm(Choice_dif_count ~ 
-               Condition * Relationship * Freq_partner_physical_violence +
-               Condition * Relationship * Freq_partner_sexual_violence +
-               Condition * Relationship * Freq_partner_infidelity +
-               Condition * Relationship * Sexual_orientation, 
-             family = "poisson",
-             data = dat_choice_yes,
-             na.action = "na.fail")
+mod4a <- glm.nb(Choice_dif_count ~ Condition * Relationship * Sexual_orientation +
+                  Freq_partner_physical_violence +
+                  Freq_partner_sexual_violence +
+                  Freq_partner_infidelity + 
+                  Men_perceived_as_dangerous,
+                data = dat_m4,
+                na.action = "na.fail")
+
 ### Dredge---
-tic()
 dr_m4a <- dredge(mod4a,
                  fixed = ~Condition * Relationship,
                  trace = 2)
-toc()
 plot(dr_m4a)
 
+### Model average----
+avg_dr_m4a <- model.avg(dr_m4a, subset = delta <= 2, fit = TRUE)
+avgplot(avg_dr_m4a)
+summary(avg_dr_m4a)
 
-best_dr_m4a <- get.models(dr_m4a, subset = 1)[[1]]
+Men_perceived_as_dangerous_levels <- c(mean(dat_m4$Men_perceived_as_dangerous) - sd(dat_m4$Men_perceived_as_dangerous),
+                                       mean(dat_m4$Men_perceived_as_dangerous),
+                                       mean(dat_m4$Men_perceived_as_dangerous) + sd(dat_m4$Men_perceived_as_dangerous))
 
-check_model(best_dr_m4a)
+bla <- as.data.frame(emmeans(avg_dr_m4a,
+                             ~ Condition + Relationship + Sexual_orientation + Men_perceived_as_dangerous,
+                             at = list(Men_perceived_as_dangerous = Men_perceived_as_dangerous_levels),
+                             data = dat_m4)) |> 
+  mutate(Men_perceived_as_dangerous_levels = paste0(rep(c("-SD = ", "Mean = ", "+SD = "), each = 8),
+                                                        round(Men_perceived_as_dangerous, 3))) |> 
+  mutate(Men_perceived_as_dangerous_levels = fct_reorder(Men_perceived_as_dangerous_levels,
+                                                  Men_perceived_as_dangerous))
 
-check_distribution(best_dr_m4a)
-
-bbmle::AICctab(mod4, mod4a, best_dr_m4a,
-               base = TRUE, weights = TRUE)
-
-ggplot(cbind(best_dr_m4a$data, predict(best_dr_m4a)), aes(x = Choice_dif_count, y = predict(best_dr_m4a))) +
-  #geom_point() +
-  geom_hex(bins = 10, color = "white") +
-  scale_fill_gradient(low =  "#00AFBB", high = "#FC4E07") +
-  geom_smooth(method = "lm") +
-  #facet_grid(Condition ~ Relationship) +
-  stat_cor(p.accuracy = 0.001, r.accuracy = 0.01, cor.coef.name = "rho", colour = "black") +
-  stat_regline_equation(label.y = 4, colour = "black", size = 3)
+ggplot(bla, aes(y = emmean, x = Relationship, color = Condition)) +
+  geom_point(position = position_dodge(0.9)) +
+  geom_errorbar(aes(ymin = emmean-SE,
+                    ymax = emmean+SE,
+                    group = Condition), 
+                colour = "black", 
+                width=.1,
+                position = position_dodge(0.9)) +
+  geom_point(size = 1) +
+  facet_grid(Sexual_orientation ~ Men_perceived_as_dangerous_levels)
 
 ### Model partnered----
-mod4a_yes <- glm(Choice_dif_count ~ 
-                   Condition * Relationship * Freq_partner_physical_violence +
-                   Condition * Relationship * Freq_partner_sexual_violence +
-                   Condition * Relationship * Freq_partner_infidelity +
-                   Condition * Relationship * Sexual_orientation, 
-                 family = "poisson",
-                 data = dat_choice_yes_yes,
-                 na.action = "na.fail")
+mod4a_ptnr <- glm.nb(Choice_dif_count ~ Condition * Relationship * Sexual_orientation +
+                       Freq_partner_physical_violence +
+                       Freq_partner_sexual_violence +
+                       Freq_partner_infidelity + 
+                       Men_perceived_as_dangerous,
+                     data = dat_m4_ptnr,
+                    na.action = "na.fail")
 
-Anova(mod4a_yes, type = 3)
+anova(mod4a_ptnr)
 
 ### Dredge---
-dr_m4a_yes <- dredge(mod4a_yes,
-                     fixed = ~Condition * Relationship,
-                     trace = 2)
-
-plot(dr_m4a_yes)
+dr_m4a_ptnr <- dredge(mod4a_ptnr,
+                      fixed = ~ Condition * Relationship,
+                      trace = 2)
+plot(dr_m4a_ptnr)
 
 ### Model single----
-mod4a_no <- glm(Choice_dif_count ~ 
-                  Condition * Relationship * Freq_partner_physical_violence +
-                  Condition * Relationship * Freq_partner_sexual_violence +
-                  Condition * Relationship * Freq_partner_infidelity +
-                  Condition * Relationship * Sexual_orientation, 
-                family = "poisson",
-                data = dat_choice_yes_no,
-                na.action = "na.fail")
+mod4a_sngl <- glm.nb(Choice_dif_count ~ Condition * Relationship * Sexual_orientation +
+                       Freq_partner_physical_violence +
+                       Freq_partner_sexual_violence +
+                       Freq_partner_infidelity + 
+                       Men_perceived_as_dangerous,
+                     data = dat_m4_sngl,
+                     na.action = "na.fail")
 
-Anova(mod4a_no)
+Anova(mod4a_sngl)
 
 ### Dredge---
 tic()
-dr_m4a_no <- dredge(mod4a_no,
-                    fixed = ~Condition * Relationship,
-                    trace = 2)
+dr_m4a_sngl <- dredge(mod4a_sngl,
+                      fixed = ~ Condition * Relationship,
+                      trace = 2)
 toc()
-plot(dr_m4a_no)
-
-
-
-
-
+plot(dr_m4a_sngl)
 
 dat_corr_choice_TDF_dif <- dat_dif |> 
   group_by(ID, Relationship, Condition) |> 
   summarise(TDF_dif = mean(TDF_dif)) |> 
-  left_join(dat_choice_yes |> 
+  left_join(dat_m4 |> 
               select(ID, Relationship, Condition, Choice_dif),
             by = c("ID", "Relationship", "Condition"))
 
+## Plot corr TDF and Choice
 ggplot(dat_corr_choice_TDF_dif, aes(x = Choice_dif, y = TDF_dif)) +
   geom_point(alpha = 0.5) +
   geom_smooth(method = "lm") +
