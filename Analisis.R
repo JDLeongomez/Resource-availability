@@ -1222,17 +1222,6 @@ mod5 <- lmer(Attr_dif ~ Condition +
 
 anova(mod5)
 
-### Contrastes post-hoc----
-
-#### Efecto principal: Relationship ----
-emmeans(mod3, pairwise ~ Relationship)
-emmip(mod3, ~ Relationship, CIs = TRUE, type = "response")
-
-#### Interacción: Relationship:Condition----
-emmeans(mod3, pairwise ~ Relationship | Condition)
-emmip(mod3, Condition ~ Relationship, CIs = TRUE, type = "response")
-
-
 # Covariates and model selection----
 
 ## DFF----
