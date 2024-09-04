@@ -1252,10 +1252,10 @@ Freq_partner_physical_violence_levels <- c(mean(dat_m1$Freq_partner_physical_vio
                                            mean(dat_m1$Freq_partner_physical_violence) + sd(dat_m1$Freq_partner_physical_violence))
 
 bla <- as.data.frame(emmeans(avg_dr_m1a,
-                      ~ Condition + Relationship + Sexual_orientation + Freq_partner_physical_violence,
+                      ~ Condition + Relationship + Freq_partner_physical_violence,
                       at = list(Freq_partner_physical_violence = Freq_partner_physical_violence_levels),
                       data = dat_m1)) |> 
-  mutate(Freq_partner_physical_violence_levels = paste0(rep(c("-SD = ", "Mean = ", "+SD = "), each = 8),
+  mutate(Freq_partner_physical_violence_levels = paste0(rep(c("-SD = ", "Mean = ", "+SD = "), each = 4),
                                                  round(Freq_partner_physical_violence, 3))) |> 
   mutate(Freq_partner_physical_violence_levels = fct_reorder(Freq_partner_physical_violence_levels,
                                                              Freq_partner_physical_violence))
@@ -1263,17 +1263,15 @@ bla <- as.data.frame(emmeans(avg_dr_m1a,
 ggplot(bla, aes(y = emmean, x = Relationship, color = Condition)) +
   geom_point(position = position_dodge(0.9)) +
   geom_errorbar(aes(ymin = emmean-SE,
-                    ymax = emmean+SE,
-                    group = Condition), 
+                    ymax = emmean+SE), 
                 colour = "black", 
-                width=.1,
-                position = position_dodge(0.9)) +
+                width=.1) +
   geom_point(size = 1) +
-  facet_grid(Sexual_orientation ~ Freq_partner_physical_violence_levels)
+  facet_grid(Freq_partner_physical_violence_levels ~ Condition)
          
 ## TDF----
 ### Model----
-mod2a <- lmer(TDF_dif ~ Condition * Relationship * Sexual_orientation +
+mod2a <- lmer(TDF_dif ~ Condition * Relationship +
                 Freq_partner_physical_violence +
                 Freq_partner_sexual_violence +
                 Freq_partner_infidelity + 
@@ -1297,7 +1295,7 @@ avgplot(avg_dr_m2a)
 
 ## NF----
 ### Model----
-mod3a <- lmer(NF_dif ~ Condition * Relationship * Sexual_orientation +
+mod3a <- lmer(NF_dif ~ Condition * Relationship +
                 Freq_partner_physical_violence +
                 Freq_partner_sexual_violence +
                 Freq_partner_infidelity + 
@@ -1320,7 +1318,7 @@ avgplot(avg_dr_m3a)
 
 ## Choice----
 ### Model----
-mod4a <- glm.nb(Choice_dif_count ~ Condition * Relationship * Sexual_orientation +
+mod4a <- glm.nb(Choice_dif_count ~ Condition * Relationship +
                   Freq_partner_physical_violence +
                   Freq_partner_sexual_violence +
                   Freq_partner_infidelity + 
@@ -1344,10 +1342,10 @@ Men_perceived_as_dangerous_levels <- c(mean(dat_m4$Men_perceived_as_dangerous) -
                                        mean(dat_m4$Men_perceived_as_dangerous) + sd(dat_m4$Men_perceived_as_dangerous))
 
 bla <- as.data.frame(emmeans(avg_dr_m4a,
-                             ~ Condition + Relationship + Sexual_orientation + Men_perceived_as_dangerous,
+                             ~ Condition + Relationship + Men_perceived_as_dangerous,
                              at = list(Men_perceived_as_dangerous = Men_perceived_as_dangerous_levels),
                              data = dat_m4)) |> 
-  mutate(Men_perceived_as_dangerous_levels = paste0(rep(c("-SD = ", "Mean = ", "+SD = "), each = 8),
+  mutate(Men_perceived_as_dangerous_levels = paste0(rep(c("-SD = ", "Mean = ", "+SD = "), each = 4),
                                                         round(Men_perceived_as_dangerous, 3))) |> 
   mutate(Men_perceived_as_dangerous_levels = fct_reorder(Men_perceived_as_dangerous_levels,
                                                   Men_perceived_as_dangerous))
@@ -1361,10 +1359,10 @@ ggplot(bla, aes(y = emmean, x = Relationship, color = Condition)) +
                 width=.1,
                 position = position_dodge(0.9)) +
   geom_point(size = 1) +
-  facet_grid(Sexual_orientation ~ Men_perceived_as_dangerous_levels)
+  facet_grid(~ Men_perceived_as_dangerous_levels)
 
 ### Model partnered----
-mod4a_ptnr <- glm.nb(Choice_dif_count ~ Condition * Relationship * Sexual_orientation +
+mod4a_ptnr <- glm.nb(Choice_dif_count ~ Condition * Relationship +
                        Freq_partner_physical_violence +
                        Freq_partner_sexual_violence +
                        Freq_partner_infidelity + 
@@ -1380,25 +1378,10 @@ dr_m4a_ptnr <- dredge(mod4a_ptnr,
                       trace = 2)
 plot(dr_m4a_ptnr)
 
-### Model single----
-mod4a_sngl <- glm.nb(Choice_dif_count ~ Condition * Relationship * Sexual_orientation +
-                       Freq_partner_physical_violence +
-                       Freq_partner_sexual_violence +
-                       Freq_partner_infidelity + 
-                       Men_perceived_as_dangerous,
-                     data = dat_m4_sngl,
-                     na.action = "na.fail")
 
-Anova(mod4a_sngl)
 
-### Dredge---
-tic()
-dr_m4a_sngl <- dredge(mod4a_sngl,
-                      fixed = ~ Condition * Relationship,
-                      trace = 2)
-toc()
-plot(dr_m4a_sngl)
 
+## Plot corr TDF and Choice
 dat_corr_choice_TDF_dif <- dat_dif |> 
   group_by(ID, Relationship, Condition) |> 
   summarise(TDF_dif = mean(TDF_dif)) |> 
@@ -1406,7 +1389,6 @@ dat_corr_choice_TDF_dif <- dat_dif |>
               select(ID, Relationship, Condition, Choice_dif),
             by = c("ID", "Relationship", "Condition"))
 
-## Plot corr TDF and Choice
 ggplot(dat_corr_choice_TDF_dif, aes(x = Choice_dif, y = TDF_dif)) +
   geom_point(alpha = 0.5) +
   geom_smooth(method = "lm") +
