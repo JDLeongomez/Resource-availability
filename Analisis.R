@@ -17,6 +17,9 @@ library(scales)
 library(factoextra)
 library(FactoMineR)
 library(gtools)
+library(bbmle)
+
+options(scipen = 9999)
 
 # Functions----
 corr.stars <- function(x) {
@@ -415,16 +418,6 @@ n_recolectado <- dat_int |>
   summarise(n = n_distinct(ID))
 
 ## Base de datos filtrada----
-dat <- dat_int |> 
-  filter(Control_question_1 == "No" & Control_question_2 == "No" 
-         & Ovulating != "Yes") |> 
-  filter(Sexual_orientation %in% 
-           c("Exclusively heterosexual",  
-             "Predominantly heterosexual")) |> 
-  mutate(Stimulus = str_remove_all(Stimulus, "F")) |> 
-  mutate(Stimulus = str_remove_all(Stimulus, "M")) |> 
-  ungroup()
-
 dat <- dat_int |> 
   filter(Control_question_1 == "No" 
          & Control_question_2 == "No" 
@@ -1086,32 +1079,50 @@ Anova(mod_attr, type = 3)
 # Model 1: DFF----
 
 ## Data----
-dat_m1 <- dat_dif |> 
-  select(DFF_dif, Condition, Relationship,
+dat_m1 <- dat |> 
+  select(DFF, Condition, Relationship, Sexual_dimorphism,
          ID, Stimulus,
          Freq_partner_physical_violence, Freq_partner_sexual_violence,
-         Freq_partner_infidelity, Men_perceived_as_dangerous) |> 
+         Freq_partner_infidelity, Men_perceived_as_dangerous,
+         Perceived_home_safety) |> 
+  filter(DFF >= 100 & DFF <= 1000) |> 
   drop_na()
 
 ## Model 1: DFF General---- 
-mod1 <- lmer(DFF_dif ~ Condition * Relationship +
+mod1 <- lmer(DFF ~ Condition * Relationship * Sexual_dimorphism +
                (1 | ID) + (1 | Stimulus), 
              data = dat_m1,
              na.action = "na.fail")
 anova(mod1)
 
+### Contrastes post-hoc----
+
+#### Efecto principal: Sexual_dimorphism ----
+emmeans(mod1, pairwise ~ Sexual_dimorphism)
+emmip(mod1, ~ Sexual_dimorphism, CIs = TRUE, type = "response")
+
+#### Diseño completo ----
+emmeans(mod1, pairwise ~ Sexual_dimorphism | Relationship + Condition)
+emmip(mod1, Relationship ~ Sexual_dimorphism | Condition, 
+      CIs = TRUE, type = "response")
+
 # Model 2: TDF----
 
 ## Data----
-dat_m2 <- dat_dif |> 
-  select(TDF_dif, Condition, Relationship, 
+dat_m2 <- dat |> 
+  select(TDF, Condition, Relationship, Sexual_dimorphism,
          ID, Stimulus, 
          Freq_partner_physical_violence, Freq_partner_sexual_violence,
-         Freq_partner_infidelity, Men_perceived_as_dangerous) |> 
+         Freq_partner_infidelity, Men_perceived_as_dangerous,
+         Perceived_home_safety) |> 
+  group_by(ID, Stimulus, Relationship) |> 
+  filter(!(sum(TDF[Sexual_dimorphism == "Masculinized"] == 0) > 0 & 
+             sum(TDF[Sexual_dimorphism == "Feminized"] == 0) > 0)) |>
+  ungroup() |> 
   drop_na()
 
 ## Model 2: TDF General----
-mod2 <- lmer(TDF_dif ~ Condition * Relationship +
+mod2 <- lmer(TDF ~ Condition * Relationship * Sexual_dimorphism +
                (1 | ID) + (1 | Stimulus), 
              data = dat_m2,
              na.action = "na.fail")
@@ -1119,40 +1130,68 @@ anova(mod2)
 
 ### Contrastes post-hoc----
 
-#### Efecto principal: Relationship ----
-emmeans(mod2, pairwise ~ Relationship)
-emmip(mod2, ~ Relationship, CIs = TRUE, type = "response")
+#### Efecto principal: Sexual_dimorphism ----
+emmeans(mod2, pairwise ~ Sexual_dimorphism)
+emmip(mod2, ~ Sexual_dimorphism, CIs = TRUE, type = "response")
 
-#### Interacción: Relationship:Condition----
-emmeans(mod2, pairwise ~ Relationship | Condition)
-emmip(mod2, Condition ~ Relationship, CIs = TRUE, type = "response")
+#### Interacción: Condition:Sexual_dimorphism----
+emmeans(mod2, pairwise ~ Sexual_dimorphism | Condition)
+emmip(mod2, Condition ~ Sexual_dimorphism, CIs = TRUE, type = "response")
+
+#### Interacción: Relationship:Sexual_dimorphism---- 
+emmeans(mod2, pairwise ~ Sexual_dimorphism | Relationship)
+emmip(mod2, Relationship ~ Sexual_dimorphism, CIs = TRUE, type = "response")
+
+#### Diseño completo ----
+emmeans(mod2, pairwise ~ Sexual_dimorphism | Relationship + Condition)
+emmip(mod2, Relationship ~ Sexual_dimorphism | Condition, 
+      CIs = TRUE, type = "response")
 
 # Model 3: NF----
 
 ## Data----
-dat_m3 <- dat_dif |> 
-  select(NF_dif, Condition, Relationship,
-         ID, Stimulus,
+dat_m3 <- dat |> 
+  select(NF, Condition, Relationship, Sexual_dimorphism,
+         ID, Stimulus, 
          Freq_partner_physical_violence, Freq_partner_sexual_violence,
-         Freq_partner_infidelity, Men_perceived_as_dangerous) |> 
+         Freq_partner_infidelity, Men_perceived_as_dangerous,
+         Perceived_home_safety) |> 
+  group_by(ID, Stimulus, Relationship) |> 
+  filter(!(sum(NF[Sexual_dimorphism == "Masculinized"] == 0) > 0 & 
+             sum(NF[Sexual_dimorphism == "Feminized"] == 0) > 0)) |>
+  ungroup() |> 
   drop_na()
 
 ## Model 3: NF General----
-mod3 <- lmer(NF_dif ~ Condition * Relationship +
+mod3 <- lmer(NF ~ Condition * Relationship * Sexual_dimorphism +
                 (1 | ID) + (1 | Stimulus), 
-              data = dat_m3)
+              data = dat_m3,
+             na.action = "na.fail")
 
 anova(mod3)
 
 ### Contrastes post-hoc----
 
-#### Efecto principal: Relationship ----
-emmeans(mod3, pairwise ~ Relationship)
-emmip(mod3, ~ Relationship, CIs = TRUE, type = "response")
+#### Efecto principal: Sexual_dimorphism ----
+emmeans(mod3, pairwise ~ Sexual_dimorphism)
+emmip(mod3, ~ Sexual_dimorphism, CIs = TRUE, type = "response")
 
-#### Interacción: Relationship:Condition----
+#### Interacción: Condition:Sexual_dimorphism----
+emmeans(mod3, pairwise ~ Sexual_dimorphism | Condition)
+emmip(mod3, Condition ~ Sexual_dimorphism, CIs = TRUE, type = "response")
+
+#### Interacción: Relationship:Sexual_dimorphism---- 
+emmeans(mod3, pairwise ~ Sexual_dimorphism | Relationship)
+emmip(mod3, Relationship ~ Sexual_dimorphism, CIs = TRUE, type = "response")
+
+#### Interacción: Condition:Relationship---- 
 emmeans(mod3, pairwise ~ Relationship | Condition)
 emmip(mod3, Condition ~ Relationship, CIs = TRUE, type = "response")
+
+#### Diseño completo ----
+emmeans(mod3, pairwise ~ Sexual_dimorphism | Relationship + Condition)
+emmip(mod3, Relationship ~ Sexual_dimorphism | Condition, 
+      CIs = TRUE, type = "response")
 
 # Model 4: Choice----
 
@@ -1161,114 +1200,191 @@ dat_m4  <- dat |>
   mutate(Choice = as.numeric(recode(Choice,
                                     "Yes" =  "1",
                                     "No" = "0"))) |> 
-  group_by(ID, Sexual_dimorphism, Relationship, Condition, Choice, 
+  group_by(ID, Sexual_dimorphism, Relationship, Condition,
            Freq_partner_physical_violence,
            Freq_partner_sexual_violence,
            Freq_partner_infidelity,
-           Men_perceived_as_dangerous) |> 
+           Men_perceived_as_dangerous,
+           Perceived_home_safety) |> 
   summarise(Choice = sum(Choice)) |> 
   group_by(ID, Sexual_dimorphism, Relationship, Condition, 
            Freq_partner_physical_violence,
            Freq_partner_sexual_violence,
            Freq_partner_infidelity,
-           Men_perceived_as_dangerous) |> 
+           Men_perceived_as_dangerous,
+           Perceived_home_safety) |> 
   summarise(Choice_count = sum(Choice)) |> 
+  drop_na()
+
+dat_m4  <- dat |> 
+  mutate(Choice = as.numeric(recode(Choice,
+                                    "Yes" =  "1",
+                                    "No" = "0"))) |> 
+  group_by(ID, Stimulus, Relationship) |> 
+  filter(!(sum(Choice[Sexual_dimorphism == "Masculinized"] == 0) > 0 & 
+             sum(Choice[Sexual_dimorphism == "Feminized"] == 0) > 0)) |>
   ungroup() |> 
-  group_by(ID, Relationship, Condition, 
+  group_by(ID, Sexual_dimorphism, Relationship, Condition,
            Freq_partner_physical_violence,
            Freq_partner_sexual_violence,
-           Freq_partner_infidelity, 
-           Men_perceived_as_dangerous) |> 
-  summarise(Choice_dif = Choice_count[Sexual_dimorphism == "Masculinized"] - 
-              Choice_count[Sexual_dimorphism == "Feminized"]) |>
+           Freq_partner_infidelity,
+           Men_perceived_as_dangerous,
+           Perceived_home_safety) |> 
+  summarise(Choice = sum(Choice)) |> 
   ungroup() |> 
-  mutate(across(where(is.character), as.factor),
-         Choice_dif_count = Choice_dif+30,
-         Choice_dif_prop = (Choice_dif+30)/60) |> 
+  mutate(Choice_prop = Choice/60) |> 
   drop_na()
 
 ## Model 4: Choice General----
-mod4 <- glm.nb(Choice_dif_count ~ Condition * Relationship,
-               data = dat_m4,
-               na.action = "na.fail")
+mod4 <- lm(Choice_prop ~ Condition * Relationship * Sexual_dimorphism,
+            data = dat_m4,
+            na.action = "na.fail")
 
-summary(mod4, corr = FALSE)
 anova(mod4)
+
+check_model(mod4)
+check_distribution(mod4)
 
 ### Contrastes post-hoc----
 
-#### Efecto principal: Relationship----
-emmeans(mod4, pairwise ~ Relationship)
-emmip(mod4, ~ Relationship, CIs = TRUE, type = "response")
+#### Efecto principal: Sexual_dimorphism ----
+emmeans(mod4, pairwise ~ Sexual_dimorphism)
+emmip(mod4, ~ Sexual_dimorphism, CIs = TRUE, type = "response")
 
-#### Interacción: Relationship:Condition----
-emmeans(mod4, pairwise ~ Relationship | Condition)
-emmip(mod4, Condition ~ Relationship, CIs = TRUE, type = "response")
+#### Interacción: Relationship:Sexual_dimorphism---- 
+emmeans(mod4, pairwise ~ Sexual_dimorphism | Relationship)
+emmip(mod4, Relationship ~ Sexual_dimorphism, CIs = TRUE, type = "response")
+
+#### Diseño completo ----
+emmeans(mod4, pairwise ~ Sexual_dimorphism | Relationship + Condition)
+emmip(mod4, Relationship ~ Sexual_dimorphism | Condition, 
+      CIs = TRUE, type = "response")
 
 # Model 5: Attractiveness ratings----
 
 ## Data----
-dat_m5 <- dat_dif |> 
-  select(Attr_dif, Condition, Relationship,
+dat_m5 <- dat |> 
+  select(Attractiveness, Condition, Sexual_dimorphism,
          ID, Stimulus,
-         Freq_partner_physical_violence, Freq_partner_sexual_violence,
-         Freq_partner_infidelity, Men_perceived_as_dangerous) |> 
+         Freq_partner_physical_violence, 
+         Freq_partner_sexual_violence,
+         Freq_partner_infidelity, 
+         Men_perceived_as_dangerous,
+         Perceived_home_safety) |> 
   drop_na()
 
 ## Model 3: NF General----
-mod5 <- lmer(Attr_dif ~ Condition +
+mod5 <- lmer(Attractiveness ~ Condition * Sexual_dimorphism +
                (1 | ID) + (1 | Stimulus), 
              data = dat_m5)
 
 anova(mod5)
 
+### Contrastes post-hoc----
+
+#### Efecto principal: Sexual_dimorphism ----
+emmeans(mod5, pairwise ~ Sexual_dimorphism)
+emmip(mod5, ~ Sexual_dimorphism, CIs = TRUE, type = "response")
+
+#### Interacción: Condition:Sexual_dimorphism---- 
+emmeans(mod4, pairwise ~ Sexual_dimorphism | Condition)
+emmip(mod4, Condition ~ Sexual_dimorphism, CIs = TRUE, type = "response")
+
 # Covariates and model selection----
 
 ## DFF----
-### Model----
-mod1a <- lmer(DFF_dif ~ Condition * Relationship  +
-                Freq_partner_physical_violence +
-                Freq_partner_sexual_violence +
-                Freq_partner_infidelity + 
-                Men_perceived_as_dangerous +
+### Models----
+mod1a <- lmer(DFF ~
+                Condition * Relationship * Sexual_dimorphism * Men_perceived_as_dangerous +
                 (1 | ID) + (1 | Stimulus), 
               data = dat_m1,
               na.action = "na.fail")
 
-anova(mod1a)
+mod1b <- lmer(DFF ~
+                Condition * Relationship * Sexual_dimorphism * Freq_partner_physical_violence +
+                (1 | ID) + (1 | Stimulus), 
+              data = dat_m1,
+              na.action = "na.fail")
 
-### Dredge---
-dr_m1a <- dredge(mod1a,
-                 fixed = ~Condition * Relationship,
-                 trace = 2)
-plot(dr_m1a)
+mod1c <- lmer(DFF ~
+                Condition * Relationship * Sexual_dimorphism * Freq_partner_sexual_violence +
+                (1 | ID) + (1 | Stimulus), 
+              data = dat_m1,
+              na.action = "na.fail")
 
-### Model average----
-avg_dr_m1a <- model.avg(dr_m1a, subset = delta <= 2, fit = TRUE)
-avgplot(avg_dr_m1a)
+mod1d <- lmer(DFF ~
+                Condition * Relationship * Sexual_dimorphism * Freq_partner_infidelity +
+                (1 | ID) + (1 | Stimulus), 
+              data = dat_m1,
+              na.action = "na.fail")
 
-Freq_partner_physical_violence_levels <- c(mean(dat_m1$Freq_partner_physical_violence) - sd(dat_m1$Freq_partner_physical_violence),
-                                           mean(dat_m1$Freq_partner_physical_violence),
-                                           mean(dat_m1$Freq_partner_physical_violence) + sd(dat_m1$Freq_partner_physical_violence))
+mod1e <- lmer(DFF ~
+                Condition * Relationship * Sexual_dimorphism * Perceived_home_safety +
+                (1 | ID) + (1 | Stimulus), 
+              data = dat_m1,
+              na.action = "na.fail")
 
-bla <- as.data.frame(emmeans(avg_dr_m1a,
-                      ~ Condition + Relationship + Freq_partner_physical_violence,
-                      at = list(Freq_partner_physical_violence = Freq_partner_physical_violence_levels),
-                      data = dat_m1)) |> 
-  mutate(Freq_partner_physical_violence_levels = paste0(rep(c("-SD = ", "Mean = ", "+SD = "), each = 4),
+aic_m1 <- AICctab(mod1, mod1a, mod1b, mod1c, mod1d, mod1e,
+                  base = TRUE, weights = TRUE)
+
+best_m1 <- eval(parse(text = rownames(data.frame(aic_m1))[1]))
+
+anova(best_m1)
+
+covar_best_m1 <- best_m1@frame |> 
+  select(where(is.numeric)) |> 
+  select(-1)
+
+covar_name <- colnames(covar_best_m1)
+
+covar_best_m1_levels <- c(min(covar_best_m1[,1]),
+                          #median(covar_best_m1[,1]),
+                          max(covar_best_m1[,1]))
+
+emms_best_m1 <- as.data.frame(emmeans(best_m1,
+                                      ~ Sexual_dimorphism + Condition + Relationship + Freq_partner_physical_violence,
+                             at = list(Freq_partner_physical_violence = covar_best_m1_levels))) |> 
+  mutate(Freq_partner_physical_violence = paste0(rep(c("Min = ", "Max = "), each = 8),
+                                                    round(Freq_partner_physical_violence, 3))) |> 
+  mutate(Freq_partner_physical_violence = fct_reorder(covar_best_m1_levels,
+                                                      Freq_partner_physical_violence))
+contr_best_m1 <- as.data.frame(pairs(emmeans(best_m1,
+                                  ~ Sexual_dimorphism | Condition + Relationship + Freq_partner_physical_violence,
+                                  at = list(Freq_partner_physical_violence = covar_best_m1_levels)))) |> 
+  separate(contrast, c("group1", "group2"), " - ") |> 
+  mutate(Freq_partner_physical_violence = paste0(rep(c("Min = ", "Max = "), each = 4),
                                                  round(Freq_partner_physical_violence, 3))) |> 
-  mutate(Freq_partner_physical_violence_levels = fct_reorder(Freq_partner_physical_violence_levels,
-                                                             Freq_partner_physical_violence))
+  mutate(p.signif = stars.pval(p.value))
 
-ggplot(bla, aes(y = emmean, x = Relationship, color = Condition)) +
-  geom_point(position = position_dodge(0.9)) +
+ggplot(emms_best_m1, aes(y = emmean, x = Sexual_dimorphism, color = Relationship)) +
   geom_errorbar(aes(ymin = emmean-SE,
-                    ymax = emmean+SE), 
-                colour = "black", 
-                width=.1) +
-  geom_point(size = 1) +
-  facet_grid(Freq_partner_physical_violence_levels ~ Condition)
-         
+                    ymax = emmean+SE,
+                    group = Relationship), 
+                color = "black",
+                width=.1,
+                position = position_dodge(0.9)) +
+  geom_point(position = position_dodge(0.9), size = 1) +
+  geom_line(aes(group = Relationship),
+            position = position_dodge(0.9)) + 
+  stat_pvalue_manual(contr_best_m1, label = "p.signif", y.position = c(300, 240, 280, 280,
+                                                                       310, 250, 290, 290),
+                     color = "Relationship", hide.ns = TRUE,
+                     position = position_dodge(0.9),
+                     tip.length = 0) +
+  facet_grid(Condition ~ Freq_partner_physical_violence) 
+
+stat.test <- compare_means(
+  DFF ~ Sexual_dimorphism, data = dat_m1, group.by = c("Condition", "Relationship"),
+  method = "t.test"
+)
+
+emmip(best_m1, Relationship ~ Sexual_dimorphism | Condition + Freq_partner_physical_violence, 
+      at = list(Freq_partner_physical_violence = covar_best_m1_levels), 
+      CIs = TRUE, type = "response")
+
+
+
+
 ## TDF----
 ### Model----
 mod2a <- lmer(TDF_dif ~ Condition * Relationship +
