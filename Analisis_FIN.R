@@ -106,10 +106,52 @@ avgplot <- function(avgmod) {
   return(bubplot)
 }
 
+# External stimuli evaluation----
+ext_val <- read_excel("Data/Evaluacion Manipulación Rostros.xlsx") 
+
+masc_dat <- ext_val |> 
+  select(ResponseId, 
+         contains("M", ignore.case = FALSE), 
+         -Menstruacion) |> 
+  pivot_longer(cols = contains("M", ignore.case = FALSE),
+               names_to = "Stimulus",
+               values_to = "Masculinity") |> 
+  mutate(Sexual_dimorphism = ifelse(grepl("f_1", Stimulus), "Feminine", "Masculine")) |> 
+  mutate(Stimulus = str_sub(Stimulus, end = 3))
+
+masc_dat |> 
+  group_by(Stimulus) |> 
+  summarise(t = t.test(Masculinity ~ Sexual_dimorphism)$statistic,
+            p = t.test(Masculinity ~ Sexual_dimorphism)$p.value) |> 
+  ungroup() |> 
+  mutate(p.signif = stars.pval(p))
+
+age_dat <- ext_val |> 
+  select(ResponseId, 
+         contains("E", ignore.case = FALSE)) |> 
+  select(-c(2:5)) |> 
+  pivot_longer(cols = contains("E", ignore.case = FALSE),
+               names_to = "Stimulus",
+               values_to = "Age") |> 
+  mutate(Sexual_dimorphism = ifelse(grepl("f_1", Stimulus), "Feminine", "Masculine")) |> 
+  mutate(Stimulus = str_sub(Stimulus, end = 3))
+
+age_dat |> 
+  summarise(Mean = mean(Age, na.rm = TRUE),
+            SD = sd(Age, na.rm = TRUE),
+            Min = min(Age, na.rm = TRUE),
+            Max = max(Age, na.rm = TRUE))
+
+ggplot(age_dat, aes(x = Age)) +
+  geom_histogram(bins = 26, fill = "grey", color = "black") +
+  labs(x = "Estimated Age",
+       y = "Count") +
+  scale_x_continuous(breaks = seq(15, 40, 5))
+
 # Cargar datos----
 
 ## Eye-tracking----
-dat_et <- read_excel("Datos/BD-ET-CUC-UB.xlsx", 
+dat_et <- read_excel("Data/BD-ET-CUC-UB.xlsx", 
                      sheet = "CUC-UB") |> 
   select(-c(Participant, Condicion, TOI, Interval, Media_respuesta, AOI, 
             AOI_Global, Respuesta, Number_of_mouse_clicks...17, 
@@ -143,7 +185,7 @@ dat_et <- read_excel("Datos/BD-ET-CUC-UB.xlsx",
 
 ## Cuestionarios----
 ### Sin calcular puntajes totales de instrumentos, para ver consistencia interna
-quests <- read_excel("Datos/Cuestionario Datos Sociodemográficos  (Disponibilidad) (respuestas) (1).xlsx", 
+quests <- read_excel("Data/Cuestionario Datos Sociodemográficos  (Disponibilidad) (respuestas) (1).xlsx", 
                      sheet = "Respuestas de formulario 1") |> 
   select(-c(Invitado, `Servicios ayuda`, `Correos cierre`)) |>
   rename(Date = Fecha,
@@ -333,7 +375,7 @@ quests_clean <- quests |>
 
 ## Evaluación subjestiva de rostros----
 ### Formato ancho
-eval <- read_excel("Datos/Evaluación subjetiva rostros (Respuestas).xlsx") |> 
+eval <- read_excel("Data/Evaluación subjetiva rostros (Respuestas).xlsx") |> 
   select(-c(123:124)) |> 
   rowwise() |> 
   mutate(Masculinity_masculinized = sum(across(ends_with("M Mas"))),
@@ -359,10 +401,10 @@ eval_long <- left_join(eval |>
                          mutate(Stimulus = str_remove_all(Stimulus, " Mas")))
 
 ## Disponibilidad de recursos----
-reg <- rbind(read_excel("Datos/3Registro Participantes Disponibilidad de Recursos-corregido.xlsx", 
+reg <- rbind(read_excel("Data/3Registro Participantes Disponibilidad de Recursos-corregido.xlsx", 
                         sheet = "UB") |> 
                mutate(University = "UB"),
-             read_excel("Datos/3Registro Participantes Disponibilidad de Recursos-corregido.xlsx", 
+             read_excel("Data/3Registro Participantes Disponibilidad de Recursos-corregido.xlsx", 
                         sheet = "CUC") |> 
                mutate(University = "CUC")) |> 
   select(-c(Grupo, `Entrega de kit`, `Protocolo de bioseguridad`, `Requisitos previos al registro`, Consentimiento,
@@ -1260,36 +1302,6 @@ emmeans(mod4, pairwise ~ Sexual_dimorphism | Relationship + Condition)
 emmip(mod4, Relationship ~ Sexual_dimorphism | Condition, 
       CIs = TRUE, type = "response")
 
-# Model 5: Attractiveness ratings----
-
-## Data----
-dat_m5 <- dat |> 
-  select(Attractiveness, Condition, Sexual_dimorphism,
-         ID, Stimulus,
-         Freq_partner_physical_violence, 
-         Freq_partner_sexual_violence,
-         Freq_partner_infidelity, 
-         Men_perceived_as_dangerous,
-         Perceived_home_safety) |> 
-  drop_na()
-
-## Model 5: NF General----
-mod5 <- lmer(Attractiveness ~ Condition * Sexual_dimorphism +
-               (1 | ID) + (1 | Stimulus), 
-             data = dat_m5)
-
-anova(mod5)
-
-### Contrastes post-hoc----
-
-#### Efecto principal: Sexual_dimorphism ----
-emmeans(mod5, pairwise ~ Sexual_dimorphism)
-emmip(mod5, ~ Sexual_dimorphism, CIs = TRUE, type = "response")
-
-#### Interacción: Condition:Sexual_dimorphism---- 
-emmeans(mod4, pairwise ~ Sexual_dimorphism | Condition)
-emmip(mod4, Condition ~ Sexual_dimorphism, CIs = TRUE, type = "response")
-
 # Covariates and model selection----
 
 ## DFF----
@@ -1334,7 +1346,7 @@ best_m1 <- eval(parse(text = rownames(data.frame(aic_m1))[1]))
 
 anova(best_m1)
 
-#### Plot besrt model----
+#### Plot best model----
 covar_best_m1 <- best_m1@frame |> 
   select(where(is.numeric)) |> 
   select(-1)
@@ -1428,7 +1440,7 @@ best_m2 <- eval(parse(text = rownames(data.frame(aic_m2))[1]))
 
 anova(best_m2)
 
-#### Plot besrt model----
+#### Plot best model----
 covar_best_m2 <- best_m2@frame |> 
   select(where(is.numeric)) |> 
   select(-1)
@@ -1515,7 +1527,7 @@ best_m3 <- eval(parse(text = rownames(data.frame(aic_m3))[1]))
 
 anova(best_m3)
 
-#### Plot besrt model----
+#### Plot best model----
 covar_best_m3 <- best_m3@frame |> 
   select(where(is.numeric)) |> 
   select(-1)
@@ -1634,7 +1646,7 @@ pm4 <- ggplot(emms_best_m4, aes(y = emmean, x = Sexual_dimorphism, color = Relat
   geom_point(position = position_dodge(0.9), size = 1) +
   geom_line(aes(group = Relationship),
             position = position_dodge(0.9)) + 
-  stat_pvalue_manual(contr_best_m4, label = "p.signif", y.position = c(0.45, 0.45, 0.5, 0.5,
+  stat_pvalue_manual(contr_best_m4, label = "p.signif", y.position = c(0.45, 0.45, 0.55, 0.55,
                                                                        NA, 0.65, 0.55, NA),
                      color = "Relationship", hide.ns = TRUE,
                      position = position_dodge(),
@@ -1645,93 +1657,7 @@ pm4 <- ggplot(emms_best_m4, aes(y = emmean, x = Sexual_dimorphism, color = Relat
              labeller = labeller(Condition = cond_labs,
                                  Freq_partner_physical_violence = covar_labs)) 
 
-# Attractiveness ratings----
-### Models----
-mod5a <- lmer(Attractiveness ~
-              Condition * Sexual_dimorphism * Men_perceived_as_dangerous +
-                (1 | ID) + (1 | Stimulus),
-            data = dat_m5)
-
-mod5b <- lmer(Attractiveness ~
-              Condition * Sexual_dimorphism * Freq_partner_physical_violence +
-                (1 | ID) + (1 | Stimulus),
-            data = dat_m5)
-
-mod5c <- lmer(Attractiveness ~
-              Condition * Sexual_dimorphism * Freq_partner_sexual_violence +
-                (1 | ID) + (1 | Stimulus),
-            data = dat_m5)
-
-mod5d <- lmer(Attractiveness ~
-              Condition * Sexual_dimorphism * Freq_partner_infidelity +
-                (1 | ID) + (1 | Stimulus),
-            data = dat_m5)
-
-mod5e <- lmer(Attractiveness ~
-              Condition * Sexual_dimorphism * Perceived_home_safety +
-                (1 | ID) + (1 | Stimulus),
-            data = dat_m5)
-
-### Best model----
-aic_m5 <- AICctab(mod5, mod5a, mod5b, mod5c, mod5d, mod5e,
-                  base = TRUE, weights = TRUE)
-aic_m5
-
-best_m5 <- eval(parse(text = rownames(data.frame(aic_m5))[1]))
-
-anova(best_m5)
-
-#### Plot best model----
-covar_best_m5 <- best_m5@frame |> 
-  select(where(is.numeric)) |> 
-  select(-1)
-
-covar_name <- colnames(covar_best_m5)
-
-covar_best_m5_levels <- c(min(covar_best_m5[,1]),
-                          #median(covar_best_m5[,1]),
-                          max(covar_best_m5[,1]))
-covar_labs <- paste0(c("Min = ", "Max = "),
-                     round(covar_best_m5_levels, 3))
-names(covar_labs) <- covar_best_m5_levels
-
-cond_labs <- c("Condition: High", "Condition: Low")
-names(cond_labs) <- c("High", "Low")
-
-emms_best_m5 <- as.data.frame(emmeans(best_m5,
-                                      ~ Sexual_dimorphism + Condition + Freq_partner_infidelity,
-                                      at = list(Freq_partner_infidelity = covar_best_m5_levels))) |> 
-  mutate(Freq_partner_infidelity = round(Freq_partner_infidelity, 3))
-
-contr_best_m5 <- as.data.frame(pairs(emmeans(best_m5,
-                                             ~ Sexual_dimorphism | Condition + Freq_partner_infidelity,
-                                             at = list(Freq_partner_infidelity = covar_best_m5_levels)))) |> 
-  separate(contrast, c("group1", "group2"), " - ") |> 
-  mutate(p.signif = stars.pval(p.value))
-
-pm5 <- ggplot(emms_best_m5, aes(y = emmean, x = Sexual_dimorphism)) +
-  geom_errorbar(aes(ymin = emmean-SE,
-                    ymax = emmean+SE), 
-                color = "black",
-                width=.1,
-                position = position_dodge(0.9)) +
-  geom_point(position = position_dodge(0.9), size = 1) +
-  geom_line() + 
-  stat_pvalue_manual(contr_best_m5, label = "p.signif", y.position = c(7, 7, 9, 8.5),
-                     hide.ns = TRUE,
-                     position = position_dodge(),
-                     tip.length = 0) +
-  labs(subtitle = "Interaction with frequency of partner infidelity",
-       y = "Attractiveness Rating",
-       x = "Sexual dimorphism") +
-  facet_grid(Condition ~ Freq_partner_infidelity,
-             labeller = labeller(Condition = cond_labs,
-                                 Freq_partner_infidelity = covar_labs)) 
-pm5
-
-
 ## Final plots----
-
 ggarrange(pm1, pm2, pm3, pm4,
           common.legend = TRUE,
           legend = "bottom",
