@@ -10,14 +10,13 @@ library(emmeans)
 library(knitr)
 library(kableExtra)
 library(performance)
-library(MuMIn)
-library(tictoc)
 library(GGally)
 library(scales) 
 library(factoextra)
 library(FactoMineR)
 library(gtools)
 library(bbmle)
+library(effectsize)
 
 options(scipen = 9999)
 
@@ -52,58 +51,6 @@ corr.stars <- function(x) {
   # remove last column and return the matrix (which is now a data frame)
   Rnew <- cbind(Rnew[1:length(Rnew) - 1])
   return(Rnew)
-}
-
-avgplot <- function(avgmod) {
-  # Create data frame with coefficients and proportion of models in which each term appears
-  xlb <- cbind(summary(avgmod)$coefmat.subset,
-               confint(avgmod, full = FALSE),
-               gather(as.data.frame(summary(avgmod)$coef.nmod)))
-  xlb$value <- xlb$value/max(xlb$value)
-  xlb$sig <- stars.pval(xlb$`Pr(>|z|)`)
-  xlb$sig[xlb$sig == "." ] <- "†"
-  # Replace and format term names from model tables
-  xlb$key <- str_replace_all(xlb$key, "_", " ")
-  xlb$key <- str_replace_all(xlb$key, "Freq", "Freq.")
-  xlb$key <- str_replace_all(xlb$key, ":", " × ")
-  xlb$key <- str_replace_all(xlb$key, "Low", " (Low)")
-  xlb$key <- str_replace_all(xlb$key, "Long term", " (Long term)")
-  xlb$key <- str_replace_all(xlb$key, "Predominantly heterosexual", " (Predominantly heterosexual)")
-  lvs <- as.character(unique(xlb$key))
-  xlb$key <- factor(xlb$key, levels = lvs)
-  #create data frame with number of averaged models
-  nMods <- data.frame(n = dim(avgmod$msTable)[1])
-  #create plot
-  bubplot <- ggplot(xlb, aes(x = key, y = Estimate)) +
-    geom_hline(yintercept = 0, color = "grey") +
-    geom_point(aes(size = value, color = value), alpha = 0.5) +
-    geom_errorbar(aes(ymin = `2.5 %`,
-                      ymax = `97.5 %`), 
-                  colour = "black", width=.1) +
-    geom_point(size = 1) +
-    theme_bw() +
-    labs(x = NULL, y = "Estimate") +
-    theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
-    scale_size_continuous(range = c(2,8),
-                          breaks= seq(0, 1, by = 0.2)) +
-    guides(size = guide_legend(title = "Importance"),
-           color = guide_legend(title = "Importance")) +
-    scale_x_discrete(labels = levels(xlb$key),
-                     expand = c(0, 0.5)) +
-    scale_colour_gradient(low = "deepskyblue2", 
-                          high = "brown2",
-                          breaks= seq(0, 1, by = 0.2)) +
-    geom_text(aes(label = sig), y = xlb$`97.5 %`, vjust = -0.4) +
-    geom_text(data = nMods,
-              aes(x = Inf, 
-                  y = -Inf, 
-                  label = paste("Averaged models = ", n)),
-              fontface = "italic",
-              size = 3,
-              hjust = 1.1,
-              vjust = -0.5,
-              inherit.aes = FALSE)
-  return(bubplot)
 }
 
 # External stimuli evaluation----
@@ -162,7 +109,7 @@ dat_et <- read_excel("Data/BD-ET-CUC-UB.xlsx",
          Condition = Condición,
          Relationship = Contexto,
          Sexual_dimorphism = Rostro,
-         TDF = Total_duration_of_whole_fixations,
+         TFD = Total_duration_of_whole_fixations,
          NF = Number_of_whole_fixations,
          TFF = Time_to_first_whole_fixation,
          NMC = Number_of_mouse_clicks...21,
@@ -336,11 +283,38 @@ quests <- read_excel("Data/Cuestionario Datos Sociodemográficos  (Disponibilida
   mutate(across(where(is.character), ~replace(., . ==  "No estoy segura" , "Unsure")))
 
 ### PCA----
+#### Socio-ecological factors----
+quests_pca_gen <- quests |> 
+  select(ID, 
+         Men_perceived_as_danger_to_partner, 
+         Men_perceived_as_danger_to_children,
+         Freq_partner_physical_violence,
+         Freq_partner_sexual_violence,
+         Freq_partner_infidelity,
+         Perceived_home_safety) |> 
+  #rename_with(~str_replace_all(., "Men_perceived_as_danger_to_")) |> 
+  rename_with(~str_replace_all(., "Freq_", "Frequency of")) |>
+  rename_with(~str_replace_all(., "_", " ")) |> 
+  rename_with(~str_to_sentence(.))
+
+pca_sef <- PCA(quests_pca_gen[,-1], graph = FALSE)
+summary(pca_sef)
+
+ggarrange(fviz_eig(pca_sef, addlabels = TRUE, barfill = "#00AFBB") +
+            labs(title = "PCA: Socio-ecological factors",
+                 subtitle = "Scree plot"),
+          fviz_pca_var(pca_sef, 
+                       col.var = "#00AFBB",
+                       repel = TRUE) +
+            labs(title = NULL,
+                 subtitle = "Loadings"))
+
+#### Men perceives as dangerous----
 quests_pca <- quests |> 
   select(ID, 
          Men_perceived_as_danger_to_partner, 
          Men_perceived_as_danger_to_children) |> 
-  rename_with(~str_replace_all(., "Men_perceived_as_danger_to_", "")) |> 
+  rename_with(~str_remove_all(., "Men_perceived_as_danger_to_")) |>
   rename_with(~str_to_sentence(.))
 
 pca_mpd <- PCA(quests_pca[,-1], graph = FALSE)
@@ -351,7 +325,9 @@ mpd_scores <- data.frame(pca_mpd$ind$coord)$Dim.1
 ggarrange(fviz_eig(pca_mpd, addlabels = TRUE, barfill = "#00AFBB") +
             labs(title = "PCA: Men perceived as danger to...",
                  subtitle = "Scree plot"),
-          fviz_pca_var(pca_mpd, col.var = "#00AFBB") +
+          fviz_pca_var(pca_mpd, 
+                       col.var = "#00AFBB",
+                       repel = TRUE) +
             labs(title = NULL,
                  subtitle = "Loadings"))
 
@@ -483,7 +459,7 @@ dat_dif <- dat |>
            Relationship_current,
            Men_perceived_as_dangerous) |> 
   summarise(DFF_dif = DFF[Sexual_dimorphism == "Masculinized"] - DFF[Sexual_dimorphism == "Feminized"],
-            TDF_dif = TDF[Sexual_dimorphism == "Masculinized"] - TDF[Sexual_dimorphism == "Feminized"],
+            TFD_dif = TFD[Sexual_dimorphism == "Masculinized"] - TFD[Sexual_dimorphism == "Feminized"],
             NF_dif = NF[Sexual_dimorphism == "Masculinized"] - NF[Sexual_dimorphism == "Feminized"],
             Attr_dif = Attractiveness[Sexual_dimorphism == "Masculinized"] - Attractiveness[Sexual_dimorphism == "Feminized"],
             Masc_dif = Masculinity[Sexual_dimorphism == "Masculinized"] - Masculinity[Sexual_dimorphism == "Feminized"]) |> 
@@ -493,6 +469,18 @@ dat_dif <- dat |>
 ### Tamaño de muestra----
 n_filtrado <- dat |> 
   summarise(n = n_distinct(ID))
+
+n_edad <- dat |> 
+  group_by(ID) |> 
+  summarise(Age = first(Age),
+            Condition = first(Condition)) |> 
+  ungroup() |> 
+  group_by(Condition) |> 
+  summarise(n = n_distinct(ID),
+            Mean = mean(Age, na.rm = TRUE),
+            SD = sd(Age, na.rm = TRUE),
+            Min = min(Age, na.rm = TRUE),
+            Max = max(Age, na.rm = TRUE))
 
 ## Bases filtradas individuales----
 ### Disponibilidad de recursos----
@@ -539,7 +527,6 @@ desc_quest |>
   mutate(Variable = str_replace_all(Variable, "_", " ")) |>
   mutate(Variable = str_replace_all(Variable, "Freq", "Frequency of")) |>
   mutate(Variable = str_replace_all(Variable, "SP", "Self-perceived")) |>
-  #mutate(Variable = case_when(str_detect(Variable, "_safety") ~ str_replace_all(Variable, "Self-perceived", "Perceived"))) |>
   ggplot(aes(x = Value, fill = Condition, color = Condition)) +
   geom_density(alpha = 0.3) +
   facet_wrap(~Variable, scales = "free") +
@@ -958,7 +945,7 @@ desc_quest |>
 ### Correlations table (fixations, subjective evaluations and violence)----
 dat_main_corr <- dat |> 
   select(ID, Condition, Relationship,
-         TDF, DFF, NF,
+         TFD, DFF, NF,
          Masculinity, Attractiveness,
          Partner_attractiveness:Partner_masculinity,
          ends_with("_safety"), Freq_robery,
@@ -969,7 +956,7 @@ dat_main_corr <- dat |>
 dat_main_corr |> 
   filter(Condition == "High") |> 
   ungroup() |> 
-  select(TDF:Freq_partner_infidelity) |> 
+  select(TFD:Freq_partner_infidelity) |> 
   rename_with(~str_replace_all(., "_", " ")) |> 
   rename_with(~str_replace_all(., "Freq", "Frequency of")) |>
   rename_with(~str_replace_all(., "Frequency of partner", "Partner")) |>
@@ -1023,7 +1010,7 @@ dat_dif_short <- dat_dif |>
             Freq_partner_infidelity = mean(Freq_partner_infidelity),
             Men_perceived_as_dangerous = mean(Men_perceived_as_dangerous),
             DFF_dif = mean(DFF_dif),
-            TDF_dif = mean(TDF_dif),
+            TFD_dif = mean(TFD_dif),
             NF_dif = mean(NF_dif),
             Attr_dif = mean(Attr_dif),
             Masc_dif = mean(Masc_dif)) |> 
@@ -1035,7 +1022,7 @@ dat_dif_short <- dat_dif |>
          "PI" =  "Freq_partner_infidelity",
          "MPD" = "Men_perceived_as_dangerous",
          "DFF" = "DFF_dif",
-         "TDF" = "TDF_dif",
+         "TFD" = "TFD_dif",
          "NF" =  "NF_dif",
          "Attr." = "Attr_dif",
          "Masc." = "Masc_dif",
@@ -1089,34 +1076,73 @@ ggarrange(ggcorr(Rst_Cl[,1:11],
           legend = "bottom")
 
 # Manipulation check----
-## Resource availability----
 
-### Happiness----
-mod_happ <- lm(Condition_happiness ~ Condition * Relationship_current, data = reg_fin) 
-Anova(mod_happ, type = 3)
-### Physical safety----
-mod_phys_safety <- lm(Condition_physical_safety ~ Condition * Relationship_current, data = reg_fin) 
-Anova(mod_phys_safety, type = 3)
-### Health----
-mod_health <- lm(Condition_healthy ~ Condition * Relationship_current, data = reg_fin) 
-Anova(mod_health, type = 3)
-### Economic security----
-mod_econ_sec <- lm(Condition_economic_security ~ Condition * Relationship_current, data = reg_fin) 
-Anova(mod_econ_sec, type = 3)
+## Condition: resource availability----
+reg_fin |> 
+  select(starts_with("Condition")) |> 
+  pivot_longer(cols = contains("_"),
+               names_to = "Dimension",
+               values_to = "Score") |> 
+  group_by(Dimension) |> 
+  summarise("Mean (Low)" = mean(Score[reg_fin$Condition == "Low"]),
+            "Mean (High)" = mean(Score[reg_fin$Condition == "High"]),
+            t = t.test(Score ~ Condition)$statistic,
+            p = t.test(Score ~ Condition)$p.value,
+            g = hedges_g(Score ~ Condition)$Hedges_g) |> 
+  ungroup() |> 
+  mutate(p.signif = stars.pval(p))
 
 ## Sexual dimorphism----
-eval_desc <- eval_long |> 
-  left_join(quests_fin, by = c("ID")) |> 
-  mutate(Sexual_dimorphism = ifelse(grepl("F", Stimulus), "Feminine", "Masculine")) |> 
-  group_by(ID, Sexual_dimorphism, Relationship_current) |> 
+eval_desc <- dat |>
+  group_by(ID, Sexual_dimorphism, Condition) |> 
   summarise(Masculinity = mean(Masculinity),
             Attractiveness = mean(Attractiveness))
 ### Masculinity----
-mod_masc <- lm(Masculinity ~ Sexual_dimorphism * Relationship_current, data = eval_desc)
-Anova(mod_masc, type = 3)
+mod_masc <- lmer(Masculinity ~ Sexual_dimorphism * Condition + (1 | ID), data = eval_desc)
+anova(mod_masc)
+contr_mod_masc <- as.data.frame(pairs(emmeans(mod_masc,
+                                              ~ Sexual_dimorphism | Condition))) |> 
+  separate(contrast, c("group1", "group2"), " - ") |> 
+  mutate(p.signif = stars.pval(p.value))
+
+p_mancheck_masc <- ggplot(eval_desc, aes(x = Sexual_dimorphism, y = Masculinity, color = Sexual_dimorphism)) +
+  geom_jitter(alpha = 0.5) +
+  stat_summary(fun.data = "mean_cl_boot",
+               color = "black") +
+  stat_pvalue_manual(contr_mod_masc, label = "p.signif",
+                     y.position = 10.5,
+                     hide.ns = TRUE,
+                     tip.length = 0) +
+  labs(x = NULL,
+       color = "Sexual dimorphism") +
+  facet_wrap(~Condition)
+
 ### Attractiveness----
-mod_attr <- lm(Attractiveness ~ Sexual_dimorphism * Relationship_current, data = eval_desc)
-Anova(mod_attr, type = 3)
+mod_attr <- lmer(Attractiveness ~ Sexual_dimorphism * Condition + (1 | ID), data = eval_desc)
+anova(mod_attr)
+contr_mod_attr <- as.data.frame(pairs(emmeans(mod_attr,
+                                              ~ Sexual_dimorphism | Condition))) |> 
+  separate(contrast, c("group1", "group2"), " - ") |> 
+  mutate(p.signif = stars.pval(p.value))
+
+p_mancheck_attr <- ggplot(eval_desc, aes(x = Sexual_dimorphism, y = Attractiveness, color = Sexual_dimorphism)) +
+  geom_jitter(alpha = 0.5) +
+  stat_summary(fun.data = "mean_cl_boot",
+               color = "black") +
+  stat_pvalue_manual(contr_mod_attr, label = "p.signif",
+                     y.position = 10,
+                     hide.ns = TRUE,
+                     tip.length = 0) +
+  labs(x = NULL,
+       color = "Sexual dimorphism") +
+  facet_wrap(~Condition)
+
+#### Plot----
+ggarrange(p_mancheck_masc, p_mancheck_attr,
+          legend = "none",
+          labels = "auto")  |> 
+  annotate_figure(bottom = text_grob("Sexual dimorphism",
+                                  size = 11))
 
 # Model 1: DFF----
 
@@ -1130,7 +1156,7 @@ dat_m1 <- dat |>
   filter(DFF >= 100 & DFF <= 1000) |> 
   drop_na()
 
-## Model 1: DFF General---- 
+## Model 1: DFF---- 
 mod1 <- lmer(DFF ~ Condition * Relationship * Sexual_dimorphism +
                (1 | ID) + (1 | Stimulus), 
              data = dat_m1,
@@ -1139,32 +1165,62 @@ anova(mod1)
 
 ### Contrastes post-hoc----
 
-#### Efecto principal: Sexual_dimorphism ----
+#### Efecto principal: Sexual_dimorphism----
 emmeans(mod1, pairwise ~ Sexual_dimorphism)
-emmip(mod1, ~ Sexual_dimorphism, CIs = TRUE, type = "response")
 
-#### Diseño completo ----
+#### Diseño completo----
 emmeans(mod1, pairwise ~ Sexual_dimorphism | Relationship + Condition)
-emmip(mod1, Relationship ~ Sexual_dimorphism | Condition, 
-      CIs = TRUE, type = "response")
 
-# Model 2: TDF----
+#### Plot----
+cond_labs <- c("Condition: High", "Condition: Low")
+names(cond_labs) <- c("High", "Low")
+
+emms_m1 <- as.data.frame(emmeans(mod1,
+                                 ~ Sexual_dimorphism + Condition + Relationship))
+
+contr_m1 <- as.data.frame(pairs(emmeans(mod1,
+                                        ~ Sexual_dimorphism | Condition + Relationship))) |> 
+  separate(contrast, c("group1", "group2"), " - ") |> 
+  mutate(p.signif = stars.pval(p.value))
+
+pm1 <- ggplot(emms_m1, aes(y = emmean, x = Sexual_dimorphism, color = Relationship)) +
+  geom_errorbar(aes(ymin = emmean-SE,
+                    ymax = emmean+SE,
+                    group = Relationship), 
+                color = "black",
+                width=.1,
+                position = position_dodge(0.9)) +
+  geom_point(position = position_dodge(0.9), size = 1) +
+  geom_line(aes(group = Relationship),
+            position = position_dodge(0.9)) + 
+  stat_pvalue_manual(contr_m1, 
+                     label = "p.signif", 
+                     y.position = c(266, NA, NA, 268),
+                     color = "Relationship", hide.ns = TRUE,
+                     position = position_dodge(),
+                     tip.length = 0) +
+  labs(y = "Duration of First Fixation (DFF)",
+       x = NULL) +
+  facet_grid(~ Condition,
+             labeller = labeller(Condition = cond_labs)) 
+
+# Model 2: TFD----
 
 ## Data----
 dat_m2 <- dat |> 
-  select(TDF, Condition, Relationship, Sexual_dimorphism,
+  select(TFD, Condition, Relationship, Sexual_dimorphism,
          ID, Stimulus, 
          Freq_partner_physical_violence, Freq_partner_sexual_violence,
          Freq_partner_infidelity, Men_perceived_as_dangerous,
          Perceived_home_safety) |> 
   group_by(ID, Stimulus, Relationship) |> 
-  filter(!(sum(TDF[Sexual_dimorphism == "Masculinized"] == 0) > 0 & 
-             sum(TDF[Sexual_dimorphism == "Feminized"] == 0) > 0)) |>
+  filter(!(sum(TFD[Sexual_dimorphism == "Masculinized"] == 0) > 0 & 
+             sum(TFD[Sexual_dimorphism == "Feminized"] == 0) > 0)) |>
   ungroup() |> 
   drop_na()
 
-## Model 2: TDF General----
-mod2 <- lmer(TDF ~ Condition * Relationship * Sexual_dimorphism +
+## Model 2: TFD----
+mod2 <- lmer(TFD ~ Condition * Relationship * Sexual_dimorphism +
                (1 | ID) + (1 | Stimulus), 
              data = dat_m2,
              na.action = "na.fail")
@@ -1172,22 +1228,47 @@ anova(mod2)
 
 ### Contrastes post-hoc----
 
-#### Efecto principal: Sexual_dimorphism ----
+#### Efecto principal: Sexual_dimorphism----
 emmeans(mod2, pairwise ~ Sexual_dimorphism)
-emmip(mod2, ~ Sexual_dimorphism, CIs = TRUE, type = "response")
 
 #### Interacción: Condition:Sexual_dimorphism----
 emmeans(mod2, pairwise ~ Sexual_dimorphism | Condition)
-emmip(mod2, Condition ~ Sexual_dimorphism, CIs = TRUE, type = "response")
 
 #### Interacción: Relationship:Sexual_dimorphism---- 
 emmeans(mod2, pairwise ~ Sexual_dimorphism | Relationship)
-emmip(mod2, Relationship ~ Sexual_dimorphism, CIs = TRUE, type = "response")
 
-#### Diseño completo ----
+#### Diseño completo----
 emmeans(mod2, pairwise ~ Sexual_dimorphism | Relationship + Condition)
-emmip(mod2, Relationship ~ Sexual_dimorphism | Condition, 
-      CIs = TRUE, type = "response")
+
+#### Plot----
+emms_m2 <- as.data.frame(emmeans(mod2,
+                                 ~ Sexual_dimorphism + Condition + Relationship))
+
+contr_m2 <- as.data.frame(pairs(emmeans(mod2,
+                                        ~ Sexual_dimorphism | Condition + Relationship))) |> 
+  separate(contrast, c("group1", "group2"), " - ") |> 
+  mutate(p.signif = stars.pval(p.value))
+
+pm2 <- ggplot(emms_m2, aes(y = emmean, x = Sexual_dimorphism, color = Relationship)) +
+  geom_errorbar(aes(ymin = emmean-SE,
+                    ymax = emmean+SE,
+                    group = Relationship), 
+                color = "black",
+                width=.1,
+                position = position_dodge(0.9)) +
+  geom_point(position = position_dodge(0.9), size = 1) +
+  geom_line(aes(group = Relationship),
+            position = position_dodge(0.9)) + 
+  stat_pvalue_manual(contr_m2, 
+                     label = "p.signif", 
+                     y.position = c(980, 990, 990, 1000),
+                     color = "Relationship", hide.ns = TRUE,
+                     position = position_dodge(),
+                     tip.length = 0) +
+  labs(y = "Total Fixation Duration  (TFD)",
+       x = NULL) +
+  facet_grid(~ Condition,
+             labeller = labeller(Condition = cond_labs))
 
 # Model 3: NF----
 
@@ -1204,7 +1285,7 @@ dat_m3 <- dat |>
   ungroup() |> 
   drop_na()
 
-## Model 3: NF General----
+## Model 3: NF----
 mod3 <- lmer(NF ~ Condition * Relationship * Sexual_dimorphism +
                 (1 | ID) + (1 | Stimulus), 
               data = dat_m3,
@@ -1214,50 +1295,54 @@ anova(mod3)
 
 ### Contrastes post-hoc----
 
-#### Efecto principal: Sexual_dimorphism ----
+#### Efecto principal: Sexual_dimorphism----
 emmeans(mod3, pairwise ~ Sexual_dimorphism)
-emmip(mod3, ~ Sexual_dimorphism, CIs = TRUE, type = "response")
 
 #### Interacción: Condition:Sexual_dimorphism----
 emmeans(mod3, pairwise ~ Sexual_dimorphism | Condition)
-emmip(mod3, Condition ~ Sexual_dimorphism, CIs = TRUE, type = "response")
 
 #### Interacción: Relationship:Sexual_dimorphism---- 
 emmeans(mod3, pairwise ~ Sexual_dimorphism | Relationship)
-emmip(mod3, Relationship ~ Sexual_dimorphism, CIs = TRUE, type = "response")
 
 #### Interacción: Condition:Relationship---- 
 emmeans(mod3, pairwise ~ Relationship | Condition)
-emmip(mod3, Condition ~ Relationship, CIs = TRUE, type = "response")
 
-#### Diseño completo ----
+#### Diseño completo----
 emmeans(mod3, pairwise ~ Sexual_dimorphism | Relationship + Condition)
-emmip(mod3, Relationship ~ Sexual_dimorphism | Condition, 
-      CIs = TRUE, type = "response")
+
+#### Plot----
+emms_m3 <- as.data.frame(emmeans(mod3,
+                                 ~ Sexual_dimorphism + Condition + Relationship))
+
+contr_m3 <- as.data.frame(pairs(emmeans(mod3,
+                                        ~ Sexual_dimorphism | Condition + Relationship))) |> 
+  separate(contrast, c("group1", "group2"), " - ") |> 
+  mutate(p.signif = stars.pval(p.value))
+
+pm3 <- ggplot(emms_m3, aes(y = emmean, x = Sexual_dimorphism, color = Relationship)) +
+  geom_errorbar(aes(ymin = emmean-SE,
+                    ymax = emmean+SE,
+                    group = Relationship), 
+                color = "black",
+                width=.1,
+                position = position_dodge(0.9)) +
+  geom_point(position = position_dodge(0.9), size = 1) +
+  geom_line(aes(group = Relationship),
+            position = position_dodge(0.9)) + 
+  stat_pvalue_manual(contr_m3, 
+                     label = "p.signif", 
+                     y.position = c(3.7, 3.72, 3.75, 3.77),
+                     color = "Relationship", hide.ns = TRUE,
+                     position = position_dodge(),
+                     tip.length = 0) +
+  labs(y = "Number of Fixations  (NF)",
+       x = NULL) +
+  facet_grid(~ Condition,
+             labeller = labeller(Condition = cond_labs))
 
 # Model 4: Choice----
 
 ## Data----
-dat_m4  <- dat |> 
-  mutate(Choice = as.numeric(recode(Choice,
-                                    "Yes" =  "1",
-                                    "No" = "0"))) |> 
-  group_by(ID, Sexual_dimorphism, Relationship, Condition,
-           Freq_partner_physical_violence,
-           Freq_partner_sexual_violence,
-           Freq_partner_infidelity,
-           Men_perceived_as_dangerous,
-           Perceived_home_safety) |> 
-  summarise(Choice = sum(Choice)) |> 
-  group_by(ID, Sexual_dimorphism, Relationship, Condition, 
-           Freq_partner_physical_violence,
-           Freq_partner_sexual_violence,
-           Freq_partner_infidelity,
-           Men_perceived_as_dangerous,
-           Perceived_home_safety) |> 
-  summarise(Choice_count = sum(Choice)) |> 
-  drop_na()
-
 dat_m4  <- dat |> 
   mutate(Choice = as.numeric(recode(Choice,
                                     "Yes" =  "1",
@@ -1277,30 +1362,64 @@ dat_m4  <- dat |>
   mutate(Choice_prop = Choice/60) |> 
   drop_na()
 
-## Model 4: Choice General----
+## Model 4: Choice----
 mod4 <- lm(Choice_prop ~ Condition * Relationship * Sexual_dimorphism,
             data = dat_m4,
             na.action = "na.fail")
 
 anova(mod4)
 
-check_model(mod4)
-check_distribution(mod4)
+#check_model(mod4)
+#check_distribution(mod4)
 
 ### Contrastes post-hoc----
 
-#### Efecto principal: Sexual_dimorphism ----
+#### Efecto principal: Sexual_dimorphism----
 emmeans(mod4, pairwise ~ Sexual_dimorphism)
-emmip(mod4, ~ Sexual_dimorphism, CIs = TRUE, type = "response")
 
 #### Interacción: Relationship:Sexual_dimorphism---- 
 emmeans(mod4, pairwise ~ Sexual_dimorphism | Relationship)
-emmip(mod4, Relationship ~ Sexual_dimorphism, CIs = TRUE, type = "response")
 
-#### Diseño completo ----
+#### Diseño completo----
 emmeans(mod4, pairwise ~ Sexual_dimorphism | Relationship + Condition)
-emmip(mod4, Relationship ~ Sexual_dimorphism | Condition, 
-      CIs = TRUE, type = "response")
+
+#### Plot----
+emms_m4 <- as.data.frame(emmeans(mod4,
+                                 ~ Sexual_dimorphism + Condition + Relationship))
+
+contr_m4 <- as.data.frame(pairs(emmeans(mod4,
+                                        ~ Sexual_dimorphism | Condition + Relationship))) |> 
+  separate(contrast, c("group1", "group2"), " - ") |> 
+  mutate(p.signif = stars.pval(p.value))
+
+pm4 <- ggplot(emms_m4, aes(y = emmean, x = Sexual_dimorphism, color = Relationship)) +
+  geom_errorbar(aes(ymin = emmean-SE,
+                    ymax = emmean+SE,
+                    group = Relationship), 
+                color = "black",
+                width=.1,
+                position = position_dodge(0.9)) +
+  geom_point(position = position_dodge(0.9), size = 1) +
+  geom_line(aes(group = Relationship),
+            position = position_dodge(0.9)) + 
+  stat_pvalue_manual(contr_m4, 
+                     label = "p.signif", 
+                     y.position = c(0.38, 0.38, 0.4, 0.4),
+                     color = "Relationship", hide.ns = TRUE,
+                     position = position_dodge(),
+                     tip.length = 0) +
+  labs(y = "Stimuli Choice (proportion)",
+       x = NULL) +
+  facet_grid(~ Condition,
+             labeller = labeller(Condition = cond_labs))
+
+## Final plots----
+ggarrange(pm1, pm2, pm3, pm4,
+          common.legend = TRUE,
+          legend = "right",
+          labels = "auto") |> 
+  annotate_figure(bottom = text_grob("Sexual dimorphism",
+                                    size = 12))
 
 # Covariates and model selection----
 
@@ -1374,7 +1493,7 @@ contr_best_m1 <- as.data.frame(pairs(emmeans(best_m1,
   separate(contrast, c("group1", "group2"), " - ") |> 
   mutate(p.signif = stars.pval(p.value))
 
-pm1 <- ggplot(emms_best_m1, aes(y = emmean, x = Sexual_dimorphism, color = Relationship)) +
+pm1f <- ggplot(emms_best_m1, aes(y = emmean, x = Sexual_dimorphism, color = Relationship)) +
   geom_errorbar(aes(ymin = emmean-SE,
                     ymax = emmean+SE,
                     group = Relationship), 
@@ -1390,41 +1509,41 @@ pm1 <- ggplot(emms_best_m1, aes(y = emmean, x = Sexual_dimorphism, color = Relat
                      position = position_dodge(),
                      tip.length = 0) +
   labs(y = "Duration of First Fixation (DFF)",
-       x = "Sexual dimorphism") +
+       x = NULL) +
   facet_grid(Condition ~ Freq_partner_physical_violence,
              labeller = labeller(Condition = cond_labs,
                                  Freq_partner_physical_violence = covar_labs)) 
 
 
-## TDF----
+## TFD----
 ### Model----
 
 ### Models----
-mod2a <- lmer(TDF ~
+mod2a <- lmer(TFD ~
                 Condition * Relationship * Sexual_dimorphism * Men_perceived_as_dangerous +
                 (1 | ID) + (1 | Stimulus), 
               data = dat_m2,
               na.action = "na.fail")
 
-mod2b <- lmer(TDF ~
+mod2b <- lmer(TFD ~
                 Condition * Relationship * Sexual_dimorphism * Freq_partner_physical_violence +
                 (1 | ID) + (1 | Stimulus), 
               data = dat_m2,
               na.action = "na.fail")
 
-mod2c <- lmer(TDF ~
+mod2c <- lmer(TFD ~
                 Condition * Relationship * Sexual_dimorphism * Freq_partner_sexual_violence +
                 (1 | ID) + (1 | Stimulus), 
               data = dat_m2,
               na.action = "na.fail")
 
-mod2d <- lmer(TDF ~
+mod2d <- lmer(TFD ~
                 Condition * Relationship * Sexual_dimorphism * Freq_partner_infidelity +
                 (1 | ID) + (1 | Stimulus), 
               data = dat_m2,
               na.action = "na.fail")
 
-mod2e <- lmer(TDF ~
+mod2e <- lmer(TFD ~
                 Condition * Relationship * Sexual_dimorphism * Perceived_home_safety +
                 (1 | ID) + (1 | Stimulus), 
               data = dat_m2,
@@ -1468,7 +1587,7 @@ contr_best_m2 <- as.data.frame(pairs(emmeans(best_m2,
   separate(contrast, c("group1", "group2"), " - ") |> 
   mutate(p.signif = stars.pval(p.value))
 
-pm2 <- ggplot(emms_best_m2, aes(y = emmean, x = Sexual_dimorphism, color = Relationship)) +
+pm2f <- ggplot(emms_best_m2, aes(y = emmean, x = Sexual_dimorphism, color = Relationship)) +
   geom_errorbar(aes(ymin = emmean-SE,
                     ymax = emmean+SE,
                     group = Relationship), 
@@ -1483,8 +1602,8 @@ pm2 <- ggplot(emms_best_m2, aes(y = emmean, x = Sexual_dimorphism, color = Relat
                      color = "Relationship", hide.ns = TRUE,
                      position = position_dodge(),
                      tip.length = 0) +
-  labs(y = "Total Duration of Fixation (TDF)",
-       x = "Sexual dimorphism") +
+  labs(y = "Total Fixation Duration (TFD)",
+       x = NULL) +
   facet_grid(Condition ~ Freq_partner_physical_violence,
              labeller = labeller(Condition = cond_labs,
                                  Freq_partner_physical_violence = covar_labs)) 
@@ -1555,7 +1674,7 @@ contr_best_m3 <- as.data.frame(pairs(emmeans(best_m3,
   separate(contrast, c("group1", "group2"), " - ") |> 
   mutate(p.signif = stars.pval(p.value))
 
-pm3 <- ggplot(emms_best_m3, aes(y = emmean, x = Sexual_dimorphism, color = Relationship)) +
+pm3f <- ggplot(emms_best_m3, aes(y = emmean, x = Sexual_dimorphism, color = Relationship)) +
   geom_errorbar(aes(ymin = emmean-SE,
                     ymax = emmean+SE,
                     group = Relationship), 
@@ -1571,7 +1690,7 @@ pm3 <- ggplot(emms_best_m3, aes(y = emmean, x = Sexual_dimorphism, color = Relat
                      position = position_dodge(),
                      tip.length = 0) +
   labs(y = "Number of Fixations (NF)",
-       x = "Sexual dimorphism") +
+       x = NULL) +
   facet_grid(Condition ~ Freq_partner_physical_violence,
              labeller = labeller(Condition = cond_labs,
                                  Freq_partner_physical_violence = covar_labs)) 
@@ -1636,7 +1755,7 @@ contr_best_m4 <- as.data.frame(pairs(emmeans(best_m4,
   separate(contrast, c("group1", "group2"), " - ") |> 
   mutate(p.signif = stars.pval(p.value))
 
-pm4 <- ggplot(emms_best_m4, aes(y = emmean, x = Sexual_dimorphism, color = Relationship)) +
+pm4f <- ggplot(emms_best_m4, aes(y = emmean, x = Sexual_dimorphism, color = Relationship)) +
   geom_errorbar(aes(ymin = emmean-SE,
                     ymax = emmean+SE,
                     group = Relationship), 
@@ -1651,29 +1770,31 @@ pm4 <- ggplot(emms_best_m4, aes(y = emmean, x = Sexual_dimorphism, color = Relat
                      color = "Relationship", hide.ns = TRUE,
                      position = position_dodge(),
                      tip.length = 0) +
-  labs(y = "Stimuli Choice",
-       x = "Sexual dimorphism") +
+  labs(y = "Stimuli Choice (proportion)",
+       x = NULL) +
   facet_grid(Condition ~ Freq_partner_physical_violence,
              labeller = labeller(Condition = cond_labs,
                                  Freq_partner_physical_violence = covar_labs)) 
 
 ## Final plots----
-ggarrange(pm1, pm2, pm3, pm4,
+ggarrange(pm1f, pm2f, pm3f, pm4f,
           common.legend = TRUE,
-          legend = "bottom",
+          legend = "right",
           labels = "auto") |> 
   annotate_figure(top = text_grob("Interaction with frequency of partner physical violence",
-                                  size = 12))
+                                  size = 12),
+                  bottom = text_grob("Sexual dimorphism",
+                                     size = 12))
 
-## Plot corr TDF and Choice
-dat_corr_choice_TDF_dif <- dat_dif |> 
+## Plot corr TFD and Choice
+dat_corr_choice_TFD_dif <- dat_dif |> 
   group_by(ID, Relationship, Condition) |> 
-  summarise(TDF_dif = mean(TDF_dif)) |> 
+  summarise(TFD_dif = mean(TFD_dif)) |> 
   left_join(dat_m4 |> 
               select(ID, Relationship, Condition, Choice_dif),
             by = c("ID", "Relationship", "Condition"))
 
-ggplot(dat_corr_choice_TDF_dif, aes(x = Choice_dif, y = TDF_dif)) +
+ggplot(dat_corr_choice_TFD_dif, aes(x = Choice_dif, y = TFD_dif)) +
   geom_point(alpha = 0.5) +
   geom_smooth(method = "lm") +
   facet_grid(Condition ~ Relationship) +
