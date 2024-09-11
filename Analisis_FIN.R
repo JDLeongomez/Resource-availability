@@ -20,6 +20,8 @@ library(effectsize)
 
 options(scipen = 9999)
 
+#### CREAR FUNCION PARA REPORTAR MODELOS INCLIYENDO R²!!!!!!!
+
 # Functions----
 corr.stars <- function(x) {
   require(Hmisc)
