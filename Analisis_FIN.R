@@ -1,3 +1,4 @@
+
 # Cargar paquetes----
 library(car)
 library(MASS)
@@ -18,7 +19,15 @@ library(gtools)
 library(bbmle)
 library(effectsize)
 
-options(scipen = 9999)
+# Investigadoras/es
+
+## Milena Vásquez-Amézquita - https://orcid.org/0000-0001-7317-8430 
+## Andrés Castellanos-Chacón - https://orcid.org/0000-0003-1684-9319 
+## Wendy Medina-Sarmiento - NA
+## Valentina Cepeda - NA
+## Marina Begoña Martínez-González - https://orcid.org/0000-0002-5840-6383
+## Juan David Leongómez - https://orcid.org/0000-0002-0092-6298
+
 
 #### CREAR FUNCION PARA REPORTAR MODELOS INCLIYENDO R²!!!!!!!
 
