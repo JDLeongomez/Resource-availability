@@ -1,0 +1,1086 @@
+---
+title: "How do experiences of violence affect women's preferences for facial masculinity according to resource availability? An exploratory study using eye-tracking"
+subtitle: Code and analyses
+author:
+  - name: Milena Vásquez-Amézquita \orcidlink{0000-0001-7317-8430}
+    correspondence: true
+    institute: [ueb, costa]
+    email: mvasquezam@unbosque.edu.co
+  - name: Andrés Castellanos-Chacón \orcidlink{0000-0003-1684-9319}
+    correspondence: false
+    institute: evoco
+  - name: Wendy Medina-Sarmiento
+    correspondence: false
+    institute: ueb
+  - name: Valentina Cepeda
+    correspondence: false
+    institute: ueb
+  - name: Marina Begoña Martínez-González \orcidlink{0000-0002-5840-6383}
+    correspondence: false
+    institute: costa
+  - name: Juan David Leongómez \orcidlink{0000-0002-0092-6298}
+    correspondence: false
+    institute: evoco
+institute:
+  - ueb: "Faculty of Psychology, Universidad El Bosque, Bogota, Colombia."
+  - evoco: "EvoCo: Human Behaviour and Evolution Lab, Faculty of Psychology, Universidad El Bosque, Bogota, Colombia"
+  - costa: "Faculty of Psychology, Universidad de la Costa, Barranquilla, Colombia."
+date: "`r Sys.setlocale('LC_TIME','en_GB.UTF-8');format(Sys.Date(),'%d %B, %Y')`"
+output:
+  bookdown::pdf_document2:
+    citation_package: biblatex
+    highlight: zenburn
+    number_sections: yes
+    keep_tex:  true
+    toc: no
+    pandoc_args:
+      - '--lua-filter=lua/scholarly-metadata.lua'
+      - '--lua-filter=lua/author-info-blocks.lua'
+classoption: 
+      - bookmarksnumbered
+editor_options:
+  chunk_output_type: console
+geometry: margin=2cm
+header-includes: 
+  \usepackage{caption} 
+  \usepackage{float} 
+  \floatplacement{figure}{H} 
+  \usepackage[utf8]{inputenc} 
+  \usepackage{fancyhdr}
+  \pagestyle{fancy} 
+  \usepackage{hanging}
+  \lhead{Vásquez-Amézquita et al.} 
+  \rhead{\textit{Exploring violence, resource access, and facial masculinity preferences}} 
+  \renewcommand{\abstractname}{Description} 
+  \usepackage[british]{babel}
+  \usepackage{csquotes}
+  \usepackage[style=apa,backend=biber]{biblatex}
+  \DeclareLanguageMapping{british}{british-apa}
+  \usepackage{hanging}
+  \usepackage{amsthm,amssymb,amsfonts}
+  \usepackage{tikz,lipsum,lmodern}
+  \usepackage{multicol}
+  \usepackage{orcidlink}
+  \newcommand{\opensupplement}{\setcounter{table}{0}
+    \renewcommand{\thetable}{S\arabic{table}} \setcounter{figure}{0}
+    \renewcommand{\thefigure}{S\arabic{figure}}}
+  \newcommand{\closesupplement}{\setcounter{table}{0}
+    \renewcommand{\thetable}{\arabic{table}} \setcounter{figure}{0}
+    \renewcommand{\thefigure}{\arabic{figure}}}
+  \usepackage{multirow,booktabs,setspace}
+  \DeclareCaptionLabelSeparator{point}{. }
+  \captionsetup[table]{labelfont=bf,
+    textfont=it,
+    format=plain,
+    labelsep=point,
+    skip=5pt}
+  \captionsetup[figure]{labelfont=bf,
+    format=plain,
+    justification=justified,
+    singlelinecheck=false,
+    labelsep=point,
+    skip=5pt}
+always_allow_html: yes
+csl: https://raw.githubusercontent.com/citation-style-language/styles/master/apa.csl
+bibliography: bib/Bibliography.bib
+urlcolor: blue
+linkcolor: gray
+citecolor: gray
+link-citations: true
+---
+
+------------------------------------------------------------------------
+
+```{=tex}
+\begin{center}
+\textbf{Description}
+\end{center}
+
+\par
+\begingroup
+\leftskip3em
+\rightskip\leftskip
+```
+This document contains all code, and step by step explanations for all analyses, figures and tables (including supplementary figures and tables) for:
+
+```{=latex}
+\begin{hangparas}{.25in}{1}
+Vásquez-Amézquita, M., Castellanos-Chacón, A., Medina-Sarmiento, W., Cepeda, V., Martínez-González, M. B., \& Leongómez, J. D.,  (in prep). \textit{How do experiences of violence affect women's preferences for facial masculinity according to resource availability? An exploratory study using eye-tracking.}
+\end{hangparas}
+```
+
+Data available from the Open Science Framework (OSF): <https://doi.org/10.XXXXX/OSF.IO/XXXXX>. All analyses were planned by Milena Vásquez-Amézquita and Juan David Leongómez. This document and its underlying code were created in `R Markdown` by Juan David Leongómez using \LaTeX.
+
+------------------------------------------------------------------------
+
+```{=latex}
+\par
+\endgroup
+
+{\hypersetup{hidelinks}
+\setcounter{tocdepth}{6}
+\tableofcontents
+}
+\opensupplement
+```
+
+```{r results = "hold", setup, include = FALSE}
+library(knitr)
+opts_chunk$set(
+  fig.width = 12, fig.height = 8, fig.pos = "H",
+  message = FALSE, warnings = FALSE
+)
+options(knitr.kable.NA = " ")
+opts_knit$set(eval.after = "fig.cap")
+```
+
+----------------
+
+# Preliminaries
+
+## Load packages
+
+This file was created using `knitr` [@knitrcit], mostly using `tidyverse` [@tidyversecit] syntax. As such, data wrangling was mainly done using packages such as `dplyr` [@dplyrcit], and most figures were created or modified using `ggplot2` [@ggplotcit]. Tables were created using `knitr::kable` and `kableExtra` [@kableExtracit].
+
+Linear mixed models were fitted using `lmerTest` [@lmertestcit], assumptions were performed using `performance` [@ludecke2021], contrasts and interactions were explored using `emmeans` [@emmeanscit].
+
+Used packages also include `osfr` [@osfrcit] to download and open data files directly from the Open Science Framework ([OSF](https://osf.io/)), using the `osf_retrieve_file` and `osf_download` functions.
+
+All packages used in this file can be directly installed from the Comprehensive R Archive Network ([CRAN](https://cran.r-project.org/)). For a complete list of packages used to create this file, and their versions, see section \@ref(session), at the end of the document.
+
+```{r message = FALSE}
+library(car)
+library(MASS)
+library(ggstats)
+library(tidyverse)
+library(ggpubr)
+library(readxl)
+library(lmerTest)
+library(emmeans)
+library(knitr)
+library(kableExtra)
+library(performance)
+library(GGally)
+library(scales)
+library(factoextra)
+library(FactoMineR)
+library(gtools)
+library(bbmle)
+library(effectsize)
+```
+
+## Custom functions
+
+### `pval.lev`
+
+This function takes p-values and formats them in \LaTeX, highlighting significant results in bold.
+
+```{r}
+# Define a function 'pval.lev' to format p-values based on specific thresholds.
+pval.lev <- function(pvals) {
+  # If the p-value is less than 0.0001, return the string '\textbf{< 0.0001}'.
+  ifelse(pvals < 0.0001,
+    "\\textbf{< 0.0001}",
+    # If the p-value is less than 0.001, return the string '\textbf{< 0.001}'.
+    ifelse(pvals < 0.001,
+      "\\textbf{< 0.001}",
+      # If the p-value is less than 0.05, format it with bold text and round to 4
+      # decimal places.
+      ifelse(pvals < 0.05,
+        paste0("\\textbf{", round(pvals, 4), "}"),
+        # Otherwise, round the p-value to 2 decimal places.
+        round(pvals, 2)
+      )
+    )
+  )
+}
+```
+
+### `corr.stars`
+
+This function creates a correlation matrix, and displays significance (function `corr.stars` modified from <http://myowelt.blogspot.com/2008/04/beautiful-correlation-tables-in-r.html>).
+
+```{r}
+corr.stars <- function(x) {
+  # Load the 'Hmisc' package, which is required for the 'rcorr' function.
+  require(Hmisc)
+  # Convert the input 'x' to a matrix in case it is not already.
+  x <- as.matrix(x)
+  # Compute the correlation matrix (R) and p-values (p) using the 'rcorr' function.
+  R <- rcorr(x)$r # Correlation matrix
+  p <- rcorr(x)$P # p-value matrix
+  # Define significance levels for the stars notation.
+  # *** for p < 0.001, ** for p < 0.01, * for p < 0.05, and † for p < 0.10.
+  mystars <- ifelse(p < .001,
+    paste0("\\textbf{", round(R, 2), "***}"),
+    ifelse(p < .01,
+      paste0("\\textbf{", round(R, 2), "**}"),
+      ifelse(p < .05,
+        paste0("\\textbf{", round(R, 2), "*}"),
+        ifelse(p < .10,
+          paste0(round(R, 2), "$^{\\dagger}$"),
+          format(round(R, 2), nsmall = 2)
+        )
+      )
+    )
+  )
+  # Build a new matrix 'Rnew' that contains the correlations and their significance stars.
+  Rnew <- matrix(mystars,
+    ncol = ncol(x)
+  ) # Ensure the new matrix has the same number of columns as 'x'
+  # Add the correlation values without stars to the diagonal (self-correlations).
+  diag(Rnew) <- paste(diag(R), " ",
+    sep = ""
+  )
+  # Set row names and column names of the matrix 'Rnew' to match those of the original matrix.
+  rownames(Rnew) <- colnames(x)
+  colnames(Rnew) <- paste(colnames(x), "", sep = "")
+  # Remove the upper triangle and the diagonal of the matrix to avoid duplication.
+  Rnew <- as.matrix(Rnew)
+  Rnew[upper.tri(Rnew, diag = TRUE)] <- ""
+  # Convert the matrix to a data frame for easier handling.
+  Rnew <- as.data.frame(Rnew)
+  # Remove the last column (empty column from the upper triangle) and return the result.
+  Rnew <- cbind(Rnew[1:length(Rnew) - 1])
+  # Return the final correlation matrix with significance stars.
+  return(Rnew)
+}
+```
+
+## Independent stimuli evaluation
+
+The sex typicality of all stimuli was manipulated to either enhance or reduce their sex-typical characteristics. Since all the stimuli were male faces, this involved masculinizing them to increase their typical sex characteristics and feminizing them to reduce those characteristics. Masculinized and feminized versions were independently rated for masculinity and estimated age by a panel of raters (not participants).
+
+```{r}
+# Load the 'Evaluacion Manipulación Rostros.xlsx' Excel file into a data frame
+ext_val <- read_excel("Data/Evaluacion Manipulación Rostros.xlsx")
+```
+
+### Masculinity ratings
+
+First, masculinity rating given to the masculinized and feminized versions of each stimuli were compared.
+
+```{r}
+# Select relevant columns and reshape the data into long format
+masc_dat <- ext_val |>
+  select(
+    ResponseId,
+    contains("M", ignore.case = FALSE), # Select columns that contain "M" (masculinity)
+    -Menstruacion
+  ) |> # Exclude the 'Menstruacion' (menstruation) column
+  pivot_longer(
+    cols = contains("M", ignore.case = FALSE), # Reshape to long format
+    names_to = "Stimulus", # Column with stimuli names
+    values_to = "Masculinity"
+  ) |> # Column with masculinity ratings
+  # Add a column indicating sexual dimorphism based on stimulus name
+  mutate(Sexual_dimorphism = ifelse(grepl("f_1", Stimulus), "Feminine", "Masculine")) |>
+  # Keep only the first 3 characters of the stimulus name
+  mutate(Stimulus = str_sub(Stimulus, end = 3))
+
+# Group by stimulus and perform t-tests for masculinity ratings across
+# sexual dimorphism categories
+t_masc <- masc_dat |>
+  group_by(Stimulus) |>
+  summarise(
+    t = round(t.test(Masculinity ~ Sexual_dimorphism)$statistic, 2), # Compute t values
+    p = pval.lev(t.test(Masculinity ~ Sexual_dimorphism)$p.value)
+  ) |> # Compute p-value
+  ungroup()
+
+# Select the first 10 rows of the data 't_masc'
+t_masc[1:10, ] |>
+  # Add the next 10 rows (11 to 20) as additional columns
+  cbind(t_masc[11:20, ]) |>
+  # Add the next 10 rows (21 to 30) as additional columns
+  cbind(t_masc[21:30, ]) |>
+  # Create a table using the 'kable' function
+  kable(
+    booktabs = TRUE, # Use 'booktabs' style for better-looking tables in LaTeX
+    digits = 2, # Round numerical values to 2 decimal places
+    align = "c", # Center align all columns
+    linesep = "", # No lines between rows
+    caption = "Difference in independent masculinity ratings given to each stimulus,
+               according to its sexual dimorphism manipulation (feminized - masculinized)",
+    # Caption for the table
+    escape = FALSE, # Allow LaTeX commands in the table (e.g., italic or bold)
+    col.names = rep(c("Stimulus", "\\textit{t}", "\\textit{p}"), times = 3) # Column names
+  ) |>
+  # Apply additional LaTeX styling to the table using 'kable_styling'
+  kable_styling(
+    latex_options = c("HOLD_position", "scale_down") # Keep table position
+  ) |>
+  # Add vertical lines after the 3rd and 6th columns using 'column_spec'
+  column_spec(c(3, 6), border_right = TRUE) |>
+  # Add a footnote with specific formatting
+  footnote(
+    general = "Tests are Welch's \\\\textit{t}-test. Significant results are in bold.",
+    # General footnote text with LaTeX formatting
+    threeparttable = TRUE, # Enable three-part table for better layout
+    footnote_as_chunk = TRUE, # Render footnote as a chunk
+    escape = FALSE # Allow LaTeX commands in the footnote
+  )
+```
+
+### Age ratings
+
+Then, estimated age of stimuli was assessed.
+
+```{r}
+# Process age-related data: select relevant columns and reshape into long format
+age_dat <- ext_val |>
+  select(
+    ResponseId,
+    contains("E", ignore.case = FALSE)
+  ) |> # Select columns related to estimated age (E)
+  select(-c(2:5)) |> # Exclude columns 2 to 5 (irrelevant for this analysis)
+  pivot_longer(
+    cols = contains("E", ignore.case = FALSE), # Reshape to long format
+    names_to = "Stimulus", # Column with stimuli names
+    values_to = "Age"
+  ) |> # Column with age estimates
+  # Add sexual dimorphism category based on stimulus name
+  mutate(Sexual_dimorphism = ifelse(grepl("f_1", Stimulus), "Feminine", "Masculine")) |>
+  # Keep only the first 3 characters of the stimulus name
+  mutate(Stimulus = str_sub(Stimulus, end = 3))
+
+# Summarize age data: compute mean, standard deviation, minimum, and maximum age
+sum_age_dat <- age_dat |>
+  summarise(
+    Mean = mean(Age, na.rm = TRUE), # Mean age
+    SD = sd(Age, na.rm = TRUE), # Standard deviation of age
+    Min = min(Age, na.rm = TRUE), # Minimum age
+    Max = max(Age, na.rm = TRUE)
+  ) # Maximum age
+```
+
+#### Histogram of perceived age
+
+Distribution of the estimated ages.
+
+```{r estimated-age-hist, message = FALSE, warning = FALSE, results = "hold", fig.cap = paste0("Histogram of estimated age of stimuli by an independent panel of raters. Age estimations were between ", sum_age_dat$Min, " and ", sum_age_dat$Max, " with a mean of ", round(sum_age_dat$Mean, 2), " ± ", round(sum_age_dat$SD, 2),"."), fig.width = 5, fig.height = 3}
+# Create a histogram of estimated age
+ggplot(age_dat, aes(x = Age)) +
+  geom_histogram(bins = 26, fill = "#6D9EC1", color = "black") + # Plot histogram with 26 bins
+  labs(
+    x = "Estimated Age", # X-axis label
+    y = "Count"
+  ) + # Y-axis label
+  scale_x_continuous(breaks = seq(15, 40, 5)) # X-axis scale with breaks every 5 units
+```
+
+## Load and wrangle main experiment data
+
+### Individual databases (by data type/source)
+
+#### Eye-tracking data
+
+```{r}
+# Load the 'CUC-UB' sheet from the 'BD-ET-CUC-UB.xlsx' dataset
+dat_et <- read_excel("Data/BD-ET-CUC-UB.xlsx",
+  sheet = "CUC-UB"
+) |>
+  # Drop unused columns
+  select(-c(
+    Participant, Condicion, TOI, Interval, Media_respuesta, AOI,
+    AOI_Global, Respuesta, Number_of_mouse_clicks...17,
+    Time_to_first_mouse_click...18, AOI_respuesta
+  )) |>
+  # Rename columns (to English)
+  rename(
+    ID = Recording,
+    University = UNIVERSIDAD,
+    Stimulus = Media,
+    Condition = Condición,
+    Relationship = Contexto,
+    Sexual_dimorphism = Rostro,
+    TFD = Total_duration_of_whole_fixations,
+    NF = Number_of_whole_fixations,
+    TFF = Time_to_first_whole_fixation,
+    NMC = Number_of_mouse_clicks...21,
+    TFMC = Time_to_first_mouse_click...22,
+    DFF = Duration_first_fixation
+  ) |>
+  # Convert character columns to factors
+  mutate(across(where(is.character), as.factor)) |>
+  # Recode factor levels to more meaningful English labels
+  mutate(
+    Condition = fct_recode(Condition,
+      "Low" = "BAJA",
+      "High" = "ALTA"
+    ),
+    Relationship = fct_recode(Relationship,
+      "Short term" = "CP",
+      "Long term" = "LP"
+    ),
+    Sexual_dimorphism = fct_recode(Sexual_dimorphism,
+      "Feminized" = "Feminizado",
+      "Masculinized" = "Masculinizado"
+    )
+  ) |>
+  # Modify 'Stimulus' column to include 'F' for Feminized and 'M' for Masculinized
+  mutate(
+    Stimulus = ifelse(Sexual_dimorphism == "Feminized",
+      paste0(str_sub(str_replace(Stimulus, ".* - ", ""), 1, 2), "F"),
+      ifelse(Sexual_dimorphism == "Masculinized",
+        paste0(str_sub(str_replace(Stimulus, ".* - ", ""), 1, 2), "M"),
+        Stimulus
+      )
+    ),
+    # Create a new column 'Choice' to indicate whether there was a mouse click
+    Choice = ifelse(NMC == 0, "No", "Yes")
+  )
+```
+
+#### Questionnaires
+
+This was loaded without calculating total instrument scores (for now), to test internal consistency
+
+```{r}
+quests <- read_excel("Data/Cuestionario Datos Sociodemográficos  (Disponibilidad) (respuestas) (1).xlsx",
+  sheet = "Respuestas de formulario 1"
+) |>
+  # Drop unnecessary columns (such as 'Invitado', 'Servicios ayuda', and 'Correos cierre')
+  select(-c(Invitado, `Servicios ayuda`, `Correos cierre`)) |>
+  # Rename columns for better readability
+  rename(
+    Date = Fecha,
+    Age = edad,
+    City = Ciudad,
+    Education = Escolaridad,
+    Ethnicity = Etnia,
+    Gender = Sexo,
+    Sex = Genero,
+    Sexual_orientation = OS,
+    Relationship_current = "Pareja actual",
+    Relationship_duration = DuracionR,
+    Relationship_status = EstadoR,
+    Partner_sex = SexoParejaActual,
+    Partner_masculinity = Masculinidad_pareja,
+    Partner_dominance = Dominancia_pareja,
+    Partner_attractiveness = Atractivo_pareja,
+    Number_of_children = NumHijos,
+    Hormonal_contraception = "Anticonceptivos hormonales",
+    Contraceptive = Cual_anticonceptivo,
+    Last_mentruation = "Ultima menstruacion",
+    Currently_pregnant = "Embarazo actual",
+    Sexual_abuse = "Experiencia abuso sexual",
+    Comments = comentarios1,
+    Medical_history = "antecedentes medicos",
+    SP_happiness = "AP felicidad",
+    SP_financial_security = "AP seguridad economica",
+    SP_money_control = "AP control dinero",
+    SP_attractiveness = "AP atractivo",
+    SP_self_confidence = "AP autoconfianza",
+    SP_self_esteem = "AP autoestima",
+    SP_health = "AP salud",
+    Electricity = "SB electricidad",
+    Internet_access = "SB internet",
+    TV = "SB television",
+    Internet_use = "Fr acceso internet",
+    Hospital_access = "Acceso hospital",
+    Freq_illness = "Fr enfermedades",
+    Socioeconomic_level = "Estrato socioeconomico",
+    Neighborhood = "Barrio de residencia",
+    Perceived_neighborhood_safety = "Seguridad barrio",
+    Perceived_city_safety = "Seguridad ciudad",
+    Perceived_home_safety = "Seguridad hogar",
+    Perceived_country_safety = "Seguridad país",
+    Freq_robery = "Fr de robos",
+    Men_perceived_as_danger_to_children = "Hombres peligrosos hijos",
+    Men_perceived_as_danger_to_partner = "Hombres peligrosos pareja",
+    Partner_physical_violence = "VP fisica",
+    Freq_partner_physical_violence = "Fr VP fisica",
+    Partner_sexual_violence = "VP sexual",
+    Freq_partner_sexual_violence = "Fr VP sexual",
+    Partner_infidelity = "Infidelidad",
+    Freq_partner_infidelity = "Fr infidelidad",
+    Victim_of_violence = "Victima de alguna violencia",
+    Violence_type = "Tipo violencia",
+    Victim_of_gender_violence = "Victima violencia género",
+    Victim_of_armed_conflict = "Victima conflicto armado",
+    Control_question_1 = "Sin leer",
+    Control_question_2 = "Broma"
+  ) |>
+  # Recode the factor levels of several categorical variables
+  mutate(
+    Education = factor(Education, levels = c(
+      "Primaria",
+      "Bachillerato",
+      "Universitario",
+      "Posgrado"
+    )),
+    Sexual_orientation = factor(Sexual_orientation,
+      levels = c(
+        "Exclusivamente heterosexual",
+        "Principalmente heterosexual, con contactos homosexuales esporádicos",
+        "Predominantemente heterosexual, aunque con contactos homosexuales más que esporádicos",
+        "Bisexual",
+        "Pansexual",
+        "Demisexual"
+      )
+    ),
+    Relationship_status = factor(Relationship_status,
+      levels = c(
+        "Soltero sin contactos sexuales en el último año",
+        "Soltero con contactos sexuales en el último año",
+        "Relación exclusiva o matrimonio - viven juntos",
+        "Relación exclusiva - no viven juntos",
+        "Relación no exclusiva - contactos sexuales con otras personas"
+      )
+    ),
+    Internet_use = factor(Internet_use,
+      levels = c("Cada día", "Cada mes", "Cada año")
+    ),
+    Socioeconomic_level = as.factor(Socioeconomic_level)
+  ) |>
+  # Recode City variable to simplify geographical information
+  mutate(City = ifelse(City %in% c(
+    "Bogotá D.C.", "Madrid, Cundinamarca", "Zipaquirá, Cundinamarca",
+    "Zipaquirá", "Mosquera, cundinamarca", "Mosquera",
+    "FUNZA, CUNDINAMARCA", "Madrid Cundinamarca", "Une- Cundinamarca"
+  ),
+  "Bogota Region",
+  ifelse(City %in% c(
+    "Soledad", "Barranquilla", "BARRANQUILLA",
+    "Soledad, Atlantico", "Costa Atlantica", "Corozal"
+  ),
+  "Atlantico Region",
+  "Other"
+  )
+  )) |>
+  # Recode several factors from Spanish to English for easier interpretation
+  mutate(Education = recode(Education,
+    "Primaria" = "Primary school",
+    "Bachillerato" = "High school",
+    "Universitario" = "University",
+    "Posgrado" = "Postgraduate"
+  )) |>
+  # Additional recoding of variables
+  mutate(Sexual_orientation = recode(Sexual_orientation,
+    "Exclusivamente heterosexual" =
+      "Exclusively heterosexual",
+    "Principalmente heterosexual, con contactos homosexuales esporádicos" =
+      "Predominantly heterosexual",
+    "Predominantemente heterosexual, aunque con contactos homosexuales más que esporádicos" =
+      "Predominantly heterosexual, but more than incidentally homosexual",
+    "Bisexual" = "Bisexual",
+    "Pansexual" = "Pansexual",
+    "Demisexual" = "Demisexual"
+  )) |>
+  mutate(Relationship_status = recode(Relationship_status,
+    "Soltero sin contactos sexuales en el último año" =
+      "Single without sexual contacts",
+    "Soltero con contactos sexuales en el último año" =
+      "Single with sexual contacts",
+    "Relación exclusiva o matrimonio - viven juntos" =
+      "Exclusive relationship - cohabitating",
+    "Relación exclusiva - no viven juntos" =
+      "Exclusive relationship - not cohabitating",
+    "Relación no exclusiva - contactos sexuales con otras personas" =
+      "Non-exclusive relationship"
+  )) |>
+  mutate(Internet_use = recode(Internet_use,
+    "Cada día" = "Daily",
+    "Cada mes" = "Monthly",
+    "Cada año" = "Yearly"
+  )) |>
+  # Recode several questions related to danger perceptions, replacing Spanish responses with
+  # numerical values.
+  mutate(across(
+    starts_with("Men_perceived_as_danger_to_"),
+    ~ recode(.,
+      "Completamente en desacuerdo" = 1,
+      "Ligeramente en desacuerdo" = 2,
+      "Ni de acuerdo ni en desacuerdo" = 3,
+      "Ligeramente deacuerdo" = 4,
+      "Completamente deacuerdo" = 5
+    )
+  )) |>
+  # Replace Spanish responses with corresponding English values
+  mutate(across(where(is.character), ~ replace(
+    ., . ==
+      "Si",
+    "Yes"
+  ))) |>
+  mutate(across(where(is.character), ~ replace(
+    ., . ==
+      "Sí",
+    "Yes"
+  ))) |>
+  mutate(across(where(is.character), ~ replace(
+    ., . ==
+      "No quiero responder",
+    "Prefer not to answer"
+  ))) |>
+  mutate(across(where(is.character), ~ replace(
+    ., . ==
+      "Mujer",
+    "Woman"
+  ))) |>
+  mutate(across(where(is.character), ~ replace(
+    ., . ==
+      "Hombre",
+    "Man"
+  ))) |>
+  mutate(across(where(is.character), ~ replace(
+    ., . ==
+      "Femenino",
+    "Female"
+  ))) |>
+  mutate(across(where(is.character), ~ replace(
+    ., . ==
+      "Masculino",
+    "Male"
+  ))) |>
+  mutate(across(where(is.character), ~ replace(
+    ., . ==
+      "Sin pareja actual",
+    "Single"
+  ))) |>
+  mutate(across(where(is.character), ~ replace(
+    ., . ==
+      "Sí, una vez en la adultez",
+    "Once as adult"
+  ))) |>
+  mutate(across(where(is.character), ~ replace(
+    ., . ==
+      "Sí, tanto en la infancia como en la adultez",
+    "Both as child and adult"
+  ))) |>
+  mutate(across(where(is.character), ~ replace(
+    ., . ==
+      "Sí, más de una vez en mi infancia",
+    "More than once as child"
+  ))) |>
+  mutate(across(where(is.character), ~ replace(
+    ., . ==
+      "Sí, una vez e mi infancia",
+    "Once as child"
+  ))) |>
+  mutate(across(where(is.character), ~ replace(
+    ., . ==
+      "Afrocolombiano",
+    "Afrocolombian"
+  ))) |>
+  mutate(across(where(is.character), ~ replace(
+    ., . ==
+      "Desplazado conflicto armado",
+    "Undetermined"
+  ))) |>
+  mutate(across(where(is.character), ~ replace(
+    ., . ==
+      "Ninguna",
+    "Undetermined"
+  ))) |>
+  mutate(across(where(is.character), ~ replace(
+    ., . ==
+      "Comunidad negra",
+    "Afrocolombian"
+  ))) |>
+  mutate(across(where(is.character), ~ replace(
+    ., . ==
+      "Raizal del Archipiélago de San Andrés, 
+       Providencia y Santa Catalina",
+    "Raizal"
+  ))) |>
+  mutate(across(where(is.character), ~ replace(
+    ., . ==
+      "Patos",
+    "Indigenous"
+  ))) |>
+  mutate(across(where(is.character), ~ replace(
+    ., . ==
+      "Indígena",
+    "Indigenous"
+  ))) |>
+  mutate(across(where(is.character), ~ replace(
+    ., . ==
+      "No estoy segura",
+    "Unsure"
+  )))
+```
+
+##### Principal component analysis (PCA)
+
+To test whether it was possible to reduce the number of socio-ecological variables, we performed PCAs using the package FactoMineR [@factominercit], and plotted its results with function from the package factoextra [@factoextracit].
+
+###### Socio-ecological factors PCA
+
+```{r pca-sef-tab}
+# Select relevant columns for PCA from the 'quests' dataset
+quests_pca_gen <- quests |>
+  select(
+    ID,  # Unique identifier
+    Men_perceived_as_danger_to_partner,
+    Men_perceived_as_danger_to_children,
+    Freq_partner_physical_violence,
+    Freq_partner_sexual_violence,
+    Freq_partner_infidelity,
+    Perceived_home_safety
+  ) |>
+  # Rename columns: replace "Freq_" with "Frequency of"
+  rename_with(~ str_replace_all(., "Freq_", "Frequency of")) |>
+  # Replace underscores with spaces in column names
+  rename_with(~ str_replace_all(., "_", " ")) |>
+  # Capitalize the first letter of each column name
+  rename_with(~ str_to_sentence(.))
+
+# Perform PCA on the selected variables (excluding the ID column)
+pca_sef <- PCA(quests_pca_gen[, -1], graph = FALSE)
+
+# Display summary of the PCA results
+pca_sef$var$cor |> 
+  # Create a table using the 'kable' function
+  kable(
+    booktabs = TRUE, # Use 'booktabs' style for better-looking tables in LaTeX
+    digits = 2, # Round numerical values to 2 decimal places
+    align = "c", # Center align all columns
+    linesep = "", # No lines between rows
+    caption = "Correlation between variables and PCA dimensions",
+    # Caption for the table
+    escape = FALSE, # Allow LaTeX commands in the table (e.g., italic or bold)
+  ) |>
+  # Apply additional LaTeX styling to the table using 'kable_styling'
+  kable_styling(
+    latex_options = c("HOLD_position", "scale_down") # Keep table position
+  )
+```
+
+**Summary plot**
+
+```{r pca-sef-plot, message = FALSE, warning = FALSE, results = "hold", fig.cap = "Summary of the PCA for all socio-ecological factors. \textbf{a.} Scree plot. \textbf{b.} Factor loadings."}
+# Arrange two plots side by side: 
+# 1. A scree plot showing the explained variance for each principal component
+# 2. A plot showing the variable loadings on the principal components
+ggarrange(
+  fviz_eig(pca_sef, addlabels = TRUE, barfill = "#00AFBB") +
+    labs(
+      title = "PCA: Socio-ecological factors",  # Title for the scree plot
+      subtitle = "Scree plot"  # Subtitle for the scree plot
+    ),
+  fviz_pca_var(pca_sef,
+    col.var = "#00AFBB",  # Color the variable loadings in teal
+    repel = TRUE  # Avoid overlapping labels
+  ) +
+    labs(
+      title = NULL,  # No title for the loading plot
+      subtitle = "Loadings"  # Subtitle for the loading plot
+    ),
+  labels = "auto"
+)
+```
+
+When including all socio-ecological factors, the only variables that strongly correlate between them and with the PCA dimension (Table \@ref(tab:pca-sef-plot); Fig. \@ref(fig:pca-sef-plot)), are the two variables that evaluate participant's perception of men as dangerous to children and to their partner.
+
+Because of this, a new PCA was performed or only these two variables, to calculate a score of Men perceived as dangerous.  All remaining socio-ecological variables were kept.
+
+###### Men perceived as dangerous
+
+```{r}
+# Select relevant columns for PCA from the 'quests' dataset
+quests_pca <- quests |>
+  select(
+    ID,
+    Men_perceived_as_danger_to_partner,
+    Men_perceived_as_danger_to_children
+  ) |>
+  # Rename columns: remove "Men_perceived_as_danger_to_"
+  rename_with(~ str_remove_all(., "Men_perceived_as_danger_to_")) |>
+  # Capitalize the first letter of each column name
+  rename_with(~ str_to_sentence(.))
+
+
+# Perform PCA on the selected variables (excluding the ID column)
+pca_mpd <- PCA(quests_pca[, -1], graph = FALSE)
+
+# Calculate score for the men perceived as dangerous dimension
+mpd_scores <- data.frame(pca_mpd$ind$coord)$Dim.1
+
+# Display summary of the PCA results
+pca_mpd$var$cor |> 
+  # Create a table using the 'kable' function
+  kable(
+    booktabs = TRUE, # Use 'booktabs' style for better-looking tables in LaTeX
+    digits = 2, # Round numerical values to 2 decimal places
+    align = "c", # Center align all columns
+    linesep = "", # No lines between rows
+    caption = "Correlation between variables and PCA dimensions",
+    # Caption for the table
+    escape = FALSE, # Allow LaTeX commands in the table (e.g., italic or bold)
+  ) |>
+  # Apply additional LaTeX styling to the table using 'kable_styling'
+  kable_styling(
+    latex_options = c("HOLD_position", "scale_down") # Keep table position
+  )
+```
+
+**Summary plot**
+
+In fact, the two variables related to men perceived as dangerous, could be reduced to a single dimension, that captured over `r percent(pca_mpd$eig[1,2]/100)` of the variance.
+
+```{r pca-mpd-plot, message = FALSE, warning = FALSE, results = "hold", fig.cap = "Summary of the PCA for factors related to men perceived as dangerous. \textbf{a.} Scree plot. \textbf{b.} Factor loadings."}
+# Arrange two plots side by side: 
+# 1. A scree plot showing the explained variance for each principal component
+# 2. A plot showing the variable loadings on the principal components
+ggarrange(
+  fviz_eig(pca_mpd, addlabels = TRUE, barfill = "#00AFBB") +
+    labs(
+      title = "PCA: Men perceived as danger to...", # Title for the scree plot
+      subtitle = "Scree plot"  # Subtitle for the scree plot
+    ),
+  fviz_pca_var(pca_mpd,
+    col.var = "#00AFBB", # Color the variable loadings in teal
+    repel = TRUE # Avoid overlapping labels
+  ) +
+    labs(
+      title = NULL, # No title for the loading plot
+      subtitle = "Loadings" # Subtitle for the loading plot
+    ),
+  labels = "auto"
+)
+```
+
+##### Clean questionnaire data
+
+Less columns, with total instrument scores
+
+```{r}
+# Clean and modify the 'quests' dataset
+quests_clean <- quests |>
+  # Recode values in columns that start with "Escasez alimentaria"
+  mutate(across(
+    starts_with("Escasez alimentaria"),
+    ~ recode(.,
+      "Nunca" = 0,  # Recode "Nunca" to 0
+      "Rara vez/algunas veces" = 1,  # Recode "Rara vez/algunas veces" to 1
+      "Casi siempre" = 2  # Recode "Casi siempre" to 2
+    )
+  )) |>
+  # Perform row-wise operations
+  rowwise() |>
+  # Create new variables by summing up specific columns
+  mutate(
+    # Calculate Self-esteem score by summing relevant items (with reverse scoring)
+    Self_esteem = sum(
+      autoestima_I1, 5 - autoestima_I2, autoestima_I3, autoestima_I4,
+      autoestima_I5, 5 - autoestima_I6, autoestima_I7, 5 - autoestima_I8,
+      5 - autoestima_I9, autoestima_I10
+    ),
+    # Calculate Self-perception score by summing columns that start with "SP_"
+    Self_perception = sum(across(starts_with("SP_"))),
+    # Calculate Perceived safety by summing columns that end with "_safety"
+    Perceived_safety = sum(across(ends_with("_safety"))),
+    # Calculate Food insecurity by summing columns that start with "Escasez alimentaria"
+    Food_insecurity = sum(across(starts_with("Escasez alimentaria")))
+  ) |>
+  # Remove columns that start with "autoestima_"
+  select(!starts_with("autoestima_")) |>
+  # Convert character columns to factors
+  mutate(across(where(is.character), as.factor)) |>
+  # Bind the column 'Men_perceived_as_dangerous' from 'mpd_scores' (PCA scores)
+  bind_cols(Men_perceived_as_dangerous = mpd_scores)
+```
+
+#### Subjective evaluation of stimuli
+
+##### Wide format
+
+```{r}
+# Load the subjective evaluation dataset, removing the last two columns (123 and 124)
+eval <- read_excel("Data/Evaluación subjetiva rostros (Respuestas).xlsx") |> 
+  select(-c(123:124)) |> 
+  # Perform row-wise operations to compute new variables
+  rowwise() |> 
+  # Calculate the sum of masculinity and attractiveness ratings for both masculinized and 
+  # feminized stimuli
+  mutate(Masculinity_masculinized = sum(across(ends_with("M Mas"))),
+         Masculinity_feminized = sum(across(ends_with("F Mas"))),
+         Attractiveness_masculinized = sum(across(ends_with("M Atr"))),
+         Attractiveness_feminized = sum(across(ends_with("F Atr")))) |> 
+  # Rename columns for clarity
+  rename(Date = "Marca temporal",
+         ID = "Escribe tu código de participante")
+```
+
+##### Long format
+
+```{r}
+# Create a long format dataset by combining attractiveness and masculinity ratings
+eval_long <- left_join(
+  # First, select relevant columns and pivot the attractiveness ratings to long format
+  eval |>
+    select(-c(123:126)) |>  # Remove unnecessary columns
+    select(!ends_with(" Mas")) |>  # Exclude masculinity-related columns
+    pivot_longer(cols = ends_with("Atr"),  # Pivot attractiveness ratings to long format
+                 names_to = "Stimulus", 
+                 values_to = "Attractiveness") |> 
+    mutate(Stimulus = str_remove_all(Stimulus, " Atr")),  # Clean the Stimulus names
+  # Next, pivot the masculinity ratings to long format
+  eval |> 
+    select(-c(123:126)) |>  # Remove unnecessary columns
+    select(!ends_with(" Atr")) |>  # Exclude attractiveness-related columns
+    pivot_longer(cols = ends_with("Mas"),  # Pivot masculinity ratings to long format
+                 names_to = "Stimulus", 
+                 values_to = "Masculinity") |> 
+    mutate(Stimulus = str_remove_all(Stimulus, " Mas"))  # Clean the Stimulus names
+)
+```
+
+#### Resource availability
+
+```{r}
+reg <- rbind(read_excel("Data/3Registro Participantes Disponibilidad de Recursos-corregido.xlsx", 
+                        sheet = "UB") |> 
+               mutate(University = "UB"),
+             read_excel("Data/3Registro Participantes Disponibilidad de Recursos-corregido.xlsx", 
+                        sheet = "CUC") |> 
+               mutate(University = "CUC")) |> 
+  select(-c(Grupo, `Entrega de kit`, `Protocolo de bioseguridad`, `Requisitos previos al registro`, Consentimiento,
+            `Código de evaluador`:`Código auxiliar que reclutó`)) |>
+  rename(Date = "Fecha de registro",
+         ID = "Codigo del Participante",
+         Condition = "Condicion",
+         Calibration = "Calibración",
+         Gaze_perc = "% Gaze",
+         Condition_happiness = "Q Feliz",
+         Condition_physical_safety = "Q Segura físicamente",
+         Condition_healthy = "Q Saludable",
+         Condition_economic_security = "Q Segura económicamente",
+         Body_temperature = "Temperatura",
+         Ovulating = "Test de ovulación",
+         Saliva_pre = "Recolección de saliva pre",
+         Saliva_pre_time = "Hora...18",
+         Eye_tracking = "Rastreo Ocular",
+         Subjective_evaluation = "Evaluación subjetiva",
+         Sociodemographic_questionnaire = "Cuestionario sociodemográfico",
+         Saliva_post = "Recolección de saliva post",
+         Saliva_post_time = "Hora...23",
+         Notes = "Observaciones") |>
+  mutate(Condition = fct_recode(Condition, 
+                                "Low" = "Baja",
+                                "High" = "Alta"),
+         Calibration = fct_recode(Calibration, 
+                                  "<=0.5" = "<0.5 (menor a 0.5)",
+                                  ">0.5" = ">0.5 (mayor a 0.5)",
+                                  "<=0.5" = "0.5 (igual a 0.5)",
+                                  NULL = "Selecciona"),
+         Ovulating = fct_recode(as.factor(Ovulating),
+                                "No" = "0",
+                                "Yes" = "1")) |> 
+  mutate_all(~str_replace_all(., "SI", "Yes")) |> 
+  mutate_all(~str_replace_all(., "NO", "No")) |> 
+  mutate_all(~str_replace_all(., "INCOMPLETO", "No")) |>
+  mutate_all(~str_replace_all(., "Recuperado", "Data recovered")) |> 
+  mutate_all(~str_replace_all(., "RECUPERADO", "Data recovered")) |> 
+  mutate_all(~na_if(., "Selecciona")) |> 
+  mutate_all(~na_if(., "N/A")) |> 
+  mutate(across(starts_with("Condition_"), as.numeric))
+```
+
+### Full, final database
+
+#### Join data files
+
+```{r}
+dat_int <- dat_et |> 
+  left_join(quests_clean, by = c("ID"), multiple = "all") |>
+  left_join(eval_long, by = c("ID", "Stimulus"), multiple = "all") |> 
+  left_join(reg, by = c("ID", "University", "Condition"), multiple = "all") 
+```
+
+#### Filtered database
+
+Filtered database to exclude participants who did responded the two control questions correctly, were ovulating, or did not report being exclusively heterosexual.
+
+```{r}
+dat <- dat_int |> 
+  # Filter out rows where Control_question_1 and Control_question_2 are both "No",
+  # Ovulating is not "Yes", and Sexual_orientation is "Exclusively heterosexual"
+  filter(Control_question_1 == "No" 
+         & Control_question_2 == "No" 
+         & Ovulating != "Yes" 
+         & Sexual_orientation == "Exclusively heterosexual") |> 
+  # Remove all occurrences of the letter "F" from the Stimulus column 
+  # (infomation already in the column Sexual_dimorphism)
+  mutate(Stimulus = str_remove_all(Stimulus, "F")) |> 
+  # Remove all occurrences of the letter "M" from the Stimulus column
+  # (infomation already in the column Sexual_dimorphism)
+  mutate(Stimulus = str_remove_all(Stimulus, "M")) |> 
+  # Ensure that the resulting data frame is ungrouped
+  ungroup()
+```
+
+After filtering the database and removing data who did not meet these criteria, from an initial sample size of `r summarise(dat_int, n = n_distinct(ID))` women, the final database contained data from `r summarise(dat, n = n_distinct(ID))` exclusively heterosexual participants, who were not ovulating.
+
+### Final individual databases filtered to the final sample
+
+#### Resource availability (filtered)
+
+```{r}
+reg_fin <- reg |> 
+  left_join(quests_clean, by = c("ID")) |> 
+  filter(ID %in% unique(dat$ID)) 
+```
+
+#### Questionnaires (filtered)
+
+```{r}
+quests_fin <- quests_clean |> 
+  filter(ID %in% unique(dat$ID)) 
+```
+
+# Descriptives
+
+## Number and age of participants in each condition
+
+```{r}
+dat |> 
+  group_by(ID) |> 
+  summarise(Age = first(Age),
+            Condition = first(Condition)) |> 
+  ungroup() |> 
+  group_by(Condition) |> 
+  summarise(n = n_distinct(ID),
+            Mean = mean(Age, na.rm = TRUE),
+            SD = sd(Age, na.rm = TRUE),
+            Min = min(Age, na.rm = TRUE),
+            Max = max(Age, na.rm = TRUE)) |> 
+  kable(
+    booktabs = TRUE, # Use 'booktabs' style for better-looking tables in LaTeX
+    digits = 2, # Round numerical values to 2 decimal places
+    align = "c", # Center align all columns
+    linesep = "", # No lines between rows
+    caption = "Number and age of participants in each condition",
+    # Caption for the table
+    escape = FALSE, # Allow LaTeX commands in the table (e.g., italic or bold)
+    col.names = c("Condition",
+                  "\\textit{n}",
+                  "Mean",
+                  "SD",
+                  "Min.",
+                  "Max.")
+  ) |>
+  # Apply additional LaTeX styling to the table using 'kable_styling'
+  kable_styling(
+    latex_options = c("HOLD_position", "scale_down") # Keep table position
+  )
+```
+
+
+# Session info (for reproducibility) {#session}
+
+```{r results = "hold"}
+library(pander)
+pander(sessionInfo(), locale = FALSE)
+```
+
+# Supplementary references {#refs}
+
+\begin{multicols}{2}
+\AtNextBibliography{\footnotesize}
+\printbibliography[heading=none]
+\normalsize
+\end{multicols}
+
+\def\printbibliography{}

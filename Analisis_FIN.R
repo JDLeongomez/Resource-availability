@@ -320,7 +320,7 @@ ggarrange(fviz_eig(pca_sef, addlabels = TRUE, barfill = "#00AFBB") +
             labs(title = NULL,
                  subtitle = "Loadings"))
 
-#### Men perceives as dangerous----
+#### Men perceived as dangerous----
 quests_pca <- quests |> 
   select(ID, 
          Men_perceived_as_danger_to_partner, 
@@ -342,7 +342,7 @@ ggarrange(fviz_eig(pca_mpd, addlabels = TRUE, barfill = "#00AFBB") +
             labs(title = NULL,
                  subtitle = "Loadings"))
 
-### Con puntajes totales de instrumentos, menos columnas
+### Con puntajes totales de instrumentos, menos columnas----
 quests_clean <- quests |>  
   mutate(across(starts_with("Escasez alimentaria"),
                 ~recode(.,
