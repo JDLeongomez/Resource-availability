@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.9.16)  16 SEP 2024 18:00
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.9.12)  17 SEP 2024 15:32
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1263,22 +1263,26 @@ File: t1lmtt.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 \tf@toc=\write6
 \openout6 = `Supplementary_material.toc'.
 
+LaTeX Font Info:    Font shape `T1/lmtt/bx/n' in size <10> not available
+(Font)              Font shape `T1/lmtt/b/n' tried instead on input line 230.
 
 
 [2]
-LaTeX Font Info:    Font shape `T1/lmtt/bx/n' in size <10> not available
-(Font)              Font shape `T1/lmtt/b/n' tried instead on input line 230.
 LaTeX Font Info:    Trying to load font information for TS1+lmtt on input line 236.
 (/home/jdl/.TinyTeX/texmf-dist/tex/latex/lm/ts1lmtt.fd
 File: ts1lmtt.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
+Overfull \vbox (1.70526pt too high) detected at line 308
+ []
+
+
 
 [3{/home/jdl/.TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-ts1.enc}]
 
 [4]
 
 [5]
-<Supplementary_material_files/figure-latex/estimated-age-hist-1.pdf, id=139, 361.35pt x 216.81pt>
+<Supplementary_material_files/figure-latex/estimated-age-hist-1.pdf, id=137, 361.35pt x 216.81pt>
 File: Supplementary_material_files/figure-latex/estimated-age-hist-1.pdf Graphic file (type pdf)
 <use Supplementary_material_files/figure-latex/estimated-age-hist-1.pdf>
 Package pdftex.def Info: Supplementary_material_files/figure-latex/estimated-age-hist-1.pdf  used on input line 472.
@@ -1288,160 +1292,148 @@ LaTeX Font Info:    Trying to load font information for TS1+lmr on input line 47
 File: ts1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
 
-[6]
+[6 <./Supplementary_material_files/figure-latex/estimated-age-hist-1.pdf>]
+Underfull \vbox (badness 10000) detected at line 539
+ []
 
-[7 <./Supplementary_material_files/figure-latex/estimated-age-hist-1.pdf>]
-Overfull \vbox (0.13557pt too high) detected at line 810
+
+
+[7]
+Overfull \vbox (1.08958pt too high) detected at line 809
  []
 
 
 
 [8]
-Underfull \vbox (badness 10000) detected at line 810
+Underfull \vbox (badness 10000) detected at line 809
  []
 
 
-Underfull \vbox (badness 10000) detected at line 810
+Underfull \vbox (badness 10000) detected at line 809
  []
 
 
 
 [9]
-Underfull \vbox (badness 10000) detected at line 810
+Underfull \vbox (badness 10000) detected at line 809
  []
 
 
-Underfull \vbox (badness 10000) detected at line 810
+Underfull \vbox (badness 10000) detected at line 809
  []
 
 
 
 [10]
-Underfull \vbox (badness 10000) detected at line 810
+Underfull \vbox (badness 10000) detected at line 809
  []
 
 
-Underfull \vbox (badness 10000) detected at line 810
+Underfull \vbox (badness 10000) detected at line 809
  []
 
 
 
 [11]
-Underfull \vbox (badness 10000) detected at line 810
- []
-
-
-Underfull \vbox (badness 10000) detected at line 810
- []
-
-
 
 [12]
 
 [13]
-<Supplementary_material_files/figure-latex/pca-sef-plot-1.pdf, id=186, 867.24pt x 578.16pt>
+<Supplementary_material_files/figure-latex/pca-sef-plot-1.pdf, id=185, 867.24pt x 578.16pt>
 File: Supplementary_material_files/figure-latex/pca-sef-plot-1.pdf Graphic file (type pdf)
 <use Supplementary_material_files/figure-latex/pca-sef-plot-1.pdf>
-Package pdftex.def Info: Supplementary_material_files/figure-latex/pca-sef-plot-1.pdf  used on input line 907.
+Package pdftex.def Info: Supplementary_material_files/figure-latex/pca-sef-plot-1.pdf  used on input line 906.
 (pdftex.def)             Requested size: 500.48529pt x 333.65685pt.
 
-
-[14]
-
-LaTeX Warning: Reference `tab:pca-sef-plot' on page 15 undefined on input line 911.
+LaTeX Warning: Reference `tab:pca-sef-plot' on page 14 undefined on input line 910.
 
 
 
-[15 <./Supplementary_material_files/figure-latex/pca-sef-plot-1.pdf>]
-<Supplementary_material_files/figure-latex/pca-mpd-plot-1.pdf, id=204, 867.24pt x 578.16pt>
+[14 <./Supplementary_material_files/figure-latex/pca-sef-plot-1.pdf>]
+<Supplementary_material_files/figure-latex/pca-mpd-plot-1.pdf, id=198, 867.24pt x 578.16pt>
 File: Supplementary_material_files/figure-latex/pca-mpd-plot-1.pdf Graphic file (type pdf)
 <use Supplementary_material_files/figure-latex/pca-mpd-plot-1.pdf>
-Package pdftex.def Info: Supplementary_material_files/figure-latex/pca-mpd-plot-1.pdf  used on input line 1002.
+Package pdftex.def Info: Supplementary_material_files/figure-latex/pca-mpd-plot-1.pdf  used on input line 1001.
 (pdftex.def)             Requested size: 500.48529pt x 333.65685pt.
 
 
-[16]
+[15]
 
-[17 <./Supplementary_material_files/figure-latex/pca-mpd-plot-1.pdf>]
+[16 <./Supplementary_material_files/figure-latex/pca-mpd-plot-1.pdf>]
+
+[17]
 
 [18]
 
 [19]
 
 [20]
-
-[21]
-
-[22]
-<Supplementary_material_files/figure-latex/sociodemographic-numeric-desc-plot-1.pdf, id=243, 867.24pt x 578.16pt>
-File: Supplementary_material_files/figure-latex/sociodemographic-numeric-desc-plot-1.pdf Graphic file (type pdf)
-<use Supplementary_material_files/figure-latex/sociodemographic-numeric-desc-plot-1.pdf>
-Package pdftex.def Info: Supplementary_material_files/figure-latex/sociodemographic-numeric-desc-plot-1.pdf  used on input line 1392.
-(pdftex.def)             Requested size: 500.48529pt x 333.65685pt.
-
-
-[23]
-Overfull \vbox (0.56882pt too high) detected at line 1434
+Underfull \vbox (badness 10000) detected at line 1409
  []
 
 
 
-[24 <./Supplementary_material_files/figure-latex/sociodemographic-numeric-desc-plot-1.pdf>]
-<Supplementary_material_files/figure-latex/sociodemographic-categorical-desc-plot-1.pdf, id=261, 867.24pt x 650.43pt>
-File: Supplementary_material_files/figure-latex/sociodemographic-categorical-desc-plot-1.pdf Graphic file (type pdf)
-<use Supplementary_material_files/figure-latex/sociodemographic-categorical-desc-plot-1.pdf>
-Package pdftex.def Info: Supplementary_material_files/figure-latex/sociodemographic-categorical-desc-plot-1.pdf  used on input line 1438.
-(pdftex.def)             Requested size: 500.48529pt x 375.36395pt.
+[21]
+<Supplementary_material_files/figure-latex/sociodemographic-factors-desc-plot-1.pdf, id=237, 867.24pt x 433.62pt>
+File: Supplementary_material_files/figure-latex/sociodemographic-factors-desc-plot-1.pdf Graphic file (type pdf)
+<use Supplementary_material_files/figure-latex/sociodemographic-factors-desc-plot-1.pdf>
+Package pdftex.def Info: Supplementary_material_files/figure-latex/sociodemographic-factors-desc-plot-1.pdf  used on input line 1413.
+(pdftex.def)             Requested size: 500.48529pt x 250.24265pt.
 
-Underfull \hbox (badness 3138) in paragraph at lines 1458--1460
+
+[22]
+
+[23 <./Supplementary_material_files/figure-latex/sociodemographic-factors-desc-plot-1.pdf>]
+<Supplementary_material_files/figure-latex/resource-desc-plot-1.pdf, id=256, 867.24pt x 433.62pt>
+File: Supplementary_material_files/figure-latex/resource-desc-plot-1.pdf Graphic file (type pdf)
+<use Supplementary_material_files/figure-latex/resource-desc-plot-1.pdf>
+Package pdftex.def Info: Supplementary_material_files/figure-latex/resource-desc-plot-1.pdf  used on input line 1460.
+(pdftex.def)             Requested size: 500.48529pt x 250.24265pt.
+
+Underfull \hbox (badness 3138) in paragraph at lines 1480--1482
 []\T1/lmr/bx/n/10 other at-tached pack-ages: \T1/lmr/m/it/10 pan-der(v.0.6.5)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 ef-fect-size(v.0.8.9)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 bbmle(v.1.0.25.1)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 gtools(v.3.9.5)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 Fac-
  []
 
 
-Underfull \hbox (badness 1028) in paragraph at lines 1458--1460
+Underfull \hbox (badness 1028) in paragraph at lines 1480--1482
 \T1/lmr/m/it/10 em-means(v.1.10.3)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 lmerTest(v.3.1-3)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 lme4(v.1.1-35.5)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 Matrix(v.1.7-0)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 readxl(v.1.4.3)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 gg-pubr(v.0.6.0)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 lu-
  []
 
 
-
-[25 <./Supplementary_material_files/figure-latex/sociodemographic-categorical-desc-plot-1.pdf>]
-Underfull \hbox (badness 1960) in paragraph at lines 1461--1463
-[]\T1/lmr/bx/n/10 loaded via a names-pace (and not at-tached): \T1/lmr/m/it/10 sandwich(v.3.1-0)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 rlang(v.1.1.4)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 magrittr(v.2.0.3)\T1/lmr/m/n/10 ,
+Underfull \hbox (badness 5431) in paragraph at lines 1483--1485
+\T1/lmr/m/it/10 piler(v.4.4.1)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 sys-tem-fonts(v.1.1.0)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 vc-trs(v.0.6.5)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 pkg-con-fig(v.2.0.3)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 fastmap(v.1.2.0)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 back-ports(v.1.5.0)\T1/lmr/m/n/10 ,
  []
 
 
-Overfull \hbox (8.00217pt too wide) in paragraph at lines 1461--1463
-\T1/lmr/m/it/10 flashClust(v.1.01-2)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 highr(v.0.11)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 broom(v.1.0.6)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 clus-ter(v.2.1.6)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 R6(v.2.5.1)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 stringi(v.1.8.4)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 RColorBrewer(v.1.1-
+Underfull \hbox (badness 2173) in paragraph at lines 1483--1485
+\T1/lmr/m/it/10 cell-ranger(v.1.1.0)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 numDeriv(v.2016.8-1.1)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 es-tima-bil-ity(v.1.5.1)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 Rcpp(v.1.0.13)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 book-down(v.0.40)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 pa-ram-
  []
 
 
-Underfull \hbox (badness 2617) in paragraph at lines 1461--1463
-\T1/lmr/m/it/10 3)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 boot(v.1.3-30)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 cell-ranger(v.1.1.0)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 numDeriv(v.2016.8-1.1)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 es-tima-bil-ity(v.1.5.1)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 Rcpp(v.1.0.13)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 book-
+Underfull \hbox (badness 1960) in paragraph at lines 1483--1485
+\T1/lmr/m/it/10 e-ters(v.0.22.1)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 splines(v.4.4.1)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 timechange(v.0.3.0)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 tidys-e-lect(v.1.2.1)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 rstu-dioapi(v.0.16.0)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 abind(v.1.4-5)\T1/lmr/m/n/10 ,
  []
 
 
-Overfull \hbox (18.42247pt too wide) in paragraph at lines 1461--1463
-\T1/lmr/m/it/10 dioapi(v.0.16.0)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 abind(v.1.4-5)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 yaml(v.2.3.10)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 codetools(v.0.2-20)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 lattice(v.0.22-5)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 plyr(v.1.8.9)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 bayestestR(v.0.13.2)\T1/lmr/m/n/10 ,
+Underfull \hbox (badness 2073) in paragraph at lines 1483--1485
+\T1/lmr/m/it/10 yaml(v.2.3.10)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 lattice(v.0.22-5)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 plyr(v.1.8.9)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 withr(v.3.0.1)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 bayestestR(v.0.14.0)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 coda(v.0.19-4.1)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 eval-u-
  []
 
 
-Underfull \hbox (badness 6268) in paragraph at lines 1461--1463
-\T1/lmr/m/it/10 glue(v.1.7.0)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 scatterplot3d(v.0.3-44)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 tools(v.4.4.1)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 ggsig-nif(v.0.6.4)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 mvtnorm(v.1.2-5)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 cow-plot(v.1.1.3)\T1/lmr/m/n/10 ,
+Underfull \hbox (badness 3138) in paragraph at lines 1483--1485
+\T1/lmr/m/it/10 ate(v.0.24.0)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 xml2(v.1.3.6)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 pil-lar(v.1.9.0)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 DT(v.0.33)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 in-sight(v.0.20.2)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 gener-ics(v.0.1.3)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 hms(v.1.1.3)\T1/lmr/m/n/10 ,
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1461--1463
-\T1/lmr/m/it/10 grid(v.4.4.1)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 datawiz-ard(v.0.12.2)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 bdsmatrix(v.1.3-7)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 colorspace(v.2.1-1)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 nlme(v.3.1-165)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 cli(v.3.6.3)\T1/lmr/m/n/10 ,
- []
-
-
-Underfull \hbox (badness 4391) in paragraph at lines 1461--1463
-\T1/lmr/m/it/10 fansi(v.1.0.6)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 viridis-Lite(v.0.4.2)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 svglite(v.2.1.3)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 gtable(v.0.3.5)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 rstatix(v.0.7.2)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 di-gest(v.0.6.37)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 ggre-
+Underfull \hbox (badness 1953) in paragraph at lines 1483--1485
+\T1/lmr/m/it/10 ggsig-nif(v.0.6.4)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 mvtnorm(v.1.2-5)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 cow-plot(v.1.1.3)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 grid(v.4.4.1)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 bdsmatrix(v.1.3-7)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 datawiz-ard(v.0.12.2)\T1/lmr/m/n/10 ,
  []
 
 
 
-[26] (./Supplementary_material.aux)
+[24 <./Supplementary_material_files/figure-latex/resource-desc-plot-1.pdf>]
+
+[25] (./Supplementary_material.aux)
  ***********
 LaTeX2e <2024-06-01> patch level 2
 L3 programming layer <2024-08-30>
@@ -1454,18 +1446,18 @@ Package logreq Info: Writing requests to 'Supplementary_material.run.xml'.
 
  ) 
 Here is how much of TeX's memory you used:
- 36483 strings out of 475480
- 690630 string characters out of 5775841
- 1738111 words of memory out of 5000000
- 58427 multiletter control sequences out of 15000+600000
+ 36479 strings out of 475480
+ 690418 string characters out of 5775841
+ 1736191 words of memory out of 5000000
+ 58425 multiletter control sequences out of 15000+600000
  620041 words of font info for 84 fonts, out of 8000000 for 9000
  36 hyphenation exceptions out of 8191
- 84i,12n,87p,2071b,5237s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 84i,12n,87p,1942b,5237s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </home/jdl/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx10.pfb></home/jdl/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx12.pfb></home/jdl/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmr10.pfb></home/jdl/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmr12.pfb></home/jdl/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmr17.pfb></home/jdl/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmr7.pfb></home/jdl/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmr8.pfb></home/jdl/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmri10.pfb></home/jdl/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmri8.pfb></home/jdl/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmtk10.pfb></home/jdl/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmtt10.pfb>
-Output written on Supplementary_material.pdf (26 pages, 589500 bytes).
+Output written on Supplementary_material.pdf (25 pages, 425094 bytes).
 PDF statistics:
- 476 PDF objects out of 1000 (max. 8388607)
- 409 compressed objects within 5 object streams
- 82 named destinations out of 1000 (max. 500000)
- 302 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 468 PDF objects out of 1000 (max. 8388607)
+ 402 compressed objects within 5 object streams
+ 80 named destinations out of 1000 (max. 500000)
+ 294 words of extra memory for PDF output out of 10000 (max. 10000000)
 

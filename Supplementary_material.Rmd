@@ -680,8 +680,7 @@ quests <- read_excel("Data/Cuestionario Datos Sociodemográficos  (Disponibilida
   ))) |>
   mutate(across(where(is.character), ~ replace(
     ., . ==
-      "Raizal del Archipiélago de San Andrés,
-       Providencia y Santa Catalina",
+      "Raizal del Archipiélago de San Andrés, Providencia y Santa Catalina",
     "Raizal"
   ))) |>
   mutate(across(where(is.character), ~ replace(
@@ -749,7 +748,7 @@ pca_sef$var$cor |>
 
 **Summary plot**
 
-```{r pca-sef-plot, message = FALSE, warning = FALSE, results = "hold", fig.cap = "Summary of the PCA for all socio-ecological factors. \textbf{a.} Scree plot. \textbf{b.} Factor loadings."}
+```{r pca-sef-plot, message = FALSE, warning = FALSE, results = "hold", fig.cap = "Summary of the PCA for all socio-ecological factors. \\textbf{a.} Scree plot. \\textbf{b.} Factor loadings."}
 # Arrange two plots side by side:
 # 1. A scree plot showing the explained variance for each principal component
 # 2. A plot showing the variable loadings on the principal components
@@ -819,7 +818,7 @@ pca_mpd$var$cor |>
 
 In fact, the two variables related to men perceived as dangerous, could be reduced to a single dimension, that captured over `r percent(pca_mpd$eig[1,2]/100)` of the variance.
 
-```{r pca-mpd-plot, message = FALSE, warning = FALSE, results = "hold", fig.cap = "Summary of the PCA for factors related to men perceived as dangerous. \textbf{a.} Scree plot. \textbf{b.} Factor loadings."}
+```{r pca-mpd-plot, message = FALSE, warning = FALSE, results = "hold", fig.cap = "Summary of the PCA for factors related to men perceived as dangerous. \\textbf{a.} Scree plot. \\textbf{b.} Factor loadings."}
 # Arrange two plots side by side:
 # 1. A scree plot showing the explained variance for each principal component
 # 2. A plot showing the variable loadings on the principal components
@@ -1094,9 +1093,7 @@ dat |>
   )
 ```
 
-## Sociodemographic data
-
-### Select and wrangle data
+## Select and wrangle data for descriptive plots
 
 ```{r}
 # Create desc_quest, combining and transforming quests_fin and reg
@@ -1156,74 +1153,99 @@ desc_quest <-
   )
 ```
 
-### Sociodemographic numeric
+## Sociodemographic factors
 
-```{r sociodemographic-numeric-desc-plot, message = FALSE, warning = FALSE, results = "hold", fig.cap = "Distribution of values across numeric sociodemographic variables by condition. Colored vertical lines indicate the mean value for each variable under each condition.", fig.height = 8}
-# Transform desc_quest by selecting only certain columns and pivoting them into a long format
-desc_quest |>
-  # Select ID, Condition, and all numeric columns
-  select(ID, Condition, where(is.numeric)) |> 
-  # Pivot the numeric columns into a long format with "Variable" as the column name
-  pivot_longer(where(is.numeric),
-               names_to = "Variable",
-               values_to = "Value") |>
-  # Clean up the Variable names by replacing underscores and "Freq" and "SP" substrings.
-  mutate(Variable = str_replace_all(Variable, "_", " ")) |>
-  mutate(Variable = str_replace_all(Variable, "Freq", "Frequency of")) |>
-  mutate(Variable = str_replace_all(Variable, "SP", "Self-perceived")) |> 
-  # Create a ggplot object to visualize the transformed data.
-  ggplot(aes(x = Value, fill = Condition, color = Condition)) +
-  # Create a density plot for each Variable, with different colors and fills based on Condition
-  geom_density(alpha = 0.3) +
-  # Set up plot labels and title.
-  labs(x = NULL, y = "Density") +
-  theme(legend.position = c(1, 0),
-       legend.justification = c(1, 0),
-       legend.direction = "horizontal") +
-  # Add a vertical line at the mean Value for each Variable.
-  stat_summary(aes(xintercept = after_stat(x), y = 0),
-               fun = mean, geom = "vline", orientation = "y") +
-  # Divide the plot into facets by Variable, with free scales
-  facet_wrap(~Variable, scales = "free",
-             labeller = labeller(Variable = label_wrap_gen(width = 25)))
+```{r sociodemographic-factors-desc-plot, message = FALSE, warning = FALSE, results = "hold", fig.cap = "Distribution of values across sociodemographic variables, by condition.\\textbf{a.} Distribution of values across numeric sociodemographic variables. Colored vertical lines indicate the mean value for each variable under each condition. \\textbf{b.} Proportional number of participants across categorical variables.", fig.height = 6}
+# Create a plot that displays the distribution of sociodemographic factors
+# by condition, with subplots for numeric and categorical variables.
+ggarrange(
+  # Plot a: Distribution of values across numeric sociodemographic variables
+  desc_quest |>
+    select(ID, Condition, Age, Number_of_children) |>
+    # Convert data from long to wide format to prepare for plotting
+    pivot_longer(where(is.numeric),
+                 names_to = "Variable",
+                 values_to = "Value") |> 
+    # Clean and transform the variable names by replacing underscores with spaces
+    mutate(Variable = str_replace_all(Variable, "_", " ")) |>
+    # Create a plot of density distributions for numeric variables, 
+    # colored and filled by condition
+    ggplot(aes(x = Value, fill = Condition, color = Condition)) +
+    geom_density(alpha = 0.3) +  # Use semi-transparent density curves
+    facet_wrap(~Variable, scales = "free", ncol = 1) +  # Display variables in separate panels
+    stat_summary(aes(xintercept = after_stat(x), y = 0),
+                  fun = mean, geom = "vline", orientation = "y") +  # Add vertical lines at mean values
+    labs(x = NULL, y = NULL),  # Remove axis labels for this panel
+  # Plot b: Proportional number of participants across categorical variables
+  desc_quest |> 
+    select(ID, Condition, City, Ethnicity, 
+           Education, Relationship_current, Relationship_status) |> 
+    # Convert data from long to wide format to prepare for plotting
+    pivot_longer(City:Relationship_status,
+                  names_to = "Variable",
+                  values_to = "Value") |> 
+    # Clean and transform the variable names by replacing underscores with spaces
+    mutate(Variable = str_replace_all(Variable, "_", " ")) |> 
+    # Create a plot of bar charts for categorical variables, 
+    # colored and filled by condition
+    ggplot(aes(y = Value, fill = Condition, color = Condition)) +
+    geom_bar(alpha = 0.3, position = position_dodge()) +  # Use semi-transparent bars
+    # Add text labels to display proportional values as percentages
+    geom_text(aes(label = scales::percent(after_stat(prop), accuracy = 0.1)),
+                xjust = "inward",
+                position = position_dodge(.9),
+                stat = "prop",
+                color = "black",
+                size = 3) +
+    facet_wrap(~Variable, scales = "free") +  # Display variables in separate panels
+    scale_y_discrete(labels = label_wrap(20)) +  # Wrap long labels for categorical axes
+    theme(axis.text.y = element_text(size = 8)) +  # Reduce font size for y-axis text
+    labs(x = NULL, y = NULL),  # Remove axis labels for this panel
+  # Arrange subplots into a grid with specified widths and share legends
+  widths = c(1, 3),
+  common.legend = TRUE,
+  legend = "bottom",
+  labels = "auto"
+)
 ```
 
-### Sociodemographic categorical
+## Access to resources
 
-```{r sociodemographic-categorical-desc-plot, message = FALSE, warning = FALSE, results = "hold", fig.cap = "Proportional number of participants across categorical variables by condition.", fig.height = 9}
-# Transform desc_quest by selecting only certain columns and pivoting them into a long format
-desc_quest |>
-  # Select ID, Condition, all factor variables (will be renamed to Factor), City, and exclude
-  # any variables starting with "Escasez alimentaria".
-  select(ID, Condition, where(is.factor), City, -starts_with("Escasez alimentaria")) |> 
-  # Pivot the long data from City:Victim_of_armed_conflict into a wide format.
-  pivot_longer(City:Victim_of_armed_conflict,
-               names_to = "Variable",
-               values_to = "Value") |>
-  # Clean up the Variable names by replacing underscores with spaces
-  mutate(Variable = str_replace_all(Variable, "_", " ")) |> 
-  # Create a ggplot object to visualize the transformed data
+```{r resource-desc-plot, message = FALSE, warning = FALSE, results = "hold", fig.cap = "Proportional number of participants across categorical variables that measure access to resources.", fig.height = 6}
+# Create a plot that displays the distribution of socioeconomic factors
+# by condition.
+ggarrange(
+  # Select relevant variables from the dataset (desc_quest)
+  desc_quest |> 
+  select(ID, Condition,
+         Socioeconomic_level, Electricity, Internet_access, Internet_use,
+         TV, Hospital_access) |>
+  # Convert data from long to wide format to prepare for plotting
+  pivot_longer(Socioeconomic_level:Hospital_access,
+                names_to = "Variable",
+                values_to = "Value") |> 
+  # Clean and transform the variable names by replacing underscores with spaces
+  mutate(Variable = str_replace_all(Variable, "_", " ")) |>
+  # Create a plot of bar charts for socioeconomic variables, 
+  # colored and filled by condition
   ggplot(aes(y = Value, fill = Condition, color = Condition)) +
-  # Create a bar plot for each Variable, with different colors and fills based on Condition
-  geom_bar(alpha = 0.3, position = position_dodge()) +
-  # Add text labels to show the proportion of each category within each group
+  geom_bar(alpha = 0.3, position = position_dodge()) +  # Use semi-transparent bars
+  # Add text labels to display proportional values as percentages
   geom_text(aes(label = scales::percent(after_stat(prop), accuracy = 0.1)),
-            vjust = "inward",
-            position = position_dodge(.9),
-            stat = "prop",
-            color = "black",
-            size = 2.5) +
-  # Divide the plot into facets by Variable, with free scales 
-  facet_wrap(~Variable, scales = "free") +
-  # Set up scale for y-axis to display counts in a compact manner
-  scale_y_discrete(labels = label_wrap(25)) +
-  # Adjust the appearance of the plot by making axis text slightly smaller
-  theme(axis.text.y = element_text(size = 7),
-       legend.position = c(1, 0),
-       legend.justification = c(1, 0),
-       legend.direction = "horizontal") +
-  # Set up plot labels and title.
-  labs(x = NULL, y = NULL)
+               xjust = "inward",
+               position = position_dodge(.9),
+               stat = "prop",
+               color = "black",
+               size = 3) +
+  facet_wrap(~Variable, scales = "free") +  # Display variables in separate panels
+  scale_y_discrete(labels = label_wrap(20)) +  # Wrap long labels for categorical axes
+  theme(axis.text.y = element_text(size = 8)) +  # Reduce font size for y-axis text
+  labs(x = NULL, y = NULL),  # Remove axis labels
+  # Arrange subplots into a grid with specified widths and share legends
+  widths = c(1, 3),
+  common.legend = TRUE,
+  legend = "bottom"
+)
 ```
 
 # Session info (for reproducibility) {#session}

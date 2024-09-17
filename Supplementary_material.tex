@@ -147,7 +147,7 @@
 \makeatother
 \subtitle{Code and analyses}
 \author{Milena Vásquez-Amézquita \orcidlink{0000-0001-7317-8430}\textsuperscript{1,3,*} \and Andrés Castellanos-Chacón \orcidlink{0000-0003-1684-9319}\textsuperscript{2} \and Wendy Medina-Sarmiento\textsuperscript{1} \and Valentina Cepeda\textsuperscript{1} \and Marina Begoña Martínez-González \orcidlink{0000-0002-5840-6383}\textsuperscript{3} \and Juan David Leongómez \orcidlink{0000-0002-0092-6298}\textsuperscript{2}}
-\date{16 September, 2024}
+\date{17 September, 2024}
 
 \begin{document}
 \maketitle
@@ -787,8 +787,7 @@ This was loaded without calculating total instrument scores (for now), to test i
 \NormalTok{  ))) }\SpecialCharTok{|\textgreater{}}
   \FunctionTok{mutate}\NormalTok{(}\FunctionTok{across}\NormalTok{(}\FunctionTok{where}\NormalTok{(is.character), }\SpecialCharTok{\textasciitilde{}} \FunctionTok{replace}\NormalTok{(}
 \NormalTok{    ., . }\SpecialCharTok{==}
-      \StringTok{"Raizal del Archipiélago de San Andrés,}
-\StringTok{       Providencia y Santa Catalina"}\NormalTok{,}
+      \StringTok{"Raizal del Archipiélago de San Andrés, Providencia y Santa Catalina"}\NormalTok{,}
     \StringTok{"Raizal"}
 \NormalTok{  ))) }\SpecialCharTok{|\textgreater{}}
   \FunctionTok{mutate}\NormalTok{(}\FunctionTok{across}\NormalTok{(}\FunctionTok{where}\NormalTok{(is.character), }\SpecialCharTok{\textasciitilde{}} \FunctionTok{replace}\NormalTok{(}
@@ -905,7 +904,7 @@ Perceived home safety & 0.05 & -0.37 & 0.69 & 0.61 & 0.06\\
 \begin{figure}
 \centering
 \includegraphics{Supplementary_material_files/figure-latex/pca-sef-plot-1.pdf}
-\caption{\label{fig:pca-sef-plot}Summary of the PCA for all socio-ecological factors. extbf\{a.\} Scree plot. extbf\{b.\} Factor loadings.}
+\caption{\label{fig:pca-sef-plot}Summary of the PCA for all socio-ecological factors. \textbf{a.} Scree plot. \textbf{b.} Factor loadings.}
 \end{figure}
 
 When including all socio-ecological factors, the only variables that strongly correlate between them and with the PCA dimension (Table \ref{tab:pca-sef-plot}; Fig. \ref{fig:pca-sef-plot}), are the two variables that evaluate participant's perception of men as dangerous to children and to their partner.
@@ -1000,7 +999,7 @@ In fact, the two variables related to men perceived as dangerous, could be reduc
 \begin{figure}
 \centering
 \includegraphics{Supplementary_material_files/figure-latex/pca-mpd-plot-1.pdf}
-\caption{\label{fig:pca-mpd-plot}Summary of the PCA for factors related to men perceived as dangerous. extbf\{a.\} Scree plot. extbf\{b.\} Factor loadings.}
+\caption{\label{fig:pca-mpd-plot}Summary of the PCA for factors related to men perceived as dangerous. \textbf{a.} Scree plot. \textbf{b.} Factor loadings.}
 \end{figure}
 
 \subparagraph{Clean questionnaire data}\label{clean-questionnaire-data}
@@ -1289,9 +1288,7 @@ Low & 128 & 21.50 & 2.25 & 18 & 25\\
 \end{tabular}}
 \end{table}
 
-\subsection{Sociodemographic data}\label{sociodemographic-data}
-
-\subsubsection{Select and wrangle data}\label{select-and-wrangle-data}
+\subsection{Select and wrangle data for descriptive plots}\label{select-and-wrangle-data-for-descriptive-plots}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -1353,90 +1350,115 @@ Low & 128 & 21.50 & 2.25 & 18 & 25\\
 \end{Highlighting}
 \end{Shaded}
 
-\subsubsection{Sociodemographic numeric}\label{sociodemographic-numeric}
+\subsection{Sociodemographic factors}\label{sociodemographic-factors}
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\CommentTok{\# Transform desc\_quest by selecting only certain columns and pivoting them into a long format}
-\NormalTok{desc\_quest }\SpecialCharTok{|\textgreater{}}
-  \CommentTok{\# Select ID, Condition, and all numeric columns}
-  \FunctionTok{select}\NormalTok{(ID, Condition, }\FunctionTok{where}\NormalTok{(is.numeric)) }\SpecialCharTok{|\textgreater{}} 
-  \CommentTok{\# Pivot the numeric columns into a long format with "Variable" as the column name}
-  \FunctionTok{pivot\_longer}\NormalTok{(}\FunctionTok{where}\NormalTok{(is.numeric),}
-               \AttributeTok{names\_to =} \StringTok{"Variable"}\NormalTok{,}
-               \AttributeTok{values\_to =} \StringTok{"Value"}\NormalTok{) }\SpecialCharTok{|\textgreater{}}
-  \CommentTok{\# Clean up the Variable names by replacing underscores and "Freq" and "SP" substrings.}
-  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{Variable =} \FunctionTok{str\_replace\_all}\NormalTok{(Variable, }\StringTok{"\_"}\NormalTok{, }\StringTok{" "}\NormalTok{)) }\SpecialCharTok{|\textgreater{}}
-  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{Variable =} \FunctionTok{str\_replace\_all}\NormalTok{(Variable, }\StringTok{"Freq"}\NormalTok{, }\StringTok{"Frequency of"}\NormalTok{)) }\SpecialCharTok{|\textgreater{}}
-  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{Variable =} \FunctionTok{str\_replace\_all}\NormalTok{(Variable, }\StringTok{"SP"}\NormalTok{, }\StringTok{"Self{-}perceived"}\NormalTok{)) }\SpecialCharTok{|\textgreater{}} 
-  \CommentTok{\# Create a ggplot object to visualize the transformed data.}
-  \FunctionTok{ggplot}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ Value, }\AttributeTok{fill =}\NormalTok{ Condition, }\AttributeTok{color =}\NormalTok{ Condition)) }\SpecialCharTok{+}
-  \CommentTok{\# Create a density plot for each Variable, with different colors and fills based on Condition}
-  \FunctionTok{geom\_density}\NormalTok{(}\AttributeTok{alpha =} \FloatTok{0.3}\NormalTok{) }\SpecialCharTok{+}
-  \CommentTok{\# Set up plot labels and title.}
-  \FunctionTok{labs}\NormalTok{(}\AttributeTok{x =} \ConstantTok{NULL}\NormalTok{, }\AttributeTok{y =} \StringTok{"Density"}\NormalTok{) }\SpecialCharTok{+}
-  \FunctionTok{theme}\NormalTok{(}\AttributeTok{legend.position =} \FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{0}\NormalTok{),}
-       \AttributeTok{legend.justification =} \FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{0}\NormalTok{),}
-       \AttributeTok{legend.direction =} \StringTok{"horizontal"}\NormalTok{) }\SpecialCharTok{+}
-  \CommentTok{\# Add a vertical line at the mean Value for each Variable.}
-  \FunctionTok{stat\_summary}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{xintercept =} \FunctionTok{after\_stat}\NormalTok{(x), }\AttributeTok{y =} \DecValTok{0}\NormalTok{),}
-               \AttributeTok{fun =}\NormalTok{ mean, }\AttributeTok{geom =} \StringTok{"vline"}\NormalTok{, }\AttributeTok{orientation =} \StringTok{"y"}\NormalTok{) }\SpecialCharTok{+}
-  \CommentTok{\# Divide the plot into facets by Variable, with free scales}
-  \FunctionTok{facet\_wrap}\NormalTok{(}\SpecialCharTok{\textasciitilde{}}\NormalTok{Variable, }\AttributeTok{scales =} \StringTok{"free"}\NormalTok{,}
-             \AttributeTok{labeller =} \FunctionTok{labeller}\NormalTok{(}\AttributeTok{Variable =} \FunctionTok{label\_wrap\_gen}\NormalTok{(}\AttributeTok{width =} \DecValTok{25}\NormalTok{)))}
+\CommentTok{\# Create a plot that displays the distribution of sociodemographic factors}
+\CommentTok{\# by condition, with subplots for numeric and categorical variables.}
+\FunctionTok{ggarrange}\NormalTok{(}
+  \CommentTok{\# Plot a: Distribution of values across numeric sociodemographic variables}
+\NormalTok{  desc\_quest }\SpecialCharTok{|\textgreater{}}
+    \FunctionTok{select}\NormalTok{(ID, Condition, Age, Number\_of\_children) }\SpecialCharTok{|\textgreater{}}
+    \CommentTok{\# Convert data from long to wide format to prepare for plotting}
+    \FunctionTok{pivot\_longer}\NormalTok{(}\FunctionTok{where}\NormalTok{(is.numeric),}
+                 \AttributeTok{names\_to =} \StringTok{"Variable"}\NormalTok{,}
+                 \AttributeTok{values\_to =} \StringTok{"Value"}\NormalTok{) }\SpecialCharTok{|\textgreater{}} 
+    \CommentTok{\# Clean and transform the variable names by replacing underscores with spaces}
+    \FunctionTok{mutate}\NormalTok{(}\AttributeTok{Variable =} \FunctionTok{str\_replace\_all}\NormalTok{(Variable, }\StringTok{"\_"}\NormalTok{, }\StringTok{" "}\NormalTok{)) }\SpecialCharTok{|\textgreater{}}
+    \CommentTok{\# Create a plot of density distributions for numeric variables, }
+    \CommentTok{\# colored and filled by condition}
+    \FunctionTok{ggplot}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ Value, }\AttributeTok{fill =}\NormalTok{ Condition, }\AttributeTok{color =}\NormalTok{ Condition)) }\SpecialCharTok{+}
+    \FunctionTok{geom\_density}\NormalTok{(}\AttributeTok{alpha =} \FloatTok{0.3}\NormalTok{) }\SpecialCharTok{+}  \CommentTok{\# Use semi{-}transparent density curves}
+    \FunctionTok{facet\_wrap}\NormalTok{(}\SpecialCharTok{\textasciitilde{}}\NormalTok{Variable, }\AttributeTok{scales =} \StringTok{"free"}\NormalTok{, }\AttributeTok{ncol =} \DecValTok{1}\NormalTok{) }\SpecialCharTok{+}  \CommentTok{\# Display variables in separate panels}
+    \FunctionTok{stat\_summary}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{xintercept =} \FunctionTok{after\_stat}\NormalTok{(x), }\AttributeTok{y =} \DecValTok{0}\NormalTok{),}
+                  \AttributeTok{fun =}\NormalTok{ mean, }\AttributeTok{geom =} \StringTok{"vline"}\NormalTok{, }\AttributeTok{orientation =} \StringTok{"y"}\NormalTok{) }\SpecialCharTok{+}  \CommentTok{\# Add vertical lines at mean values}
+    \FunctionTok{labs}\NormalTok{(}\AttributeTok{x =} \ConstantTok{NULL}\NormalTok{, }\AttributeTok{y =} \ConstantTok{NULL}\NormalTok{),  }\CommentTok{\# Remove axis labels for this panel}
+  \CommentTok{\# Plot b: Proportional number of participants across categorical variables}
+\NormalTok{  desc\_quest }\SpecialCharTok{|\textgreater{}} 
+    \FunctionTok{select}\NormalTok{(ID, Condition, City, Ethnicity, }
+\NormalTok{           Education, Relationship\_current, Relationship\_status) }\SpecialCharTok{|\textgreater{}} 
+    \CommentTok{\# Convert data from long to wide format to prepare for plotting}
+    \FunctionTok{pivot\_longer}\NormalTok{(City}\SpecialCharTok{:}\NormalTok{Relationship\_status,}
+                  \AttributeTok{names\_to =} \StringTok{"Variable"}\NormalTok{,}
+                  \AttributeTok{values\_to =} \StringTok{"Value"}\NormalTok{) }\SpecialCharTok{|\textgreater{}} 
+    \CommentTok{\# Clean and transform the variable names by replacing underscores with spaces}
+    \FunctionTok{mutate}\NormalTok{(}\AttributeTok{Variable =} \FunctionTok{str\_replace\_all}\NormalTok{(Variable, }\StringTok{"\_"}\NormalTok{, }\StringTok{" "}\NormalTok{)) }\SpecialCharTok{|\textgreater{}} 
+    \CommentTok{\# Create a plot of bar charts for categorical variables, }
+    \CommentTok{\# colored and filled by condition}
+    \FunctionTok{ggplot}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{y =}\NormalTok{ Value, }\AttributeTok{fill =}\NormalTok{ Condition, }\AttributeTok{color =}\NormalTok{ Condition)) }\SpecialCharTok{+}
+    \FunctionTok{geom\_bar}\NormalTok{(}\AttributeTok{alpha =} \FloatTok{0.3}\NormalTok{, }\AttributeTok{position =} \FunctionTok{position\_dodge}\NormalTok{()) }\SpecialCharTok{+}  \CommentTok{\# Use semi{-}transparent bars}
+    \CommentTok{\# Add text labels to display proportional values as percentages}
+    \FunctionTok{geom\_text}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{label =}\NormalTok{ scales}\SpecialCharTok{::}\FunctionTok{percent}\NormalTok{(}\FunctionTok{after\_stat}\NormalTok{(prop), }\AttributeTok{accuracy =} \FloatTok{0.1}\NormalTok{)),}
+                \AttributeTok{xjust =} \StringTok{"inward"}\NormalTok{,}
+                \AttributeTok{position =} \FunctionTok{position\_dodge}\NormalTok{(.}\DecValTok{9}\NormalTok{),}
+                \AttributeTok{stat =} \StringTok{"prop"}\NormalTok{,}
+                \AttributeTok{color =} \StringTok{"black"}\NormalTok{,}
+                \AttributeTok{size =} \DecValTok{3}\NormalTok{) }\SpecialCharTok{+}
+    \FunctionTok{facet\_wrap}\NormalTok{(}\SpecialCharTok{\textasciitilde{}}\NormalTok{Variable, }\AttributeTok{scales =} \StringTok{"free"}\NormalTok{) }\SpecialCharTok{+}  \CommentTok{\# Display variables in separate panels}
+    \FunctionTok{scale\_y\_discrete}\NormalTok{(}\AttributeTok{labels =} \FunctionTok{label\_wrap}\NormalTok{(}\DecValTok{20}\NormalTok{)) }\SpecialCharTok{+}  \CommentTok{\# Wrap long labels for categorical axes}
+    \FunctionTok{theme}\NormalTok{(}\AttributeTok{axis.text.y =} \FunctionTok{element\_text}\NormalTok{(}\AttributeTok{size =} \DecValTok{8}\NormalTok{)) }\SpecialCharTok{+}  \CommentTok{\# Reduce font size for y{-}axis text}
+    \FunctionTok{labs}\NormalTok{(}\AttributeTok{x =} \ConstantTok{NULL}\NormalTok{, }\AttributeTok{y =} \ConstantTok{NULL}\NormalTok{),  }\CommentTok{\# Remove axis labels for this panel}
+  \CommentTok{\# Arrange subplots into a grid with specified widths and share legends}
+  \AttributeTok{widths =} \FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{3}\NormalTok{),}
+  \AttributeTok{common.legend =} \ConstantTok{TRUE}\NormalTok{,}
+  \AttributeTok{legend =} \StringTok{"bottom"}\NormalTok{,}
+  \AttributeTok{labels =} \StringTok{"auto"}
+\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
 \begin{figure}
 \centering
-\includegraphics{Supplementary_material_files/figure-latex/sociodemographic-numeric-desc-plot-1.pdf}
-\caption{\label{fig:sociodemographic-numeric-desc-plot}Distribution of values across numeric sociodemographic variables by condition. Colored vertical lines indicate the mean value for each variable under each condition.}
+\includegraphics{Supplementary_material_files/figure-latex/sociodemographic-factors-desc-plot-1.pdf}
+\caption{\label{fig:sociodemographic-factors-desc-plot}Distribution of values across sociodemographic variables, by condition.\textbf{a.} Distribution of values across numeric sociodemographic variables. Colored vertical lines indicate the mean value for each variable under each condition. \textbf{b.} Proportional number of participants across categorical variables.}
 \end{figure}
 
-\subsubsection{Sociodemographic categorical}\label{sociodemographic-categorical}
+\subsection{Access to resources}\label{access-to-resources}
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\CommentTok{\# Transform desc\_quest by selecting only certain columns and pivoting them into a long format}
-\NormalTok{desc\_quest }\SpecialCharTok{|\textgreater{}}
-  \CommentTok{\# Select ID, Condition, all factor variables (will be renamed to Factor), City, and exclude}
-  \CommentTok{\# any variables starting with "Escasez alimentaria".}
-  \FunctionTok{select}\NormalTok{(ID, Condition, }\FunctionTok{where}\NormalTok{(is.factor), City, }\SpecialCharTok{{-}}\FunctionTok{starts\_with}\NormalTok{(}\StringTok{"Escasez alimentaria"}\NormalTok{)) }\SpecialCharTok{|\textgreater{}} 
-  \CommentTok{\# Pivot the long data from City:Victim\_of\_armed\_conflict into a wide format.}
-  \FunctionTok{pivot\_longer}\NormalTok{(City}\SpecialCharTok{:}\NormalTok{Victim\_of\_armed\_conflict,}
-               \AttributeTok{names\_to =} \StringTok{"Variable"}\NormalTok{,}
-               \AttributeTok{values\_to =} \StringTok{"Value"}\NormalTok{) }\SpecialCharTok{|\textgreater{}}
-  \CommentTok{\# Clean up the Variable names by replacing underscores with spaces}
-  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{Variable =} \FunctionTok{str\_replace\_all}\NormalTok{(Variable, }\StringTok{"\_"}\NormalTok{, }\StringTok{" "}\NormalTok{)) }\SpecialCharTok{|\textgreater{}} 
-  \CommentTok{\# Create a ggplot object to visualize the transformed data}
+\CommentTok{\# Create a plot that displays the distribution of socioeconomic factors}
+\CommentTok{\# by condition.}
+\FunctionTok{ggarrange}\NormalTok{(}
+  \CommentTok{\# Select relevant variables from the dataset (desc\_quest)}
+\NormalTok{  desc\_quest }\SpecialCharTok{|\textgreater{}} 
+  \FunctionTok{select}\NormalTok{(ID, Condition,}
+\NormalTok{         Socioeconomic\_level, Electricity, Internet\_access, Internet\_use,}
+\NormalTok{         TV, Hospital\_access) }\SpecialCharTok{|\textgreater{}}
+  \CommentTok{\# Convert data from long to wide format to prepare for plotting}
+  \FunctionTok{pivot\_longer}\NormalTok{(Socioeconomic\_level}\SpecialCharTok{:}\NormalTok{Hospital\_access,}
+                \AttributeTok{names\_to =} \StringTok{"Variable"}\NormalTok{,}
+                \AttributeTok{values\_to =} \StringTok{"Value"}\NormalTok{) }\SpecialCharTok{|\textgreater{}} 
+  \CommentTok{\# Clean and transform the variable names by replacing underscores with spaces}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{Variable =} \FunctionTok{str\_replace\_all}\NormalTok{(Variable, }\StringTok{"\_"}\NormalTok{, }\StringTok{" "}\NormalTok{)) }\SpecialCharTok{|\textgreater{}}
+  \CommentTok{\# Create a plot of bar charts for socioeconomic variables, }
+  \CommentTok{\# colored and filled by condition}
   \FunctionTok{ggplot}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{y =}\NormalTok{ Value, }\AttributeTok{fill =}\NormalTok{ Condition, }\AttributeTok{color =}\NormalTok{ Condition)) }\SpecialCharTok{+}
-  \CommentTok{\# Create a bar plot for each Variable, with different colors and fills based on Condition}
-  \FunctionTok{geom\_bar}\NormalTok{(}\AttributeTok{alpha =} \FloatTok{0.3}\NormalTok{, }\AttributeTok{position =} \FunctionTok{position\_dodge}\NormalTok{()) }\SpecialCharTok{+}
-  \CommentTok{\# Add text labels to show the proportion of each category within each group}
+  \FunctionTok{geom\_bar}\NormalTok{(}\AttributeTok{alpha =} \FloatTok{0.3}\NormalTok{, }\AttributeTok{position =} \FunctionTok{position\_dodge}\NormalTok{()) }\SpecialCharTok{+}  \CommentTok{\# Use semi{-}transparent bars}
+  \CommentTok{\# Add text labels to display proportional values as percentages}
   \FunctionTok{geom\_text}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{label =}\NormalTok{ scales}\SpecialCharTok{::}\FunctionTok{percent}\NormalTok{(}\FunctionTok{after\_stat}\NormalTok{(prop), }\AttributeTok{accuracy =} \FloatTok{0.1}\NormalTok{)),}
-            \AttributeTok{vjust =} \StringTok{"inward"}\NormalTok{,}
-            \AttributeTok{position =} \FunctionTok{position\_dodge}\NormalTok{(.}\DecValTok{9}\NormalTok{),}
-            \AttributeTok{stat =} \StringTok{"prop"}\NormalTok{,}
-            \AttributeTok{color =} \StringTok{"black"}\NormalTok{,}
-            \AttributeTok{size =} \FloatTok{2.5}\NormalTok{) }\SpecialCharTok{+}
-  \CommentTok{\# Divide the plot into facets by Variable, with free scales }
-  \FunctionTok{facet\_wrap}\NormalTok{(}\SpecialCharTok{\textasciitilde{}}\NormalTok{Variable, }\AttributeTok{scales =} \StringTok{"free"}\NormalTok{) }\SpecialCharTok{+}
-  \CommentTok{\# Set up scale for y{-}axis to display counts in a compact manner}
-  \FunctionTok{scale\_y\_discrete}\NormalTok{(}\AttributeTok{labels =} \FunctionTok{label\_wrap}\NormalTok{(}\DecValTok{25}\NormalTok{)) }\SpecialCharTok{+}
-  \CommentTok{\# Adjust the appearance of the plot by making axis text slightly smaller}
-  \FunctionTok{theme}\NormalTok{(}\AttributeTok{axis.text.y =} \FunctionTok{element\_text}\NormalTok{(}\AttributeTok{size =} \DecValTok{7}\NormalTok{),}
-       \AttributeTok{legend.position =} \FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{0}\NormalTok{),}
-       \AttributeTok{legend.justification =} \FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{0}\NormalTok{),}
-       \AttributeTok{legend.direction =} \StringTok{"horizontal"}\NormalTok{) }\SpecialCharTok{+}
-  \CommentTok{\# Set up plot labels and title.}
-  \FunctionTok{labs}\NormalTok{(}\AttributeTok{x =} \ConstantTok{NULL}\NormalTok{, }\AttributeTok{y =} \ConstantTok{NULL}\NormalTok{)}
+               \AttributeTok{xjust =} \StringTok{"inward"}\NormalTok{,}
+               \AttributeTok{position =} \FunctionTok{position\_dodge}\NormalTok{(.}\DecValTok{9}\NormalTok{),}
+               \AttributeTok{stat =} \StringTok{"prop"}\NormalTok{,}
+               \AttributeTok{color =} \StringTok{"black"}\NormalTok{,}
+               \AttributeTok{size =} \DecValTok{3}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{facet\_wrap}\NormalTok{(}\SpecialCharTok{\textasciitilde{}}\NormalTok{Variable, }\AttributeTok{scales =} \StringTok{"free"}\NormalTok{) }\SpecialCharTok{+}  \CommentTok{\# Display variables in separate panels}
+  \FunctionTok{scale\_y\_discrete}\NormalTok{(}\AttributeTok{labels =} \FunctionTok{label\_wrap}\NormalTok{(}\DecValTok{20}\NormalTok{)) }\SpecialCharTok{+}  \CommentTok{\# Wrap long labels for categorical axes}
+  \FunctionTok{theme}\NormalTok{(}\AttributeTok{axis.text.y =} \FunctionTok{element\_text}\NormalTok{(}\AttributeTok{size =} \DecValTok{8}\NormalTok{)) }\SpecialCharTok{+}  \CommentTok{\# Reduce font size for y{-}axis text}
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{x =} \ConstantTok{NULL}\NormalTok{, }\AttributeTok{y =} \ConstantTok{NULL}\NormalTok{),  }\CommentTok{\# Remove axis labels}
+  \CommentTok{\# Arrange subplots into a grid with specified widths and share legends}
+  \AttributeTok{widths =} \FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{3}\NormalTok{),}
+  \AttributeTok{common.legend =} \ConstantTok{TRUE}\NormalTok{,}
+  \AttributeTok{legend =} \StringTok{"bottom"}
+\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
 \begin{figure}
 \centering
-\includegraphics{Supplementary_material_files/figure-latex/sociodemographic-categorical-desc-plot-1.pdf}
-\caption{\label{fig:sociodemographic-categorical-desc-plot}Proportional number of participants across categorical variables by condition.}
+\includegraphics{Supplementary_material_files/figure-latex/resource-desc-plot-1.pdf}
+\caption{\label{fig:resource-desc-plot}Proportional number of participants across categorical variables that measure access to resources.}
 \end{figure}
 
 \section{Session info (for reproducibility)}\label{session}
@@ -1459,7 +1481,7 @@ Low & 128 & 21.50 & 2.25 & 18 & 25\\
 \emph{pander(v.0.6.5)}, \emph{effectsize(v.0.8.9)}, \emph{bbmle(v.1.0.25.1)}, \emph{gtools(v.3.9.5)}, \emph{FactoMineR(v.2.11)}, \emph{factoextra(v.1.0.7)}, \emph{scales(v.1.3.0)}, \emph{GGally(v.2.2.1)}, \emph{performance(v.0.12.2)}, \emph{kableExtra(v.1.4.0)}, \emph{emmeans(v.1.10.3)}, \emph{lmerTest(v.3.1-3)}, \emph{lme4(v.1.1-35.5)}, \emph{Matrix(v.1.7-0)}, \emph{readxl(v.1.4.3)}, \emph{ggpubr(v.0.6.0)}, \emph{lubridate(v.1.9.3)}, \emph{forcats(v.1.0.0)}, \emph{stringr(v.1.5.1)}, \emph{dplyr(v.1.1.4)}, \emph{purrr(v.1.0.2)}, \emph{readr(v.2.1.5)}, \emph{tidyr(v.1.3.1)}, \emph{tibble(v.3.2.1)}, \emph{ggplot2(v.3.5.1)}, \emph{tidyverse(v.2.0.0)}, \emph{ggstats(v.0.6.0)}, \emph{MASS(v.7.3-61)}, \emph{car(v.3.1-2)}, \emph{carData(v.3.0-5)} and \emph{knitr(v.1.48)}
 
 \textbf{loaded via a namespace (and not attached):}
-\emph{sandwich(v.3.1-0)}, \emph{rlang(v.1.1.4)}, \emph{magrittr(v.2.0.3)}, \emph{multcomp(v.1.4-26)}, \emph{compiler(v.4.4.1)}, \emph{systemfonts(v.1.1.0)}, \emph{vctrs(v.0.6.5)}, \emph{pkgconfig(v.2.0.3)}, \emph{fastmap(v.1.2.0)}, \emph{backports(v.1.5.0)}, \emph{labeling(v.0.4.3)}, \emph{utf8(v.1.2.4)}, \emph{rmarkdown(v.2.28)}, \emph{tzdb(v.0.4.0)}, \emph{nloptr(v.2.1.1)}, \emph{xfun(v.0.47)}, \emph{flashClust(v.1.01-2)}, \emph{highr(v.0.11)}, \emph{broom(v.1.0.6)}, \emph{cluster(v.2.1.6)}, \emph{R6(v.2.5.1)}, \emph{stringi(v.1.8.4)}, \emph{RColorBrewer(v.1.1-3)}, \emph{boot(v.1.3-30)}, \emph{cellranger(v.1.1.0)}, \emph{numDeriv(v.2016.8-1.1)}, \emph{estimability(v.1.5.1)}, \emph{Rcpp(v.1.0.13)}, \emph{bookdown(v.0.40)}, \emph{zoo(v.1.8-12)}, \emph{parameters(v.0.22.0)}, \emph{splines(v.4.4.1)}, \emph{timechange(v.0.3.0)}, \emph{tidyselect(v.1.2.1)}, \emph{rstudioapi(v.0.16.0)}, \emph{abind(v.1.4-5)}, \emph{yaml(v.2.3.10)}, \emph{codetools(v.0.2-20)}, \emph{lattice(v.0.22-5)}, \emph{plyr(v.1.8.9)}, \emph{bayestestR(v.0.13.2)}, \emph{withr(v.3.0.1)}, \emph{coda(v.0.19-4.1)}, \emph{evaluate(v.0.24.0)}, \emph{survival(v.3.7-0)}, \emph{xml2(v.1.3.6)}, \emph{pillar(v.1.9.0)}, \emph{DT(v.0.33)}, \emph{insight(v.0.20.2)}, \emph{generics(v.0.1.3)}, \emph{hms(v.1.1.3)}, \emph{munsell(v.0.5.1)}, \emph{minqa(v.1.2.7)}, \emph{xtable(v.1.8-4)}, \emph{leaps(v.3.2)}, \emph{glue(v.1.7.0)}, \emph{scatterplot3d(v.0.3-44)}, \emph{tools(v.4.4.1)}, \emph{ggsignif(v.0.6.4)}, \emph{mvtnorm(v.1.2-5)}, \emph{cowplot(v.1.1.3)}, \emph{grid(v.4.4.1)}, \emph{datawizard(v.0.12.2)}, \emph{bdsmatrix(v.1.3-7)}, \emph{colorspace(v.2.1-1)}, \emph{nlme(v.3.1-165)}, \emph{cli(v.3.6.3)}, \emph{fansi(v.1.0.6)}, \emph{viridisLite(v.0.4.2)}, \emph{svglite(v.2.1.3)}, \emph{gtable(v.0.3.5)}, \emph{rstatix(v.0.7.2)}, \emph{digest(v.0.6.37)}, \emph{ggrepel(v.0.9.5)}, \emph{TH.data(v.1.1-2)}, \emph{farver(v.2.1.2)}, \emph{htmlwidgets(v.1.6.4)}, \emph{htmltools(v.0.5.8.1)}, \emph{lifecycle(v.1.0.4)} and \emph{multcompView(v.0.1-10)}
+\emph{gridExtra(v.2.3)}, \emph{rlang(v.1.1.4)}, \emph{magrittr(v.2.0.3)}, \emph{compiler(v.4.4.1)}, \emph{systemfonts(v.1.1.0)}, \emph{vctrs(v.0.6.5)}, \emph{pkgconfig(v.2.0.3)}, \emph{fastmap(v.1.2.0)}, \emph{backports(v.1.5.0)}, \emph{labeling(v.0.4.3)}, \emph{utf8(v.1.2.4)}, \emph{rmarkdown(v.2.28)}, \emph{tzdb(v.0.4.0)}, \emph{nloptr(v.2.1.1)}, \emph{xfun(v.0.47)}, \emph{flashClust(v.1.01-2)}, \emph{highr(v.0.11)}, \emph{broom(v.1.0.6)}, \emph{cluster(v.2.1.6)}, \emph{R6(v.2.5.1)}, \emph{stringi(v.1.8.4)}, \emph{RColorBrewer(v.1.1-3)}, \emph{boot(v.1.3-30)}, \emph{cellranger(v.1.1.0)}, \emph{numDeriv(v.2016.8-1.1)}, \emph{estimability(v.1.5.1)}, \emph{Rcpp(v.1.0.13)}, \emph{bookdown(v.0.40)}, \emph{parameters(v.0.22.1)}, \emph{splines(v.4.4.1)}, \emph{timechange(v.0.3.0)}, \emph{tidyselect(v.1.2.1)}, \emph{rstudioapi(v.0.16.0)}, \emph{abind(v.1.4-5)}, \emph{yaml(v.2.3.10)}, \emph{lattice(v.0.22-5)}, \emph{plyr(v.1.8.9)}, \emph{withr(v.3.0.1)}, \emph{bayestestR(v.0.14.0)}, \emph{coda(v.0.19-4.1)}, \emph{evaluate(v.0.24.0)}, \emph{xml2(v.1.3.6)}, \emph{pillar(v.1.9.0)}, \emph{DT(v.0.33)}, \emph{insight(v.0.20.2)}, \emph{generics(v.0.1.3)}, \emph{hms(v.1.1.3)}, \emph{munsell(v.0.5.1)}, \emph{minqa(v.1.2.7)}, \emph{xtable(v.1.8-4)}, \emph{leaps(v.3.2)}, \emph{glue(v.1.7.0)}, \emph{scatterplot3d(v.0.3-44)}, \emph{tools(v.4.4.1)}, \emph{ggsignif(v.0.6.4)}, \emph{mvtnorm(v.1.2-5)}, \emph{cowplot(v.1.1.3)}, \emph{grid(v.4.4.1)}, \emph{bdsmatrix(v.1.3-7)}, \emph{datawizard(v.0.12.2)}, \emph{colorspace(v.2.1-1)}, \emph{nlme(v.3.1-165)}, \emph{cli(v.3.6.3)}, \emph{fansi(v.1.0.6)}, \emph{viridisLite(v.0.4.2)}, \emph{svglite(v.2.1.3)}, \emph{gtable(v.0.3.5)}, \emph{rstatix(v.0.7.2)}, \emph{digest(v.0.6.37)}, \emph{ggrepel(v.0.9.5)}, \emph{htmlwidgets(v.1.6.4)}, \emph{farver(v.2.1.2)}, \emph{htmltools(v.0.5.8.1)}, \emph{lifecycle(v.1.0.4)} and \emph{multcompView(v.0.1-10)}
 
 \section{Supplementary references}\label{refs}
 
