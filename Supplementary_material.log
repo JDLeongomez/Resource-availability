@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.9.12)  12 SEP 2024 14:33
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.9.16)  16 SEP 2024 18:00
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -338,8 +338,8 @@ Package: babel 2024/08/29 v24.9 The Babel package
 (/home/jdl/.TinyTeX/texmf-dist/tex/generic/babel/txtbabel.def)
 \bbl@readstream=\read3
 \bbl@dirlevel=\count303
-(/home/jdl/.TinyTeX/texmf-dist/tex/generic/babel-english/british.ldf
-Language: british 2017/06/06 v3.3r English support from the babel system
+(/home/jdl/.TinyTeX/texmf-dist/tex/generic/babel-english/american.ldf
+Language: american 2017/06/06 v3.3r English support from the babel system
 (/home/jdl/.TinyTeX/texmf-dist/tex/generic/babel-english/english.ldf
 Language: english 2017/06/06 v3.3r English support from the babel system
 Package babel Info: Hyphen rules for 'canadian' set to \l@english
@@ -348,9 +348,9 @@ Package babel Info: Hyphen rules for 'australian' set to \l@ukenglish
 (babel)             (\language5). Reported on input line 105.
 Package babel Info: Hyphen rules for 'newzealand' set to \l@ukenglish
 (babel)             (\language5). Reported on input line 108.
-))) (/home/jdl/.TinyTeX/texmf-dist/tex/generic/babel/locale/en/babel-british.tex
-Package babel Info: Importing font and identification data for british
-(babel)             from babel-en-GB.ini. Reported on input line 11.
+))) (/home/jdl/.TinyTeX/texmf-dist/tex/generic/babel/locale/en/babel-american.tex
+Package babel Info: Importing font and identification data for american
+(babel)             from babel-en-US.ini. Reported on input line 11.
 ) (/home/jdl/.TinyTeX/texmf-dist/tex/latex/csquotes/csquotes.sty
 Package: csquotes 2024-04-04 v5.2o context-sensitive quotations (JAW)
 \csq@reset=\count304
@@ -1100,7 +1100,7 @@ Package hyperref Info: Option `colorlinks' set `true' on input line 139.
 Package csquotes Info: Checking for multilingual support...
 Package csquotes Info: ... found 'babel' package.
 Package csquotes Info: Adjusting default style.
-Package csquotes Info: Redefining alias 'default' -> 'british'.
+Package csquotes Info: Redefining alias 'default' -> 'american'.
 LaTeX Font Info:    Trying to load font information for T1+lmr on input line 152.
 (/home/jdl/.TinyTeX/texmf-dist/tex/latex/lm/t1lmr.fd
 File: t1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
@@ -1171,23 +1171,6 @@ Package caption Info: hyperref package is loaded.
 Package caption Info: threeparttable package is loaded.
 Package caption Info: wrapfig package is loaded.
 Package caption Info: End \AtBeginDocument code.
-Package biblatex Info: Trying to load language 'british' -> 'british-apa'...
-Package biblatex Info: ... file 'british-apa.lbx' found.
-(/home/jdl/.TinyTeX/texmf-dist/tex/latex/biblatex-apa/british-apa.lbx
-File: british-apa.lbx 2023/03/20 v9.17 APA biblatex localisation
-Package biblatex Info: Trying to load language 'british'...
-Package biblatex Info: ... file 'british.lbx' found.
-(/home/jdl/.TinyTeX/texmf-dist/tex/latex/biblatex/lbx/british.lbx
-File: british.lbx 2024/03/21 v3.20 biblatex localization (PK/MW)
-)
-Package biblatex Info: Trying to load language 'british'...
-Package biblatex Info: ... file 'british.lbx' found.
-(/home/jdl/.TinyTeX/texmf-dist/tex/latex/biblatex/lbx/british.lbx
-File: british.lbx 2024/03/21 v3.20 biblatex localization (PK/MW)
-Package biblatex Info: Trying to load language 'english' -> 'english-apa'...
-Package biblatex Info: ... file 'english-apa.lbx' found.
-(/home/jdl/.TinyTeX/texmf-dist/tex/latex/biblatex-apa/english-apa.lbx
-File: english-apa.lbx 2023/03/20 v9.17 APA biblatex localisation
 Package biblatex Info: Trying to load language 'american' -> 'american-apa'...
 Package biblatex Info: ... file 'american-apa.lbx' found.
 (/home/jdl/.TinyTeX/texmf-dist/tex/latex/biblatex-apa/american-apa.lbx
@@ -1196,11 +1179,32 @@ Package biblatex Info: Trying to load language 'american'...
 Package biblatex Info: ... file 'american.lbx' found.
 (/home/jdl/.TinyTeX/texmf-dist/tex/latex/biblatex/lbx/american.lbx
 File: american.lbx 2024/03/21 v3.20 biblatex localization (PK/MW)
+Package biblatex Info: Trying to load language 'english' -> 'english-apa'...
+Package biblatex Info: ... file 'english-apa.lbx' found.
+(/home/jdl/.TinyTeX/texmf-dist/tex/latex/biblatex-apa/english-apa.lbx
+File: english-apa.lbx 2023/03/20 v9.17 APA biblatex localisation
 Package biblatex Info: Trying to load language 'english'...
 Package biblatex Info: ... file 'english.lbx' found.
 (/home/jdl/.TinyTeX/texmf-dist/tex/latex/biblatex/lbx/english.lbx
 File: english.lbx 2024/03/21 v3.20 biblatex localization (PK/MW)
-))))))
+)))
+Package biblatex Info: Trying to load language 'american'...
+Package biblatex Info: ... file 'american.lbx' found.
+(/home/jdl/.TinyTeX/texmf-dist/tex/latex/biblatex/lbx/american.lbx
+File: american.lbx 2024/03/21 v3.20 biblatex localization (PK/MW)
+Package biblatex Info: Trying to load language 'english' -> 'english-apa'...
+Package biblatex Info: ... file 'english-apa.lbx' found.
+(/home/jdl/.TinyTeX/texmf-dist/tex/latex/biblatex-apa/english-apa.lbx
+File: english-apa.lbx 2023/03/20 v9.17 APA biblatex localisation
+Package biblatex Info: Trying to load language 'american'...
+Package biblatex Info: ... file 'american.lbx' found.
+(/home/jdl/.TinyTeX/texmf-dist/tex/latex/biblatex/lbx/american.lbx
+File: american.lbx 2024/03/21 v3.20 biblatex localization (PK/MW)
+Package biblatex Info: Trying to load language 'english'...
+Package biblatex Info: ... file 'english.lbx' found.
+(/home/jdl/.TinyTeX/texmf-dist/tex/latex/biblatex/lbx/english.lbx
+File: english.lbx 2024/03/21 v3.20 biblatex localization (PK/MW)
+)))))
 Package biblatex Info: Input encoding 'utf8' detected.
 Package biblatex Info: Automatic encoding selection.
 (biblatex)             Assuming data encoding 'utf8'.
@@ -1259,26 +1263,22 @@ File: t1lmtt.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 \tf@toc=\write6
 \openout6 = `Supplementary_material.toc'.
 
-LaTeX Font Info:    Font shape `T1/lmtt/bx/n' in size <10> not available
-(Font)              Font shape `T1/lmtt/b/n' tried instead on input line 230.
 
 
 [2]
+LaTeX Font Info:    Font shape `T1/lmtt/bx/n' in size <10> not available
+(Font)              Font shape `T1/lmtt/b/n' tried instead on input line 230.
 LaTeX Font Info:    Trying to load font information for TS1+lmtt on input line 236.
 (/home/jdl/.TinyTeX/texmf-dist/tex/latex/lm/ts1lmtt.fd
 File: ts1lmtt.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
-Overfull \vbox (1.70526pt too high) detected at line 308
- []
-
-
 
 [3{/home/jdl/.TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-ts1.enc}]
 
 [4]
 
 [5]
-<Supplementary_material_files/figure-latex/estimated-age-hist-1.pdf, id=131, 361.35pt x 216.81pt>
+<Supplementary_material_files/figure-latex/estimated-age-hist-1.pdf, id=139, 361.35pt x 216.81pt>
 File: Supplementary_material_files/figure-latex/estimated-age-hist-1.pdf Graphic file (type pdf)
 <use Supplementary_material_files/figure-latex/estimated-age-hist-1.pdf>
 Package pdftex.def Info: Supplementary_material_files/figure-latex/estimated-age-hist-1.pdf  used on input line 472.
@@ -1288,14 +1288,10 @@ LaTeX Font Info:    Trying to load font information for TS1+lmr on input line 47
 File: ts1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
 
-[6 <./Supplementary_material_files/figure-latex/estimated-age-hist-1.pdf>]
-Underfull \vbox (badness 10000) detected at line 539
- []
+[6]
 
-
-
-[7]
-Overfull \vbox (1.08958pt too high) detected at line 810
+[7 <./Supplementary_material_files/figure-latex/estimated-age-hist-1.pdf>]
+Overfull \vbox (0.13557pt too high) detected at line 810
  []
 
 
@@ -1331,95 +1327,121 @@ Underfull \vbox (badness 10000) detected at line 810
 
 
 [11]
+Underfull \vbox (badness 10000) detected at line 810
+ []
+
+
+Underfull \vbox (badness 10000) detected at line 810
+ []
+
+
 
 [12]
 
 [13]
-<Supplementary_material_files/figure-latex/pca-sef-plot-1.pdf, id=179, 867.24pt x 578.16pt>
+<Supplementary_material_files/figure-latex/pca-sef-plot-1.pdf, id=186, 867.24pt x 578.16pt>
 File: Supplementary_material_files/figure-latex/pca-sef-plot-1.pdf Graphic file (type pdf)
 <use Supplementary_material_files/figure-latex/pca-sef-plot-1.pdf>
 Package pdftex.def Info: Supplementary_material_files/figure-latex/pca-sef-plot-1.pdf  used on input line 907.
 (pdftex.def)             Requested size: 500.48529pt x 333.65685pt.
 
-LaTeX Warning: Reference `tab:pca-sef-plot' on page 14 undefined on input line 911.
+
+[14]
+
+LaTeX Warning: Reference `tab:pca-sef-plot' on page 15 undefined on input line 911.
 
 
 
-[14 <./Supplementary_material_files/figure-latex/pca-sef-plot-1.pdf>]
-
-[15]
-<Supplementary_material_files/figure-latex/pca-mpd-plot-1.pdf, id=197, 867.24pt x 578.16pt>
+[15 <./Supplementary_material_files/figure-latex/pca-sef-plot-1.pdf>]
+<Supplementary_material_files/figure-latex/pca-mpd-plot-1.pdf, id=204, 867.24pt x 578.16pt>
 File: Supplementary_material_files/figure-latex/pca-mpd-plot-1.pdf Graphic file (type pdf)
 <use Supplementary_material_files/figure-latex/pca-mpd-plot-1.pdf>
 Package pdftex.def Info: Supplementary_material_files/figure-latex/pca-mpd-plot-1.pdf  used on input line 1002.
 (pdftex.def)             Requested size: 500.48529pt x 333.65685pt.
 
 
-[16 <./Supplementary_material_files/figure-latex/pca-mpd-plot-1.pdf>]
+[16]
 
-[17]
-Overfull \vbox (0.49548pt too high) detected at line 1162
- []
-
-
+[17 <./Supplementary_material_files/figure-latex/pca-mpd-plot-1.pdf>]
 
 [18]
 
 [19]
-Underfull \hbox (badness 1264) in paragraph at lines 1281--1283
-\T1/lmr/m/it/10 ineR(v.2.11)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 fac-to-ex-tra(v.1.0.7)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 scales(v.1.3.0)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 GGally(v.2.2.1)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 per-form-ance(v.0.12.2)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 kableEx-tra(v.1.4.0)\T1/lmr/m/n/10 ,
- []
-
-
-Underfull \hbox (badness 1248) in paragraph at lines 1281--1283
-\T1/lmr/m/it/10 rid-ate(v.1.9.3)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 for-cats(v.1.0.0)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 stringr(v.1.5.1)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 dplyr(v.1.1.4)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 purrr(v.1.0.2)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 readr(v.2.1.5)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 tidyr(v.1.3.1)\T1/lmr/m/n/10 ,
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 1284--1286
-\T1/lmr/m/it/10 cluster(v.2.1.6)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 R6(v.2.5.1)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 stringi(v.1.8.4)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 RColorBrewer(v.1.1-3)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 boot(v.1.3-30)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 cellranger(v.1.1.0)\T1/lmr/m/n/10 ,
- []
-
-
-Overfull \hbox (15.64005pt too wide) in paragraph at lines 1284--1286
-\T1/lmr/m/it/10 numDeriv(v.2016.8-1.1)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 es-tim-ab-il-ity(v.1.5.1)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 Rcpp(v.1.0.13)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 book-down(v.0.40)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 para-met-ers(v.0.22.1)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 splines(v.4.4.1)\T1/lmr/m/n/10 ,
- []
-
-
-Underfull \hbox (badness 1496) in paragraph at lines 1284--1286
-\T1/lmr/m/it/10 timechange(v.0.3.0)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 tidyse-lect(v.1.2.1)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 rstu-di-oapi(v.0.16.0)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 abind(v.1.4-5)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 yaml(v.2.3.10)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 lattice(v.0.22-5)\T1/lmr/m/n/10 ,
- []
-
-
-Underfull \hbox (badness 3919) in paragraph at lines 1284--1286
-\T1/lmr/m/it/10 plyr(v.1.8.9)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 withr(v.3.0.1)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 bayes-t-estR(v.0.14.0)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 coda(v.0.19-4.1)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 eval-u-ate(v.0.24.0)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 xml2(v.1.3.6)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 pil-
- []
-
-
-Underfull \hbox (badness 1281) in paragraph at lines 1284--1286
-\T1/lmr/m/it/10 lar(v.1.9.0)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 DT(v.0.33)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 in-sight(v.0.20.2)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 gen-er-ics(v.0.1.3)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 hms(v.1.1.3)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 mun-sell(v.0.5.1)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 minqa(v.1.2.7)\T1/lmr/m/n/10 ,
- []
-
-
-Underfull \hbox (badness 1616) in paragraph at lines 1284--1286
-\T1/lmr/m/it/10 5)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 cowplot(v.1.1.3)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 grid(v.4.4.1)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 bdsmatrix(v.1.3-7)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 dataw-iz-ard(v.0.12.2)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 colorspace(v.2.1-1)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 nlme(v.3.1-
- []
-
-
-Underfull \hbox (badness 3471) in paragraph at lines 1284--1286
-\T1/lmr/m/it/10 165)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 cli(v.3.6.3)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 fansi(v.1.0.6)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 vi-rid-isLite(v.0.4.2)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 svglite(v.2.1.3)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 gt-able(v.0.3.5)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 rstatix(v.0.7.2)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 di-
- []
-
-
-Underfull \hbox (badness 4713) in paragraph at lines 1284--1286
-\T1/lmr/m/it/10 gest(v.0.6.37)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 ggre-pel(v.0.9.5)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 htm-l-wid-gets(v.1.6.4)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 farver(v.2.1.2)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 htm-ltools(v.0.5.8.1)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 li-fe-cycle(v.1.0.4)
- []
-
-
 
 [20]
 
-[21] (./Supplementary_material.aux)
+[21]
+
+[22]
+<Supplementary_material_files/figure-latex/sociodemographic-numeric-desc-plot-1.pdf, id=243, 867.24pt x 578.16pt>
+File: Supplementary_material_files/figure-latex/sociodemographic-numeric-desc-plot-1.pdf Graphic file (type pdf)
+<use Supplementary_material_files/figure-latex/sociodemographic-numeric-desc-plot-1.pdf>
+Package pdftex.def Info: Supplementary_material_files/figure-latex/sociodemographic-numeric-desc-plot-1.pdf  used on input line 1392.
+(pdftex.def)             Requested size: 500.48529pt x 333.65685pt.
+
+
+[23]
+Overfull \vbox (0.56882pt too high) detected at line 1434
+ []
+
+
+
+[24 <./Supplementary_material_files/figure-latex/sociodemographic-numeric-desc-plot-1.pdf>]
+<Supplementary_material_files/figure-latex/sociodemographic-categorical-desc-plot-1.pdf, id=261, 867.24pt x 650.43pt>
+File: Supplementary_material_files/figure-latex/sociodemographic-categorical-desc-plot-1.pdf Graphic file (type pdf)
+<use Supplementary_material_files/figure-latex/sociodemographic-categorical-desc-plot-1.pdf>
+Package pdftex.def Info: Supplementary_material_files/figure-latex/sociodemographic-categorical-desc-plot-1.pdf  used on input line 1438.
+(pdftex.def)             Requested size: 500.48529pt x 375.36395pt.
+
+Underfull \hbox (badness 3138) in paragraph at lines 1458--1460
+[]\T1/lmr/bx/n/10 other at-tached pack-ages: \T1/lmr/m/it/10 pan-der(v.0.6.5)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 ef-fect-size(v.0.8.9)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 bbmle(v.1.0.25.1)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 gtools(v.3.9.5)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 Fac-
+ []
+
+
+Underfull \hbox (badness 1028) in paragraph at lines 1458--1460
+\T1/lmr/m/it/10 em-means(v.1.10.3)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 lmerTest(v.3.1-3)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 lme4(v.1.1-35.5)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 Matrix(v.1.7-0)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 readxl(v.1.4.3)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 gg-pubr(v.0.6.0)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 lu-
+ []
+
+
+
+[25 <./Supplementary_material_files/figure-latex/sociodemographic-categorical-desc-plot-1.pdf>]
+Underfull \hbox (badness 1960) in paragraph at lines 1461--1463
+[]\T1/lmr/bx/n/10 loaded via a names-pace (and not at-tached): \T1/lmr/m/it/10 sandwich(v.3.1-0)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 rlang(v.1.1.4)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 magrittr(v.2.0.3)\T1/lmr/m/n/10 ,
+ []
+
+
+Overfull \hbox (8.00217pt too wide) in paragraph at lines 1461--1463
+\T1/lmr/m/it/10 flashClust(v.1.01-2)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 highr(v.0.11)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 broom(v.1.0.6)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 clus-ter(v.2.1.6)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 R6(v.2.5.1)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 stringi(v.1.8.4)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 RColorBrewer(v.1.1-
+ []
+
+
+Underfull \hbox (badness 2617) in paragraph at lines 1461--1463
+\T1/lmr/m/it/10 3)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 boot(v.1.3-30)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 cell-ranger(v.1.1.0)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 numDeriv(v.2016.8-1.1)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 es-tima-bil-ity(v.1.5.1)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 Rcpp(v.1.0.13)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 book-
+ []
+
+
+Overfull \hbox (18.42247pt too wide) in paragraph at lines 1461--1463
+\T1/lmr/m/it/10 dioapi(v.0.16.0)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 abind(v.1.4-5)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 yaml(v.2.3.10)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 codetools(v.0.2-20)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 lattice(v.0.22-5)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 plyr(v.1.8.9)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 bayestestR(v.0.13.2)\T1/lmr/m/n/10 ,
+ []
+
+
+Underfull \hbox (badness 6268) in paragraph at lines 1461--1463
+\T1/lmr/m/it/10 glue(v.1.7.0)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 scatterplot3d(v.0.3-44)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 tools(v.4.4.1)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 ggsig-nif(v.0.6.4)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 mvtnorm(v.1.2-5)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 cow-plot(v.1.1.3)\T1/lmr/m/n/10 ,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1461--1463
+\T1/lmr/m/it/10 grid(v.4.4.1)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 datawiz-ard(v.0.12.2)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 bdsmatrix(v.1.3-7)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 colorspace(v.2.1-1)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 nlme(v.3.1-165)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 cli(v.3.6.3)\T1/lmr/m/n/10 ,
+ []
+
+
+Underfull \hbox (badness 4391) in paragraph at lines 1461--1463
+\T1/lmr/m/it/10 fansi(v.1.0.6)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 viridis-Lite(v.0.4.2)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 svglite(v.2.1.3)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 gtable(v.0.3.5)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 rstatix(v.0.7.2)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 di-gest(v.0.6.37)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 ggre-
+ []
+
+
+
+[26] (./Supplementary_material.aux)
  ***********
 LaTeX2e <2024-06-01> patch level 2
 L3 programming layer <2024-08-30>
@@ -1432,18 +1454,18 @@ Package logreq Info: Writing requests to 'Supplementary_material.run.xml'.
 
  ) 
 Here is how much of TeX's memory you used:
- 36455 strings out of 475480
- 688898 string characters out of 5775841
- 1752519 words of memory out of 5000000
- 58410 multiletter control sequences out of 15000+600000
+ 36483 strings out of 475480
+ 690630 string characters out of 5775841
+ 1738111 words of memory out of 5000000
+ 58427 multiletter control sequences out of 15000+600000
  620041 words of font info for 84 fonts, out of 8000000 for 9000
  36 hyphenation exceptions out of 8191
- 84i,12n,95p,1917b,8649s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 84i,12n,87p,2071b,5237s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </home/jdl/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx10.pfb></home/jdl/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx12.pfb></home/jdl/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmr10.pfb></home/jdl/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmr12.pfb></home/jdl/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmr17.pfb></home/jdl/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmr7.pfb></home/jdl/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmr8.pfb></home/jdl/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmri10.pfb></home/jdl/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmri8.pfb></home/jdl/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmtk10.pfb></home/jdl/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmtt10.pfb>
-Output written on Supplementary_material.pdf (21 pages, 390853 bytes).
+Output written on Supplementary_material.pdf (26 pages, 589500 bytes).
 PDF statistics:
- 411 PDF objects out of 1000 (max. 8388607)
- 354 compressed objects within 4 object streams
- 71 named destinations out of 1000 (max. 500000)
- 260 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 476 PDF objects out of 1000 (max. 8388607)
+ 409 compressed objects within 5 object streams
+ 82 named destinations out of 1000 (max. 500000)
+ 302 words of extra memory for PDF output out of 10000 (max. 10000000)
 

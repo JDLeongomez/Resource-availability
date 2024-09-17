@@ -52,10 +52,10 @@ header-includes:
   \lhead{Vásquez-Amézquita et al.} 
   \rhead{\textit{Exploring violence, resource access, and facial masculinity preferences}} 
   \renewcommand{\abstractname}{Description} 
-  \usepackage[british]{babel}
+  \usepackage[american]{babel}
   \usepackage{csquotes}
   \usepackage[style=apa,backend=biber]{biblatex}
-  \DeclareLanguageMapping{british}{british-apa}
+  \DeclareLanguageMapping{american}{american-apa}
   \usepackage{hanging}
   \usepackage{amsthm,amssymb,amsfonts}
   \usepackage{tikz,lipsum,lmodern}
@@ -680,7 +680,7 @@ quests <- read_excel("Data/Cuestionario Datos Sociodemográficos  (Disponibilida
   ))) |>
   mutate(across(where(is.character), ~ replace(
     ., . ==
-      "Raizal del Archipiélago de San Andrés, 
+      "Raizal del Archipiélago de San Andrés,
        Providencia y Santa Catalina",
     "Raizal"
   ))) |>
@@ -711,7 +711,7 @@ To test whether it was possible to reduce the number of socio-ecological variabl
 # Select relevant columns for PCA from the 'quests' dataset
 quests_pca_gen <- quests |>
   select(
-    ID,  # Unique identifier
+    ID, # Unique identifier
     Men_perceived_as_danger_to_partner,
     Men_perceived_as_danger_to_children,
     Freq_partner_physical_violence,
@@ -730,7 +730,7 @@ quests_pca_gen <- quests |>
 pca_sef <- PCA(quests_pca_gen[, -1], graph = FALSE)
 
 # Display summary of the PCA results
-pca_sef$var$cor |> 
+pca_sef$var$cor |>
   # Create a table using the 'kable' function
   kable(
     booktabs = TRUE, # Use 'booktabs' style for better-looking tables in LaTeX
@@ -750,22 +750,22 @@ pca_sef$var$cor |>
 **Summary plot**
 
 ```{r pca-sef-plot, message = FALSE, warning = FALSE, results = "hold", fig.cap = "Summary of the PCA for all socio-ecological factors. \textbf{a.} Scree plot. \textbf{b.} Factor loadings."}
-# Arrange two plots side by side: 
+# Arrange two plots side by side:
 # 1. A scree plot showing the explained variance for each principal component
 # 2. A plot showing the variable loadings on the principal components
 ggarrange(
   fviz_eig(pca_sef, addlabels = TRUE, barfill = "#00AFBB") +
     labs(
-      title = "PCA: Socio-ecological factors",  # Title for the scree plot
-      subtitle = "Scree plot"  # Subtitle for the scree plot
+      title = "PCA: Socio-ecological factors", # Title for the scree plot
+      subtitle = "Scree plot" # Subtitle for the scree plot
     ),
   fviz_pca_var(pca_sef,
-    col.var = "#00AFBB",  # Color the variable loadings in teal
-    repel = TRUE  # Avoid overlapping labels
+    col.var = "#00AFBB", # Color the variable loadings in teal
+    repel = TRUE # Avoid overlapping labels
   ) +
     labs(
-      title = NULL,  # No title for the loading plot
-      subtitle = "Loadings"  # Subtitle for the loading plot
+      title = NULL, # No title for the loading plot
+      subtitle = "Loadings" # Subtitle for the loading plot
     ),
   labels = "auto"
 )
@@ -798,7 +798,7 @@ pca_mpd <- PCA(quests_pca[, -1], graph = FALSE)
 mpd_scores <- data.frame(pca_mpd$ind$coord)$Dim.1
 
 # Display summary of the PCA results
-pca_mpd$var$cor |> 
+pca_mpd$var$cor |>
   # Create a table using the 'kable' function
   kable(
     booktabs = TRUE, # Use 'booktabs' style for better-looking tables in LaTeX
@@ -820,14 +820,14 @@ pca_mpd$var$cor |>
 In fact, the two variables related to men perceived as dangerous, could be reduced to a single dimension, that captured over `r percent(pca_mpd$eig[1,2]/100)` of the variance.
 
 ```{r pca-mpd-plot, message = FALSE, warning = FALSE, results = "hold", fig.cap = "Summary of the PCA for factors related to men perceived as dangerous. \textbf{a.} Scree plot. \textbf{b.} Factor loadings."}
-# Arrange two plots side by side: 
+# Arrange two plots side by side:
 # 1. A scree plot showing the explained variance for each principal component
 # 2. A plot showing the variable loadings on the principal components
 ggarrange(
   fviz_eig(pca_mpd, addlabels = TRUE, barfill = "#00AFBB") +
     labs(
       title = "PCA: Men perceived as danger to...", # Title for the scree plot
-      subtitle = "Scree plot"  # Subtitle for the scree plot
+      subtitle = "Scree plot" # Subtitle for the scree plot
     ),
   fviz_pca_var(pca_mpd,
     col.var = "#00AFBB", # Color the variable loadings in teal
@@ -852,9 +852,9 @@ quests_clean <- quests |>
   mutate(across(
     starts_with("Escasez alimentaria"),
     ~ recode(.,
-      "Nunca" = 0,  # Recode "Nunca" to 0
-      "Rara vez/algunas veces" = 1,  # Recode "Rara vez/algunas veces" to 1
-      "Casi siempre" = 2  # Recode "Casi siempre" to 2
+      "Nunca" = 0, # Recode "Nunca" to 0
+      "Rara vez/algunas veces" = 1, # Recode "Rara vez/algunas veces" to 1
+      "Casi siempre" = 2 # Recode "Casi siempre" to 2
     )
   )) |>
   # Perform row-wise operations
@@ -888,19 +888,23 @@ quests_clean <- quests |>
 
 ```{r}
 # Load the subjective evaluation dataset, removing the last two columns (123 and 124)
-eval <- read_excel("Data/Evaluación subjetiva rostros (Respuestas).xlsx") |> 
-  select(-c(123:124)) |> 
+eval <- read_excel("Data/Evaluación subjetiva rostros (Respuestas).xlsx") |>
+  select(-c(123:124)) |>
   # Perform row-wise operations to compute new variables
-  rowwise() |> 
-  # Calculate the sum of masculinity and attractiveness ratings for both masculinized and 
+  rowwise() |>
+  # Calculate the sum of masculinity and attractiveness ratings for both masculinized and
   # feminized stimuli
-  mutate(Masculinity_masculinized = sum(across(ends_with("M Mas"))),
-         Masculinity_feminized = sum(across(ends_with("F Mas"))),
-         Attractiveness_masculinized = sum(across(ends_with("M Atr"))),
-         Attractiveness_feminized = sum(across(ends_with("F Atr")))) |> 
+  mutate(
+    Masculinity_masculinized = sum(across(ends_with("M Mas"))),
+    Masculinity_feminized = sum(across(ends_with("F Mas"))),
+    Attractiveness_masculinized = sum(across(ends_with("M Atr"))),
+    Attractiveness_feminized = sum(across(ends_with("F Atr")))
+  ) |>
   # Rename columns for clarity
-  rename(Date = "Marca temporal",
-         ID = "Escribe tu código de participante")
+  rename(
+    Date = "Marca temporal",
+    ID = "Escribe tu código de participante"
+  )
 ```
 
 ##### Long format
@@ -910,71 +914,88 @@ eval <- read_excel("Data/Evaluación subjetiva rostros (Respuestas).xlsx") |>
 eval_long <- left_join(
   # First, select relevant columns and pivot the attractiveness ratings to long format
   eval |>
-    select(-c(123:126)) |>  # Remove unnecessary columns
-    select(!ends_with(" Mas")) |>  # Exclude masculinity-related columns
-    pivot_longer(cols = ends_with("Atr"),  # Pivot attractiveness ratings to long format
-                 names_to = "Stimulus", 
-                 values_to = "Attractiveness") |> 
-    mutate(Stimulus = str_remove_all(Stimulus, " Atr")),  # Clean the Stimulus names
+    select(-c(123:126)) |> # Remove unnecessary columns
+    select(!ends_with(" Mas")) |> # Exclude masculinity-related columns
+    pivot_longer(
+      cols = ends_with("Atr"), # Pivot attractiveness ratings to long format
+      names_to = "Stimulus",
+      values_to = "Attractiveness"
+    ) |>
+    mutate(Stimulus = str_remove_all(Stimulus, " Atr")), # Clean the Stimulus names
   # Next, pivot the masculinity ratings to long format
-  eval |> 
-    select(-c(123:126)) |>  # Remove unnecessary columns
-    select(!ends_with(" Atr")) |>  # Exclude attractiveness-related columns
-    pivot_longer(cols = ends_with("Mas"),  # Pivot masculinity ratings to long format
-                 names_to = "Stimulus", 
-                 values_to = "Masculinity") |> 
-    mutate(Stimulus = str_remove_all(Stimulus, " Mas"))  # Clean the Stimulus names
+  eval |>
+    select(-c(123:126)) |> # Remove unnecessary columns
+    select(!ends_with(" Atr")) |> # Exclude attractiveness-related columns
+    pivot_longer(
+      cols = ends_with("Mas"), # Pivot masculinity ratings to long format
+      names_to = "Stimulus",
+      values_to = "Masculinity"
+    ) |>
+    mutate(Stimulus = str_remove_all(Stimulus, " Mas")) # Clean the Stimulus names
 )
 ```
 
 #### Resource availability
 
 ```{r}
-reg <- rbind(read_excel("Data/3Registro Participantes Disponibilidad de Recursos-corregido.xlsx", 
-                        sheet = "UB") |> 
-               mutate(University = "UB"),
-             read_excel("Data/3Registro Participantes Disponibilidad de Recursos-corregido.xlsx", 
-                        sheet = "CUC") |> 
-               mutate(University = "CUC")) |> 
-  select(-c(Grupo, `Entrega de kit`, `Protocolo de bioseguridad`, `Requisitos previos al registro`, Consentimiento,
-            `Código de evaluador`:`Código auxiliar que reclutó`)) |>
-  rename(Date = "Fecha de registro",
-         ID = "Codigo del Participante",
-         Condition = "Condicion",
-         Calibration = "Calibración",
-         Gaze_perc = "% Gaze",
-         Condition_happiness = "Q Feliz",
-         Condition_physical_safety = "Q Segura físicamente",
-         Condition_healthy = "Q Saludable",
-         Condition_economic_security = "Q Segura económicamente",
-         Body_temperature = "Temperatura",
-         Ovulating = "Test de ovulación",
-         Saliva_pre = "Recolección de saliva pre",
-         Saliva_pre_time = "Hora...18",
-         Eye_tracking = "Rastreo Ocular",
-         Subjective_evaluation = "Evaluación subjetiva",
-         Sociodemographic_questionnaire = "Cuestionario sociodemográfico",
-         Saliva_post = "Recolección de saliva post",
-         Saliva_post_time = "Hora...23",
-         Notes = "Observaciones") |>
-  mutate(Condition = fct_recode(Condition, 
-                                "Low" = "Baja",
-                                "High" = "Alta"),
-         Calibration = fct_recode(Calibration, 
-                                  "<=0.5" = "<0.5 (menor a 0.5)",
-                                  ">0.5" = ">0.5 (mayor a 0.5)",
-                                  "<=0.5" = "0.5 (igual a 0.5)",
-                                  NULL = "Selecciona"),
-         Ovulating = fct_recode(as.factor(Ovulating),
-                                "No" = "0",
-                                "Yes" = "1")) |> 
-  mutate_all(~str_replace_all(., "SI", "Yes")) |> 
-  mutate_all(~str_replace_all(., "NO", "No")) |> 
-  mutate_all(~str_replace_all(., "INCOMPLETO", "No")) |>
-  mutate_all(~str_replace_all(., "Recuperado", "Data recovered")) |> 
-  mutate_all(~str_replace_all(., "RECUPERADO", "Data recovered")) |> 
-  mutate_all(~na_if(., "Selecciona")) |> 
-  mutate_all(~na_if(., "N/A")) |> 
+reg <- rbind(
+  read_excel("Data/3Registro Participantes Disponibilidad de Recursos-corregido.xlsx",
+    sheet = "UB"
+  ) |>
+    mutate(University = "UB"),
+  read_excel("Data/3Registro Participantes Disponibilidad de Recursos-corregido.xlsx",
+    sheet = "CUC"
+  ) |>
+    mutate(University = "CUC")
+) |>
+  select(-c(
+    Grupo, `Entrega de kit`, `Protocolo de bioseguridad`, `Requisitos previos al registro`, 
+    Consentimiento, `Código de evaluador`:`Código auxiliar que reclutó`
+  )) |>
+  rename(
+    Date = "Fecha de registro",
+    ID = "Codigo del Participante",
+    Condition = "Condicion",
+    Calibration = "Calibración",
+    Gaze_perc = "% Gaze",
+    Condition_happiness = "Q Feliz",
+    Condition_physical_safety = "Q Segura físicamente",
+    Condition_healthy = "Q Saludable",
+    Condition_economic_security = "Q Segura económicamente",
+    Body_temperature = "Temperatura",
+    Ovulating = "Test de ovulación",
+    Saliva_pre = "Recolección de saliva pre",
+    Saliva_pre_time = "Hora...18",
+    Eye_tracking = "Rastreo Ocular",
+    Subjective_evaluation = "Evaluación subjetiva",
+    Sociodemographic_questionnaire = "Cuestionario sociodemográfico",
+    Saliva_post = "Recolección de saliva post",
+    Saliva_post_time = "Hora...23",
+    Notes = "Observaciones"
+  ) |>
+  mutate(
+    Condition = fct_recode(Condition,
+      "Low" = "Baja",
+      "High" = "Alta"
+    ),
+    Calibration = fct_recode(Calibration,
+      "<=0.5" = "<0.5 (menor a 0.5)",
+      ">0.5" = ">0.5 (mayor a 0.5)",
+      "<=0.5" = "0.5 (igual a 0.5)",
+      NULL = "Selecciona"
+    ),
+    Ovulating = fct_recode(as.factor(Ovulating),
+      "No" = "0",
+      "Yes" = "1"
+    )
+  ) |>
+  mutate_all(~ str_replace_all(., "SI", "Yes")) |>
+  mutate_all(~ str_replace_all(., "NO", "No")) |>
+  mutate_all(~ str_replace_all(., "INCOMPLETO", "No")) |>
+  mutate_all(~ str_replace_all(., "Recuperado", "Data recovered")) |>
+  mutate_all(~ str_replace_all(., "RECUPERADO", "Data recovered")) |>
+  mutate_all(~ na_if(., "Selecciona")) |>
+  mutate_all(~ na_if(., "N/A")) |>
   mutate(across(starts_with("Condition_"), as.numeric))
 ```
 
@@ -983,10 +1004,10 @@ reg <- rbind(read_excel("Data/3Registro Participantes Disponibilidad de Recursos
 #### Join data files
 
 ```{r}
-dat_int <- dat_et |> 
+dat_int <- dat_et |>
   left_join(quests_clean, by = c("ID"), multiple = "all") |>
-  left_join(eval_long, by = c("ID", "Stimulus"), multiple = "all") |> 
-  left_join(reg, by = c("ID", "University", "Condition"), multiple = "all") 
+  left_join(eval_long, by = c("ID", "Stimulus"), multiple = "all") |>
+  left_join(reg, by = c("ID", "University", "Condition"), multiple = "all")
 ```
 
 #### Filtered database
@@ -994,19 +1015,19 @@ dat_int <- dat_et |>
 Filtered database to exclude participants who did responded the two control questions correctly, were ovulating, or did not report being exclusively heterosexual.
 
 ```{r}
-dat <- dat_int |> 
+dat <- dat_int |>
   # Filter out rows where Control_question_1 and Control_question_2 are both "No",
   # Ovulating is not "Yes", and Sexual_orientation is "Exclusively heterosexual"
-  filter(Control_question_1 == "No" 
-         & Control_question_2 == "No" 
-         & Ovulating != "Yes" 
-         & Sexual_orientation == "Exclusively heterosexual") |> 
-  # Remove all occurrences of the letter "F" from the Stimulus column 
+  filter(Control_question_1 == "No" &
+    Control_question_2 == "No" &
+    Ovulating != "Yes" &
+    Sexual_orientation == "Exclusively heterosexual") |>
+  # Remove all occurrences of the letter "F" from the Stimulus column
   # (infomation already in the column Sexual_dimorphism)
-  mutate(Stimulus = str_remove_all(Stimulus, "F")) |> 
+  mutate(Stimulus = str_remove_all(Stimulus, "F")) |>
   # Remove all occurrences of the letter "M" from the Stimulus column
   # (infomation already in the column Sexual_dimorphism)
-  mutate(Stimulus = str_remove_all(Stimulus, "M")) |> 
+  mutate(Stimulus = str_remove_all(Stimulus, "M")) |>
   # Ensure that the resulting data frame is ungrouped
   ungroup()
 ```
@@ -1018,16 +1039,16 @@ After filtering the database and removing data who did not meet these criteria, 
 #### Resource availability (filtered)
 
 ```{r}
-reg_fin <- reg |> 
-  left_join(quests_clean, by = c("ID")) |> 
-  filter(ID %in% unique(dat$ID)) 
+reg_fin <- reg |>
+  left_join(quests_clean, by = c("ID")) |>
+  filter(ID %in% unique(dat$ID))
 ```
 
 #### Questionnaires (filtered)
 
 ```{r}
-quests_fin <- quests_clean |> 
-  filter(ID %in% unique(dat$ID)) 
+quests_fin <- quests_clean |>
+  filter(ID %in% unique(dat$ID))
 ```
 
 # Descriptives
@@ -1035,17 +1056,21 @@ quests_fin <- quests_clean |>
 ## Number and age of participants in each condition
 
 ```{r}
-dat |> 
-  group_by(ID) |> 
-  summarise(Age = first(Age),
-            Condition = first(Condition)) |> 
-  ungroup() |> 
-  group_by(Condition) |> 
-  summarise(n = n_distinct(ID),
-            Mean = mean(Age, na.rm = TRUE),
-            SD = sd(Age, na.rm = TRUE),
-            Min = min(Age, na.rm = TRUE),
-            Max = max(Age, na.rm = TRUE)) |> 
+dat |>
+  group_by(ID) |>
+  summarise(
+    Age = first(Age),
+    Condition = first(Condition)
+  ) |>
+  ungroup() |>
+  group_by(Condition) |>
+  summarise(
+    n = n_distinct(ID),
+    Mean = mean(Age, na.rm = TRUE),
+    SD = sd(Age, na.rm = TRUE),
+    Min = min(Age, na.rm = TRUE),
+    Max = max(Age, na.rm = TRUE)
+  ) |>
   kable(
     booktabs = TRUE, # Use 'booktabs' style for better-looking tables in LaTeX
     digits = 2, # Round numerical values to 2 decimal places
@@ -1054,12 +1079,14 @@ dat |>
     caption = "Number and age of participants in each condition",
     # Caption for the table
     escape = FALSE, # Allow LaTeX commands in the table (e.g., italic or bold)
-    col.names = c("Condition",
-                  "\\textit{n}",
-                  "Mean",
-                  "SD",
-                  "Min.",
-                  "Max.")
+    col.names = c(
+      "Condition",
+      "\\textit{n}",
+      "Mean",
+      "SD",
+      "Min.",
+      "Max."
+    )
   ) |>
   # Apply additional LaTeX styling to the table using 'kable_styling'
   kable_styling(
@@ -1067,6 +1094,137 @@ dat |>
   )
 ```
 
+## Sociodemographic data
+
+### Select and wrangle data
+
+```{r}
+# Create desc_quest, combining and transforming quests_fin and reg
+desc_quest <-
+  # Join the quests_fin and reg dataframes by ID
+  quests_fin |>
+  left_join(reg, by = c("ID")) |>
+  # Select only the desired columns
+  select(
+    ID,
+    Condition,
+    Age,
+    City,
+    Education,
+    Ethnicity,
+    Sexual_orientation,
+    Relationship_current,
+    Relationship_status:Hormonal_contraception,
+    Sexual_abuse,
+    SP_happiness:Socioeconomic_level,
+    Perceived_country_safety:Freq_robery,
+    Victim_of_violence,
+    Victim_of_gender_violence:Victim_of_armed_conflict,
+    Self_esteem:Men_perceived_as_dangerous,
+    Freq_partner_physical_violence,
+    Freq_partner_infidelity,
+    Partner_physical_violence,
+    Partner_sexual_violence,
+    Freq_partner_sexual_violence,
+    # Food security variables (transformed later)
+    "Escasez alimentaria1":"Escasez alimentaria5"
+  ) |>
+  # Transform all 'Escasez alimentaria' (food scarcity) columns into categorical variables with 
+  # specific levels.
+  mutate(
+    across(
+      starts_with("Escasez alimentaria"),
+      ~ recode(.,
+        "0" = "Never",
+        "1" = "Rarely/sometimes",
+        "2" = "Almost always"
+      )
+    ),
+    # Convert character variables to factor for clarity and consistency.
+    across(where(is.character), as.factor),
+    # Sort factor levels
+    across(
+      starts_with("Escasez alimentaria"),
+      ~ factor(.,
+        levels = c(
+          "Never",
+          "Rarely/sometimes",
+          "Almost always"
+        )
+      )
+    )
+  )
+```
+
+### Sociodemographic numeric
+
+```{r sociodemographic-numeric-desc-plot, message = FALSE, warning = FALSE, results = "hold", fig.cap = "Distribution of values across numeric sociodemographic variables by condition. Colored vertical lines indicate the mean value for each variable under each condition.", fig.height = 8}
+# Transform desc_quest by selecting only certain columns and pivoting them into a long format
+desc_quest |>
+  # Select ID, Condition, and all numeric columns
+  select(ID, Condition, where(is.numeric)) |> 
+  # Pivot the numeric columns into a long format with "Variable" as the column name
+  pivot_longer(where(is.numeric),
+               names_to = "Variable",
+               values_to = "Value") |>
+  # Clean up the Variable names by replacing underscores and "Freq" and "SP" substrings.
+  mutate(Variable = str_replace_all(Variable, "_", " ")) |>
+  mutate(Variable = str_replace_all(Variable, "Freq", "Frequency of")) |>
+  mutate(Variable = str_replace_all(Variable, "SP", "Self-perceived")) |> 
+  # Create a ggplot object to visualize the transformed data.
+  ggplot(aes(x = Value, fill = Condition, color = Condition)) +
+  # Create a density plot for each Variable, with different colors and fills based on Condition
+  geom_density(alpha = 0.3) +
+  # Set up plot labels and title.
+  labs(x = NULL, y = "Density") +
+  theme(legend.position = c(1, 0),
+       legend.justification = c(1, 0),
+       legend.direction = "horizontal") +
+  # Add a vertical line at the mean Value for each Variable.
+  stat_summary(aes(xintercept = after_stat(x), y = 0),
+               fun = mean, geom = "vline", orientation = "y") +
+  # Divide the plot into facets by Variable, with free scales
+  facet_wrap(~Variable, scales = "free",
+             labeller = labeller(Variable = label_wrap_gen(width = 25)))
+```
+
+### Sociodemographic categorical
+
+```{r sociodemographic-categorical-desc-plot, message = FALSE, warning = FALSE, results = "hold", fig.cap = "Proportional number of participants across categorical variables by condition.", fig.height = 9}
+# Transform desc_quest by selecting only certain columns and pivoting them into a long format
+desc_quest |>
+  # Select ID, Condition, all factor variables (will be renamed to Factor), City, and exclude
+  # any variables starting with "Escasez alimentaria".
+  select(ID, Condition, where(is.factor), City, -starts_with("Escasez alimentaria")) |> 
+  # Pivot the long data from City:Victim_of_armed_conflict into a wide format.
+  pivot_longer(City:Victim_of_armed_conflict,
+               names_to = "Variable",
+               values_to = "Value") |>
+  # Clean up the Variable names by replacing underscores with spaces
+  mutate(Variable = str_replace_all(Variable, "_", " ")) |> 
+  # Create a ggplot object to visualize the transformed data
+  ggplot(aes(y = Value, fill = Condition, color = Condition)) +
+  # Create a bar plot for each Variable, with different colors and fills based on Condition
+  geom_bar(alpha = 0.3, position = position_dodge()) +
+  # Add text labels to show the proportion of each category within each group
+  geom_text(aes(label = scales::percent(after_stat(prop), accuracy = 0.1)),
+            vjust = "inward",
+            position = position_dodge(.9),
+            stat = "prop",
+            color = "black",
+            size = 2.5) +
+  # Divide the plot into facets by Variable, with free scales 
+  facet_wrap(~Variable, scales = "free") +
+  # Set up scale for y-axis to display counts in a compact manner
+  scale_y_discrete(labels = label_wrap(25)) +
+  # Adjust the appearance of the plot by making axis text slightly smaller
+  theme(axis.text.y = element_text(size = 7),
+       legend.position = c(1, 0),
+       legend.justification = c(1, 0),
+       legend.direction = "horizontal") +
+  # Set up plot labels and title.
+  labs(x = NULL, y = NULL)
+```
 
 # Session info (for reproducibility) {#session}
 
