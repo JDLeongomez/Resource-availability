@@ -1099,51 +1099,68 @@ Less columns, with total instrument scores
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{reg }\OtherTok{\textless{}{-}} \FunctionTok{rbind}\NormalTok{(}\FunctionTok{read\_excel}\NormalTok{(}\StringTok{"Data/3Registro Participantes Disponibilidad de Recursos{-}corregido.xlsx"}\NormalTok{, }
-                        \AttributeTok{sheet =} \StringTok{"UB"}\NormalTok{) }\SpecialCharTok{|\textgreater{}} 
-               \FunctionTok{mutate}\NormalTok{(}\AttributeTok{University =} \StringTok{"UB"}\NormalTok{),}
-             \FunctionTok{read\_excel}\NormalTok{(}\StringTok{"Data/3Registro Participantes Disponibilidad de Recursos{-}corregido.xlsx"}\NormalTok{, }
-                        \AttributeTok{sheet =} \StringTok{"CUC"}\NormalTok{) }\SpecialCharTok{|\textgreater{}} 
-               \FunctionTok{mutate}\NormalTok{(}\AttributeTok{University =} \StringTok{"CUC"}\NormalTok{)) }\SpecialCharTok{|\textgreater{}} 
-  \FunctionTok{select}\NormalTok{(}\SpecialCharTok{{-}}\FunctionTok{c}\NormalTok{(Grupo, }\StringTok{\textasciigrave{}}\AttributeTok{Entrega de kit}\StringTok{\textasciigrave{}}\NormalTok{, }\StringTok{\textasciigrave{}}\AttributeTok{Protocolo de bioseguridad}\StringTok{\textasciigrave{}}\NormalTok{, }\StringTok{\textasciigrave{}}\AttributeTok{Requisitos previos al registro}\StringTok{\textasciigrave{}}\NormalTok{, Consentimiento,}
-            \StringTok{\textasciigrave{}}\AttributeTok{Código de evaluador}\StringTok{\textasciigrave{}}\SpecialCharTok{:}\StringTok{\textasciigrave{}}\AttributeTok{Código auxiliar que reclutó}\StringTok{\textasciigrave{}}\NormalTok{)) }\SpecialCharTok{|\textgreater{}}
-  \FunctionTok{rename}\NormalTok{(}\AttributeTok{Date =} \StringTok{"Fecha de registro"}\NormalTok{,}
-         \AttributeTok{ID =} \StringTok{"Codigo del Participante"}\NormalTok{,}
-         \AttributeTok{Condition =} \StringTok{"Condicion"}\NormalTok{,}
-         \AttributeTok{Calibration =} \StringTok{"Calibración"}\NormalTok{,}
-         \AttributeTok{Gaze\_perc =} \StringTok{"\% Gaze"}\NormalTok{,}
-         \AttributeTok{Condition\_happiness =} \StringTok{"Q Feliz"}\NormalTok{,}
-         \AttributeTok{Condition\_physical\_safety =} \StringTok{"Q Segura físicamente"}\NormalTok{,}
-         \AttributeTok{Condition\_healthy =} \StringTok{"Q Saludable"}\NormalTok{,}
-         \AttributeTok{Condition\_economic\_security =} \StringTok{"Q Segura económicamente"}\NormalTok{,}
-         \AttributeTok{Body\_temperature =} \StringTok{"Temperatura"}\NormalTok{,}
-         \AttributeTok{Ovulating =} \StringTok{"Test de ovulación"}\NormalTok{,}
-         \AttributeTok{Saliva\_pre =} \StringTok{"Recolección de saliva pre"}\NormalTok{,}
-         \AttributeTok{Saliva\_pre\_time =} \StringTok{"Hora...18"}\NormalTok{,}
-         \AttributeTok{Eye\_tracking =} \StringTok{"Rastreo Ocular"}\NormalTok{,}
-         \AttributeTok{Subjective\_evaluation =} \StringTok{"Evaluación subjetiva"}\NormalTok{,}
-         \AttributeTok{Sociodemographic\_questionnaire =} \StringTok{"Cuestionario sociodemográfico"}\NormalTok{,}
-         \AttributeTok{Saliva\_post =} \StringTok{"Recolección de saliva post"}\NormalTok{,}
-         \AttributeTok{Saliva\_post\_time =} \StringTok{"Hora...23"}\NormalTok{,}
-         \AttributeTok{Notes =} \StringTok{"Observaciones"}\NormalTok{) }\SpecialCharTok{|\textgreater{}}
-  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{Condition =} \FunctionTok{fct\_recode}\NormalTok{(Condition, }
-                                \StringTok{"Low"} \OtherTok{=} \StringTok{"Baja"}\NormalTok{,}
-                                \StringTok{"High"} \OtherTok{=} \StringTok{"Alta"}\NormalTok{),}
-         \AttributeTok{Calibration =} \FunctionTok{fct\_recode}\NormalTok{(Calibration, }
-                                  \StringTok{"\textless{}=0.5"} \OtherTok{=} \StringTok{"\textless{}0.5 (menor a 0.5)"}\NormalTok{,}
-                                  \StringTok{"\textgreater{}0.5"} \OtherTok{=} \StringTok{"\textgreater{}0.5 (mayor a 0.5)"}\NormalTok{,}
-                                  \StringTok{"\textless{}=0.5"} \OtherTok{=} \StringTok{"0.5 (igual a 0.5)"}\NormalTok{,}
-                                  \AttributeTok{NULL =} \StringTok{"Selecciona"}\NormalTok{),}
-         \AttributeTok{Ovulating =} \FunctionTok{fct\_recode}\NormalTok{(}\FunctionTok{as.factor}\NormalTok{(Ovulating),}
-                                \StringTok{"No"} \OtherTok{=} \StringTok{"0"}\NormalTok{,}
-                                \StringTok{"Yes"} \OtherTok{=} \StringTok{"1"}\NormalTok{)) }\SpecialCharTok{|\textgreater{}} 
-  \FunctionTok{mutate\_all}\NormalTok{(}\SpecialCharTok{\textasciitilde{}}\FunctionTok{str\_replace\_all}\NormalTok{(., }\StringTok{"SI"}\NormalTok{, }\StringTok{"Yes"}\NormalTok{)) }\SpecialCharTok{|\textgreater{}} 
-  \FunctionTok{mutate\_all}\NormalTok{(}\SpecialCharTok{\textasciitilde{}}\FunctionTok{str\_replace\_all}\NormalTok{(., }\StringTok{"NO"}\NormalTok{, }\StringTok{"No"}\NormalTok{)) }\SpecialCharTok{|\textgreater{}} 
-  \FunctionTok{mutate\_all}\NormalTok{(}\SpecialCharTok{\textasciitilde{}}\FunctionTok{str\_replace\_all}\NormalTok{(., }\StringTok{"INCOMPLETO"}\NormalTok{, }\StringTok{"No"}\NormalTok{)) }\SpecialCharTok{|\textgreater{}}
-  \FunctionTok{mutate\_all}\NormalTok{(}\SpecialCharTok{\textasciitilde{}}\FunctionTok{str\_replace\_all}\NormalTok{(., }\StringTok{"Recuperado"}\NormalTok{, }\StringTok{"Data recovered"}\NormalTok{)) }\SpecialCharTok{|\textgreater{}} 
-  \FunctionTok{mutate\_all}\NormalTok{(}\SpecialCharTok{\textasciitilde{}}\FunctionTok{str\_replace\_all}\NormalTok{(., }\StringTok{"RECUPERADO"}\NormalTok{, }\StringTok{"Data recovered"}\NormalTok{)) }\SpecialCharTok{|\textgreater{}} 
-  \FunctionTok{mutate\_all}\NormalTok{(}\SpecialCharTok{\textasciitilde{}}\FunctionTok{na\_if}\NormalTok{(., }\StringTok{"Selecciona"}\NormalTok{)) }\SpecialCharTok{|\textgreater{}} 
-  \FunctionTok{mutate\_all}\NormalTok{(}\SpecialCharTok{\textasciitilde{}}\FunctionTok{na\_if}\NormalTok{(., }\StringTok{"N/A"}\NormalTok{)) }\SpecialCharTok{|\textgreater{}} 
+\NormalTok{reg }\OtherTok{\textless{}{-}} \FunctionTok{rbind}\NormalTok{(}
+  \FunctionTok{read\_excel}\NormalTok{(}\StringTok{"Data/3Registro Participantes Disponibilidad de Recursos{-}corregido.xlsx"}\NormalTok{,}
+    \AttributeTok{sheet =} \StringTok{"UB"}
+\NormalTok{  ) }\SpecialCharTok{|\textgreater{}}
+    \FunctionTok{mutate}\NormalTok{(}\AttributeTok{University =} \StringTok{"UB"}\NormalTok{),}
+  \FunctionTok{read\_excel}\NormalTok{(}\StringTok{"Data/3Registro Participantes Disponibilidad de Recursos{-}corregido.xlsx"}\NormalTok{,}
+    \AttributeTok{sheet =} \StringTok{"CUC"}
+\NormalTok{  ) }\SpecialCharTok{|\textgreater{}}
+    \FunctionTok{mutate}\NormalTok{(}\AttributeTok{University =} \StringTok{"CUC"}\NormalTok{)}
+\NormalTok{) }\SpecialCharTok{|\textgreater{}}
+  \FunctionTok{select}\NormalTok{(}\SpecialCharTok{{-}}\FunctionTok{c}\NormalTok{(}
+\NormalTok{    Grupo, }
+    \StringTok{\textasciigrave{}}\AttributeTok{Entrega de kit}\StringTok{\textasciigrave{}}\NormalTok{, }
+    \StringTok{\textasciigrave{}}\AttributeTok{Protocolo de bioseguridad}\StringTok{\textasciigrave{}}\NormalTok{, }
+    \StringTok{\textasciigrave{}}\AttributeTok{Requisitos previos al registro}\StringTok{\textasciigrave{}}\NormalTok{, }
+\NormalTok{    Consentimiento,}
+    \StringTok{\textasciigrave{}}\AttributeTok{Código de evaluador}\StringTok{\textasciigrave{}}\SpecialCharTok{:}\StringTok{\textasciigrave{}}\AttributeTok{Código auxiliar que reclutó}\StringTok{\textasciigrave{}}
+\NormalTok{  )) }\SpecialCharTok{|\textgreater{}}
+  \FunctionTok{rename}\NormalTok{(}
+    \AttributeTok{Date =} \StringTok{"Fecha de registro"}\NormalTok{,}
+    \AttributeTok{ID =} \StringTok{"Codigo del Participante"}\NormalTok{,}
+    \AttributeTok{Condition =} \StringTok{"Condicion"}\NormalTok{,}
+    \AttributeTok{Calibration =} \StringTok{"Calibración"}\NormalTok{,}
+    \AttributeTok{Gaze\_perc =} \StringTok{"\% Gaze"}\NormalTok{,}
+    \AttributeTok{Condition\_happiness =} \StringTok{"Q Feliz"}\NormalTok{,}
+    \AttributeTok{Condition\_physical\_safety =} \StringTok{"Q Segura físicamente"}\NormalTok{,}
+    \AttributeTok{Condition\_healthy =} \StringTok{"Q Saludable"}\NormalTok{,}
+    \AttributeTok{Condition\_economic\_security =} \StringTok{"Q Segura económicamente"}\NormalTok{,}
+    \AttributeTok{Body\_temperature =} \StringTok{"Temperatura"}\NormalTok{,}
+    \AttributeTok{Ovulating =} \StringTok{"Test de ovulación"}\NormalTok{,}
+    \AttributeTok{Saliva\_pre =} \StringTok{"Recolección de saliva pre"}\NormalTok{,}
+    \AttributeTok{Saliva\_pre\_time =} \StringTok{"Hora...18"}\NormalTok{,}
+    \AttributeTok{Eye\_tracking =} \StringTok{"Rastreo Ocular"}\NormalTok{,}
+    \AttributeTok{Subjective\_evaluation =} \StringTok{"Evaluación subjetiva"}\NormalTok{,}
+    \AttributeTok{Sociodemographic\_questionnaire =} \StringTok{"Cuestionario sociodemográfico"}\NormalTok{,}
+    \AttributeTok{Saliva\_post =} \StringTok{"Recolección de saliva post"}\NormalTok{,}
+    \AttributeTok{Saliva\_post\_time =} \StringTok{"Hora...23"}\NormalTok{,}
+    \AttributeTok{Notes =} \StringTok{"Observaciones"}
+\NormalTok{  ) }\SpecialCharTok{|\textgreater{}}
+  \FunctionTok{mutate}\NormalTok{(}
+    \AttributeTok{Condition =} \FunctionTok{fct\_recode}\NormalTok{(Condition,}
+      \StringTok{"Low"} \OtherTok{=} \StringTok{"Baja"}\NormalTok{,}
+      \StringTok{"High"} \OtherTok{=} \StringTok{"Alta"}
+\NormalTok{    ),}
+    \AttributeTok{Calibration =} \FunctionTok{fct\_recode}\NormalTok{(Calibration,}
+      \StringTok{"\textless{}=0.5"} \OtherTok{=} \StringTok{"\textless{}0.5 (menor a 0.5)"}\NormalTok{,}
+      \StringTok{"\textgreater{}0.5"} \OtherTok{=} \StringTok{"\textgreater{}0.5 (mayor a 0.5)"}\NormalTok{,}
+      \StringTok{"\textless{}=0.5"} \OtherTok{=} \StringTok{"0.5 (igual a 0.5)"}\NormalTok{,}
+      \AttributeTok{NULL =} \StringTok{"Selecciona"}
+\NormalTok{    ),}
+    \AttributeTok{Ovulating =} \FunctionTok{fct\_recode}\NormalTok{(}\FunctionTok{as.factor}\NormalTok{(Ovulating),}
+      \StringTok{"No"} \OtherTok{=} \StringTok{"0"}\NormalTok{,}
+      \StringTok{"Yes"} \OtherTok{=} \StringTok{"1"}
+\NormalTok{    )}
+\NormalTok{  ) }\SpecialCharTok{|\textgreater{}}
+  \FunctionTok{mutate\_all}\NormalTok{(}\SpecialCharTok{\textasciitilde{}} \FunctionTok{str\_replace\_all}\NormalTok{(., }\StringTok{"SI"}\NormalTok{, }\StringTok{"Yes"}\NormalTok{)) }\SpecialCharTok{|\textgreater{}}
+  \FunctionTok{mutate\_all}\NormalTok{(}\SpecialCharTok{\textasciitilde{}} \FunctionTok{str\_replace\_all}\NormalTok{(., }\StringTok{"NO"}\NormalTok{, }\StringTok{"No"}\NormalTok{)) }\SpecialCharTok{|\textgreater{}}
+  \FunctionTok{mutate\_all}\NormalTok{(}\SpecialCharTok{\textasciitilde{}} \FunctionTok{str\_replace\_all}\NormalTok{(., }\StringTok{"INCOMPLETO"}\NormalTok{, }\StringTok{"No"}\NormalTok{)) }\SpecialCharTok{|\textgreater{}}
+  \FunctionTok{mutate\_all}\NormalTok{(}\SpecialCharTok{\textasciitilde{}} \FunctionTok{str\_replace\_all}\NormalTok{(., }\StringTok{"Recuperado"}\NormalTok{, }\StringTok{"Data recovered"}\NormalTok{)) }\SpecialCharTok{|\textgreater{}}
+  \FunctionTok{mutate\_all}\NormalTok{(}\SpecialCharTok{\textasciitilde{}} \FunctionTok{str\_replace\_all}\NormalTok{(., }\StringTok{"RECUPERADO"}\NormalTok{, }\StringTok{"Data recovered"}\NormalTok{)) }\SpecialCharTok{|\textgreater{}}
+  \FunctionTok{mutate\_all}\NormalTok{(}\SpecialCharTok{\textasciitilde{}} \FunctionTok{na\_if}\NormalTok{(., }\StringTok{"Selecciona"}\NormalTok{)) }\SpecialCharTok{|\textgreater{}}
+  \FunctionTok{mutate\_all}\NormalTok{(}\SpecialCharTok{\textasciitilde{}} \FunctionTok{na\_if}\NormalTok{(., }\StringTok{"N/A"}\NormalTok{)) }\SpecialCharTok{|\textgreater{}}
   \FunctionTok{mutate}\NormalTok{(}\FunctionTok{across}\NormalTok{(}\FunctionTok{starts\_with}\NormalTok{(}\StringTok{"Condition\_"}\NormalTok{), as.numeric))}
 \end{Highlighting}
 \end{Shaded}

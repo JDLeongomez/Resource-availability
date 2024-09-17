@@ -930,51 +930,68 @@ eval_long <- left_join(
 #### Resource availability
 
 ```{r}
-reg <- rbind(read_excel("Data/3Registro Participantes Disponibilidad de Recursos-corregido.xlsx", 
-                        sheet = "UB") |> 
-               mutate(University = "UB"),
-             read_excel("Data/3Registro Participantes Disponibilidad de Recursos-corregido.xlsx", 
-                        sheet = "CUC") |> 
-               mutate(University = "CUC")) |> 
-  select(-c(Grupo, `Entrega de kit`, `Protocolo de bioseguridad`, `Requisitos previos al registro`, Consentimiento,
-            `Código de evaluador`:`Código auxiliar que reclutó`)) |>
-  rename(Date = "Fecha de registro",
-         ID = "Codigo del Participante",
-         Condition = "Condicion",
-         Calibration = "Calibración",
-         Gaze_perc = "% Gaze",
-         Condition_happiness = "Q Feliz",
-         Condition_physical_safety = "Q Segura físicamente",
-         Condition_healthy = "Q Saludable",
-         Condition_economic_security = "Q Segura económicamente",
-         Body_temperature = "Temperatura",
-         Ovulating = "Test de ovulación",
-         Saliva_pre = "Recolección de saliva pre",
-         Saliva_pre_time = "Hora...18",
-         Eye_tracking = "Rastreo Ocular",
-         Subjective_evaluation = "Evaluación subjetiva",
-         Sociodemographic_questionnaire = "Cuestionario sociodemográfico",
-         Saliva_post = "Recolección de saliva post",
-         Saliva_post_time = "Hora...23",
-         Notes = "Observaciones") |>
-  mutate(Condition = fct_recode(Condition, 
-                                "Low" = "Baja",
-                                "High" = "Alta"),
-         Calibration = fct_recode(Calibration, 
-                                  "<=0.5" = "<0.5 (menor a 0.5)",
-                                  ">0.5" = ">0.5 (mayor a 0.5)",
-                                  "<=0.5" = "0.5 (igual a 0.5)",
-                                  NULL = "Selecciona"),
-         Ovulating = fct_recode(as.factor(Ovulating),
-                                "No" = "0",
-                                "Yes" = "1")) |> 
-  mutate_all(~str_replace_all(., "SI", "Yes")) |> 
-  mutate_all(~str_replace_all(., "NO", "No")) |> 
-  mutate_all(~str_replace_all(., "INCOMPLETO", "No")) |>
-  mutate_all(~str_replace_all(., "Recuperado", "Data recovered")) |> 
-  mutate_all(~str_replace_all(., "RECUPERADO", "Data recovered")) |> 
-  mutate_all(~na_if(., "Selecciona")) |> 
-  mutate_all(~na_if(., "N/A")) |> 
+reg <- rbind(
+  read_excel("Data/3Registro Participantes Disponibilidad de Recursos-corregido.xlsx",
+    sheet = "UB"
+  ) |>
+    mutate(University = "UB"),
+  read_excel("Data/3Registro Participantes Disponibilidad de Recursos-corregido.xlsx",
+    sheet = "CUC"
+  ) |>
+    mutate(University = "CUC")
+) |>
+  select(-c(
+    Grupo, 
+    `Entrega de kit`, 
+    `Protocolo de bioseguridad`, 
+    `Requisitos previos al registro`, 
+    Consentimiento,
+    `Código de evaluador`:`Código auxiliar que reclutó`
+  )) |>
+  rename(
+    Date = "Fecha de registro",
+    ID = "Codigo del Participante",
+    Condition = "Condicion",
+    Calibration = "Calibración",
+    Gaze_perc = "% Gaze",
+    Condition_happiness = "Q Feliz",
+    Condition_physical_safety = "Q Segura físicamente",
+    Condition_healthy = "Q Saludable",
+    Condition_economic_security = "Q Segura económicamente",
+    Body_temperature = "Temperatura",
+    Ovulating = "Test de ovulación",
+    Saliva_pre = "Recolección de saliva pre",
+    Saliva_pre_time = "Hora...18",
+    Eye_tracking = "Rastreo Ocular",
+    Subjective_evaluation = "Evaluación subjetiva",
+    Sociodemographic_questionnaire = "Cuestionario sociodemográfico",
+    Saliva_post = "Recolección de saliva post",
+    Saliva_post_time = "Hora...23",
+    Notes = "Observaciones"
+  ) |>
+  mutate(
+    Condition = fct_recode(Condition,
+      "Low" = "Baja",
+      "High" = "Alta"
+    ),
+    Calibration = fct_recode(Calibration,
+      "<=0.5" = "<0.5 (menor a 0.5)",
+      ">0.5" = ">0.5 (mayor a 0.5)",
+      "<=0.5" = "0.5 (igual a 0.5)",
+      NULL = "Selecciona"
+    ),
+    Ovulating = fct_recode(as.factor(Ovulating),
+      "No" = "0",
+      "Yes" = "1"
+    )
+  ) |>
+  mutate_all(~ str_replace_all(., "SI", "Yes")) |>
+  mutate_all(~ str_replace_all(., "NO", "No")) |>
+  mutate_all(~ str_replace_all(., "INCOMPLETO", "No")) |>
+  mutate_all(~ str_replace_all(., "Recuperado", "Data recovered")) |>
+  mutate_all(~ str_replace_all(., "RECUPERADO", "Data recovered")) |>
+  mutate_all(~ na_if(., "Selecciona")) |>
+  mutate_all(~ na_if(., "N/A")) |>
   mutate(across(starts_with("Condition_"), as.numeric))
 ```
 

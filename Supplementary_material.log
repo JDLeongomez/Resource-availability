@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.9.12)  12 SEP 2024 14:33
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.9.12)  12 SEP 2024 15:09
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1358,7 +1358,11 @@ Package pdftex.def Info: Supplementary_material_files/figure-latex/pca-mpd-plot-
 [16 <./Supplementary_material_files/figure-latex/pca-mpd-plot-1.pdf>]
 
 [17]
-Overfull \vbox (0.49548pt too high) detected at line 1162
+Underfull \vbox (badness 1715) detected at line 1166
+ []
+
+
+Underfull \vbox (badness 1009) detected at line 1166
  []
 
 
@@ -1366,58 +1370,58 @@ Overfull \vbox (0.49548pt too high) detected at line 1162
 [18]
 
 [19]
-Underfull \hbox (badness 1264) in paragraph at lines 1281--1283
+Underfull \hbox (badness 1264) in paragraph at lines 1298--1300
 \T1/lmr/m/it/10 ineR(v.2.11)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 fac-to-ex-tra(v.1.0.7)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 scales(v.1.3.0)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 GGally(v.2.2.1)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 per-form-ance(v.0.12.2)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 kableEx-tra(v.1.4.0)\T1/lmr/m/n/10 ,
  []
 
 
-Underfull \hbox (badness 1248) in paragraph at lines 1281--1283
+Underfull \hbox (badness 1248) in paragraph at lines 1298--1300
 \T1/lmr/m/it/10 rid-ate(v.1.9.3)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 for-cats(v.1.0.0)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 stringr(v.1.5.1)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 dplyr(v.1.1.4)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 purrr(v.1.0.2)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 readr(v.2.1.5)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 tidyr(v.1.3.1)\T1/lmr/m/n/10 ,
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 1284--1286
-\T1/lmr/m/it/10 cluster(v.2.1.6)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 R6(v.2.5.1)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 stringi(v.1.8.4)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 RColorBrewer(v.1.1-3)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 boot(v.1.3-30)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 cellranger(v.1.1.0)\T1/lmr/m/n/10 ,
- []
-
-
-Overfull \hbox (15.64005pt too wide) in paragraph at lines 1284--1286
-\T1/lmr/m/it/10 numDeriv(v.2016.8-1.1)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 es-tim-ab-il-ity(v.1.5.1)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 Rcpp(v.1.0.13)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 book-down(v.0.40)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 para-met-ers(v.0.22.1)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 splines(v.4.4.1)\T1/lmr/m/n/10 ,
- []
-
-
-Underfull \hbox (badness 1496) in paragraph at lines 1284--1286
-\T1/lmr/m/it/10 timechange(v.0.3.0)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 tidyse-lect(v.1.2.1)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 rstu-di-oapi(v.0.16.0)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 abind(v.1.4-5)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 yaml(v.2.3.10)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 lattice(v.0.22-5)\T1/lmr/m/n/10 ,
- []
-
-
-Underfull \hbox (badness 3919) in paragraph at lines 1284--1286
-\T1/lmr/m/it/10 plyr(v.1.8.9)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 withr(v.3.0.1)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 bayes-t-estR(v.0.14.0)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 coda(v.0.19-4.1)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 eval-u-ate(v.0.24.0)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 xml2(v.1.3.6)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 pil-
- []
-
-
-Underfull \hbox (badness 1281) in paragraph at lines 1284--1286
-\T1/lmr/m/it/10 lar(v.1.9.0)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 DT(v.0.33)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 in-sight(v.0.20.2)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 gen-er-ics(v.0.1.3)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 hms(v.1.1.3)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 mun-sell(v.0.5.1)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 minqa(v.1.2.7)\T1/lmr/m/n/10 ,
- []
-
-
-Underfull \hbox (badness 1616) in paragraph at lines 1284--1286
-\T1/lmr/m/it/10 5)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 cowplot(v.1.1.3)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 grid(v.4.4.1)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 bdsmatrix(v.1.3-7)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 dataw-iz-ard(v.0.12.2)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 colorspace(v.2.1-1)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 nlme(v.3.1-
- []
-
-
-Underfull \hbox (badness 3471) in paragraph at lines 1284--1286
-\T1/lmr/m/it/10 165)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 cli(v.3.6.3)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 fansi(v.1.0.6)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 vi-rid-isLite(v.0.4.2)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 svglite(v.2.1.3)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 gt-able(v.0.3.5)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 rstatix(v.0.7.2)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 di-
- []
-
-
-Underfull \hbox (badness 4713) in paragraph at lines 1284--1286
-\T1/lmr/m/it/10 gest(v.0.6.37)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 ggre-pel(v.0.9.5)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 htm-l-wid-gets(v.1.6.4)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 farver(v.2.1.2)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 htm-ltools(v.0.5.8.1)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 li-fe-cycle(v.1.0.4)
  []
 
 
 
 [20]
+Underfull \hbox (badness 10000) in paragraph at lines 1301--1303
+\T1/lmr/m/it/10 cluster(v.2.1.6)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 R6(v.2.5.1)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 stringi(v.1.8.4)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 RColorBrewer(v.1.1-3)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 boot(v.1.3-30)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 cellranger(v.1.1.0)\T1/lmr/m/n/10 ,
+ []
+
+
+Overfull \hbox (15.64005pt too wide) in paragraph at lines 1301--1303
+\T1/lmr/m/it/10 numDeriv(v.2016.8-1.1)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 es-tim-ab-il-ity(v.1.5.1)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 Rcpp(v.1.0.13)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 book-down(v.0.40)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 para-met-ers(v.0.22.1)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 splines(v.4.4.1)\T1/lmr/m/n/10 ,
+ []
+
+
+Underfull \hbox (badness 1496) in paragraph at lines 1301--1303
+\T1/lmr/m/it/10 timechange(v.0.3.0)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 tidyse-lect(v.1.2.1)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 rstu-di-oapi(v.0.16.0)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 abind(v.1.4-5)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 yaml(v.2.3.10)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 lattice(v.0.22-5)\T1/lmr/m/n/10 ,
+ []
+
+
+Underfull \hbox (badness 3919) in paragraph at lines 1301--1303
+\T1/lmr/m/it/10 plyr(v.1.8.9)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 withr(v.3.0.1)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 bayes-t-estR(v.0.14.0)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 coda(v.0.19-4.1)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 eval-u-ate(v.0.24.0)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 xml2(v.1.3.6)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 pil-
+ []
+
+
+Underfull \hbox (badness 1281) in paragraph at lines 1301--1303
+\T1/lmr/m/it/10 lar(v.1.9.0)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 DT(v.0.33)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 in-sight(v.0.20.2)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 gen-er-ics(v.0.1.3)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 hms(v.1.1.3)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 mun-sell(v.0.5.1)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 minqa(v.1.2.7)\T1/lmr/m/n/10 ,
+ []
+
+
+Underfull \hbox (badness 1616) in paragraph at lines 1301--1303
+\T1/lmr/m/it/10 5)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 cowplot(v.1.1.3)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 grid(v.4.4.1)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 bdsmatrix(v.1.3-7)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 dataw-iz-ard(v.0.12.2)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 colorspace(v.2.1-1)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 nlme(v.3.1-
+ []
+
+
+Underfull \hbox (badness 3471) in paragraph at lines 1301--1303
+\T1/lmr/m/it/10 165)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 cli(v.3.6.3)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 fansi(v.1.0.6)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 vi-rid-isLite(v.0.4.2)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 svglite(v.2.1.3)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 gt-able(v.0.3.5)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 rstatix(v.0.7.2)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 di-
+ []
+
+
+Underfull \hbox (badness 4713) in paragraph at lines 1301--1303
+\T1/lmr/m/it/10 gest(v.0.6.37)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 ggre-pel(v.0.9.5)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 htm-l-wid-gets(v.1.6.4)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 farver(v.2.1.2)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 htm-ltools(v.0.5.8.1)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 li-fe-cycle(v.1.0.4)
+ []
+
+
 
 [21] (./Supplementary_material.aux)
  ***********
@@ -1440,7 +1444,7 @@ Here is how much of TeX's memory you used:
  36 hyphenation exceptions out of 8191
  84i,12n,95p,1917b,8649s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </home/jdl/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx10.pfb></home/jdl/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx12.pfb></home/jdl/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmr10.pfb></home/jdl/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmr12.pfb></home/jdl/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmr17.pfb></home/jdl/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmr7.pfb></home/jdl/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmr8.pfb></home/jdl/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmri10.pfb></home/jdl/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmri8.pfb></home/jdl/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmtk10.pfb></home/jdl/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmtt10.pfb>
-Output written on Supplementary_material.pdf (21 pages, 390853 bytes).
+Output written on Supplementary_material.pdf (21 pages, 390707 bytes).
 PDF statistics:
  411 PDF objects out of 1000 (max. 8388607)
  354 compressed objects within 4 object streams
