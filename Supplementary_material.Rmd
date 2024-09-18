@@ -1066,11 +1066,16 @@ dat_dif <- dat |>
            Freq_partner_infidelity,
            Relationship_current,
            Men_perceived_as_dangerous) |> 
-  summarise(DFF_dif = DFF[Sexual_dimorphism == "Masculinized"] - DFF[Sexual_dimorphism == "Feminized"],
-            TFD_dif = TFD[Sexual_dimorphism == "Masculinized"] - TFD[Sexual_dimorphism == "Feminized"],
-            NF_dif = NF[Sexual_dimorphism == "Masculinized"] - NF[Sexual_dimorphism == "Feminized"],
-            Attr_dif = Attractiveness[Sexual_dimorphism == "Masculinized"] - Attractiveness[Sexual_dimorphism == "Feminized"],
-            Masc_dif = Masculinity[Sexual_dimorphism == "Masculinized"] - Masculinity[Sexual_dimorphism == "Feminized"]) |> 
+  summarise(DFF_dif = DFF[Sexual_dimorphism == "Masculinized"] - 
+              DFF[Sexual_dimorphism == "Feminized"],
+            TFD_dif = TFD[Sexual_dimorphism == "Masculinized"] - 
+              TFD[Sexual_dimorphism == "Feminized"],
+            NF_dif = NF[Sexual_dimorphism == "Masculinized"] - 
+              NF[Sexual_dimorphism == "Feminized"],
+            Attr_dif = Attractiveness[Sexual_dimorphism == "Masculinized"] - 
+              Attractiveness[Sexual_dimorphism == "Feminized"],
+            Masc_dif = Masculinity[Sexual_dimorphism == "Masculinized"] - 
+              Masculinity[Sexual_dimorphism == "Feminized"]) |> 
   ungroup() |> 
   mutate(across(where(is.character), as.factor))
 ```
@@ -1203,7 +1208,7 @@ ggarrange(
     geom_density(alpha = 0.3) +  # Use semi-transparent density curves
     facet_wrap(~Variable, scales = "free", ncol = 1) +  # Display variables in separate panels
     stat_summary(aes(xintercept = after_stat(x), y = 0),
-                  fun = mean, geom = "vline", orientation = "y") +  # Add vertical lines at mean values
+                 fun = mean, geom = "vline", orientation = "y") +  # Add vertical lines at mean
     labs(x = NULL, y = NULL),  # Remove axis labels for this panel
   # Plot b: Proportional number of participants across categorical variables
   desc_quest |> 
@@ -1684,9 +1689,9 @@ desc_quest |>
         caption = "Correlations between XXXXXX",
         escape = FALSE) |>
   kable_styling(latex_options = c("HOLD_position"),
-                font_size = 4) |>
-  column_spec(1, width = "1.2cm") |>
-  column_spec(2:21, width = "0.75cm") |>
+                font_size = 3.9) |>
+  column_spec(1, width = "1cm") |>
+  column_spec(2:21, width = "0.76cm") |>
   add_header_above(c(" ", 
                      "Age" = 1, 
                      "Health" = 1,
@@ -1801,7 +1806,7 @@ dat_main_corr_high |>
   landscape()
 ```
 
-### Correlations between partner violence and difference scores between responses to masculinized and feminized stimuli
+### Correlations between partner violence and mean difference scores between responses to masculinized and feminized stimuli
 
 ```{r}
 dat_choice_dif <- dat |> 

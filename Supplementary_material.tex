@@ -1245,11 +1245,16 @@ To test bias in fixation patterns according to the sexual dimorphism manipulatio
 \NormalTok{           Freq\_partner\_infidelity,}
 \NormalTok{           Relationship\_current,}
 \NormalTok{           Men\_perceived\_as\_dangerous) }\SpecialCharTok{|\textgreater{}} 
-  \FunctionTok{summarise}\NormalTok{(}\AttributeTok{DFF\_dif =}\NormalTok{ DFF[Sexual\_dimorphism }\SpecialCharTok{==} \StringTok{"Masculinized"}\NormalTok{] }\SpecialCharTok{{-}}\NormalTok{ DFF[Sexual\_dimorphism }\SpecialCharTok{==} \StringTok{"Feminized"}\NormalTok{],}
-            \AttributeTok{TFD\_dif =}\NormalTok{ TFD[Sexual\_dimorphism }\SpecialCharTok{==} \StringTok{"Masculinized"}\NormalTok{] }\SpecialCharTok{{-}}\NormalTok{ TFD[Sexual\_dimorphism }\SpecialCharTok{==} \StringTok{"Feminized"}\NormalTok{],}
-            \AttributeTok{NF\_dif =}\NormalTok{ NF[Sexual\_dimorphism }\SpecialCharTok{==} \StringTok{"Masculinized"}\NormalTok{] }\SpecialCharTok{{-}}\NormalTok{ NF[Sexual\_dimorphism }\SpecialCharTok{==} \StringTok{"Feminized"}\NormalTok{],}
-            \AttributeTok{Attr\_dif =}\NormalTok{ Attractiveness[Sexual\_dimorphism }\SpecialCharTok{==} \StringTok{"Masculinized"}\NormalTok{] }\SpecialCharTok{{-}}\NormalTok{ Attractiveness[Sexual\_dimorphism }\SpecialCharTok{==} \StringTok{"Feminized"}\NormalTok{],}
-            \AttributeTok{Masc\_dif =}\NormalTok{ Masculinity[Sexual\_dimorphism }\SpecialCharTok{==} \StringTok{"Masculinized"}\NormalTok{] }\SpecialCharTok{{-}}\NormalTok{ Masculinity[Sexual\_dimorphism }\SpecialCharTok{==} \StringTok{"Feminized"}\NormalTok{]) }\SpecialCharTok{|\textgreater{}} 
+  \FunctionTok{summarise}\NormalTok{(}\AttributeTok{DFF\_dif =}\NormalTok{ DFF[Sexual\_dimorphism }\SpecialCharTok{==} \StringTok{"Masculinized"}\NormalTok{] }\SpecialCharTok{{-}} 
+\NormalTok{              DFF[Sexual\_dimorphism }\SpecialCharTok{==} \StringTok{"Feminized"}\NormalTok{],}
+            \AttributeTok{TFD\_dif =}\NormalTok{ TFD[Sexual\_dimorphism }\SpecialCharTok{==} \StringTok{"Masculinized"}\NormalTok{] }\SpecialCharTok{{-}} 
+\NormalTok{              TFD[Sexual\_dimorphism }\SpecialCharTok{==} \StringTok{"Feminized"}\NormalTok{],}
+            \AttributeTok{NF\_dif =}\NormalTok{ NF[Sexual\_dimorphism }\SpecialCharTok{==} \StringTok{"Masculinized"}\NormalTok{] }\SpecialCharTok{{-}} 
+\NormalTok{              NF[Sexual\_dimorphism }\SpecialCharTok{==} \StringTok{"Feminized"}\NormalTok{],}
+            \AttributeTok{Attr\_dif =}\NormalTok{ Attractiveness[Sexual\_dimorphism }\SpecialCharTok{==} \StringTok{"Masculinized"}\NormalTok{] }\SpecialCharTok{{-}} 
+\NormalTok{              Attractiveness[Sexual\_dimorphism }\SpecialCharTok{==} \StringTok{"Feminized"}\NormalTok{],}
+            \AttributeTok{Masc\_dif =}\NormalTok{ Masculinity[Sexual\_dimorphism }\SpecialCharTok{==} \StringTok{"Masculinized"}\NormalTok{] }\SpecialCharTok{{-}} 
+\NormalTok{              Masculinity[Sexual\_dimorphism }\SpecialCharTok{==} \StringTok{"Feminized"}\NormalTok{]) }\SpecialCharTok{|\textgreater{}} 
   \FunctionTok{ungroup}\NormalTok{() }\SpecialCharTok{|\textgreater{}} 
   \FunctionTok{mutate}\NormalTok{(}\FunctionTok{across}\NormalTok{(}\FunctionTok{where}\NormalTok{(is.character), as.factor))}
 \end{Highlighting}
@@ -1401,7 +1406,7 @@ Low & 128 & 21.50 & 2.25 & 18 & 25\\
     \FunctionTok{geom\_density}\NormalTok{(}\AttributeTok{alpha =} \FloatTok{0.3}\NormalTok{) }\SpecialCharTok{+}  \CommentTok{\# Use semi{-}transparent density curves}
     \FunctionTok{facet\_wrap}\NormalTok{(}\SpecialCharTok{\textasciitilde{}}\NormalTok{Variable, }\AttributeTok{scales =} \StringTok{"free"}\NormalTok{, }\AttributeTok{ncol =} \DecValTok{1}\NormalTok{) }\SpecialCharTok{+}  \CommentTok{\# Display variables in separate panels}
     \FunctionTok{stat\_summary}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{xintercept =} \FunctionTok{after\_stat}\NormalTok{(x), }\AttributeTok{y =} \DecValTok{0}\NormalTok{),}
-                  \AttributeTok{fun =}\NormalTok{ mean, }\AttributeTok{geom =} \StringTok{"vline"}\NormalTok{, }\AttributeTok{orientation =} \StringTok{"y"}\NormalTok{) }\SpecialCharTok{+}  \CommentTok{\# Add vertical lines at mean values}
+                 \AttributeTok{fun =}\NormalTok{ mean, }\AttributeTok{geom =} \StringTok{"vline"}\NormalTok{, }\AttributeTok{orientation =} \StringTok{"y"}\NormalTok{) }\SpecialCharTok{+}  \CommentTok{\# Add vertical lines at mean}
     \FunctionTok{labs}\NormalTok{(}\AttributeTok{x =} \ConstantTok{NULL}\NormalTok{, }\AttributeTok{y =} \ConstantTok{NULL}\NormalTok{),  }\CommentTok{\# Remove axis labels for this panel}
   \CommentTok{\# Plot b: Proportional number of participants across categorical variables}
 \NormalTok{  desc\_quest }\SpecialCharTok{|\textgreater{}} 
@@ -1987,9 +1992,9 @@ Attractiveness & -0.06 & 0.07 & 0.06 & \textbf{0.78***} & \textbf{0.6***}\\
         \AttributeTok{caption =} \StringTok{"Correlations between XXXXXX"}\NormalTok{,}
         \AttributeTok{escape =} \ConstantTok{FALSE}\NormalTok{) }\SpecialCharTok{|\textgreater{}}
   \FunctionTok{kable\_styling}\NormalTok{(}\AttributeTok{latex\_options =} \FunctionTok{c}\NormalTok{(}\StringTok{"HOLD\_position"}\NormalTok{),}
-                \AttributeTok{font\_size =} \DecValTok{4}\NormalTok{) }\SpecialCharTok{|\textgreater{}}
-  \FunctionTok{column\_spec}\NormalTok{(}\DecValTok{1}\NormalTok{, }\AttributeTok{width =} \StringTok{"1.2cm"}\NormalTok{) }\SpecialCharTok{|\textgreater{}}
-  \FunctionTok{column\_spec}\NormalTok{(}\DecValTok{2}\SpecialCharTok{:}\DecValTok{21}\NormalTok{, }\AttributeTok{width =} \StringTok{"0.75cm"}\NormalTok{) }\SpecialCharTok{|\textgreater{}}
+                \AttributeTok{font\_size =} \FloatTok{3.9}\NormalTok{) }\SpecialCharTok{|\textgreater{}}
+  \FunctionTok{column\_spec}\NormalTok{(}\DecValTok{1}\NormalTok{, }\AttributeTok{width =} \StringTok{"1cm"}\NormalTok{) }\SpecialCharTok{|\textgreater{}}
+  \FunctionTok{column\_spec}\NormalTok{(}\DecValTok{2}\SpecialCharTok{:}\DecValTok{21}\NormalTok{, }\AttributeTok{width =} \StringTok{"0.76cm"}\NormalTok{) }\SpecialCharTok{|\textgreater{}}
   \FunctionTok{add\_header\_above}\NormalTok{(}\FunctionTok{c}\NormalTok{(}\StringTok{" "}\NormalTok{, }
                      \StringTok{"Age"} \OtherTok{=} \DecValTok{1}\NormalTok{, }
                      \StringTok{"Health"} \OtherTok{=} \DecValTok{1}\NormalTok{,}
@@ -2016,9 +2021,9 @@ Attractiveness & -0.06 & 0.07 & 0.06 & \textbf{0.78***} & \textbf{0.6***}\\
 \centering
 \caption{\label{tab:unnamed-chunk-22}Correlations between XXXXXX}
 \centering
-\fontsize{4}{6}\selectfont
+\fontsize{3.9}{5.9}\selectfont
 \begin{threeparttable}
-\begin{tabular}[t]{>{\raggedright\arraybackslash}p{1.2cm}>{\centering\arraybackslash}p{0.75cm}>{\centering\arraybackslash}p{0.75cm}>{\centering\arraybackslash}p{0.75cm}>{\centering\arraybackslash}p{0.75cm}>{\centering\arraybackslash}p{0.75cm}>{\centering\arraybackslash}p{0.75cm}>{\centering\arraybackslash}p{0.75cm}>{\centering\arraybackslash}p{0.75cm}>{\centering\arraybackslash}p{0.75cm}>{\centering\arraybackslash}p{0.75cm}>{\centering\arraybackslash}p{0.75cm}>{\centering\arraybackslash}p{0.75cm}>{\centering\arraybackslash}p{0.75cm}>{\centering\arraybackslash}p{0.75cm}>{\centering\arraybackslash}p{0.75cm}>{\centering\arraybackslash}p{0.75cm}>{\centering\arraybackslash}p{0.75cm}>{\centering\arraybackslash}p{0.75cm}>{\centering\arraybackslash}p{0.75cm}>{\centering\arraybackslash}p{0.75cm}}
+\begin{tabular}[t]{>{\raggedright\arraybackslash}p{1cm}>{\centering\arraybackslash}p{0.76cm}>{\centering\arraybackslash}p{0.76cm}>{\centering\arraybackslash}p{0.76cm}>{\centering\arraybackslash}p{0.76cm}>{\centering\arraybackslash}p{0.76cm}>{\centering\arraybackslash}p{0.76cm}>{\centering\arraybackslash}p{0.76cm}>{\centering\arraybackslash}p{0.76cm}>{\centering\arraybackslash}p{0.76cm}>{\centering\arraybackslash}p{0.76cm}>{\centering\arraybackslash}p{0.76cm}>{\centering\arraybackslash}p{0.76cm}>{\centering\arraybackslash}p{0.76cm}>{\centering\arraybackslash}p{0.76cm}>{\centering\arraybackslash}p{0.76cm}>{\centering\arraybackslash}p{0.76cm}>{\centering\arraybackslash}p{0.76cm}>{\centering\arraybackslash}p{0.76cm}>{\centering\arraybackslash}p{0.76cm}>{\centering\arraybackslash}p{0.76cm}}
 \toprule
 \multicolumn{1}{c}{\textbf{ }} & \multicolumn{1}{c}{\textbf{Age}} & \multicolumn{1}{c}{\textbf{Health}} & \multicolumn{7}{c}{\textbf{Self-perceived conditions}} & \multicolumn{3}{c}{\textbf{\makecell[c]{Current/last partner\\perception}}} & \multicolumn{6}{c}{\textbf{\makecell[c]{Perceived context\\violence}}} & \multicolumn{2}{c}{\textbf{\makecell[c]{Frequency of\\partner violence}}} \\
 \cmidrule(l{3pt}r{3pt}){2-2} \cmidrule(l{3pt}r{3pt}){3-3} \cmidrule(l{3pt}r{3pt}){4-10} \cmidrule(l{3pt}r{3pt}){11-13} \cmidrule(l{3pt}r{3pt}){14-19} \cmidrule(l{3pt}r{3pt}){20-21}
@@ -2218,7 +2223,7 @@ Infidelity & \textbf{0.2***} & 0.03 & -0.03 & -0.07 & -0.05 & 0.06 & 0.04 & -0.0
 \end{table}
 \end{landscape}
 
-\subsubsection{Correlations between partner violence and difference scores between responses to masculinized and feminized stimuli}\label{correlations-between-partner-violence-and-difference-scores-between-responses-to-masculinized-and-feminized-stimuli}
+\subsubsection{Correlations between partner violence and mean difference scores between responses to masculinized and feminized stimuli}\label{correlations-between-partner-violence-and-mean-difference-scores-between-responses-to-masculinized-and-feminized-stimuli}
 
 \begin{Shaded}
 \begin{Highlighting}[]
