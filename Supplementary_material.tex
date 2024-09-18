@@ -147,7 +147,7 @@
 \makeatother
 \subtitle{Code and analyses}
 \author{Milena Vásquez-Amézquita \orcidlink{0000-0001-7317-8430}\textsuperscript{1,3,*} \and Andrés Castellanos-Chacón \orcidlink{0000-0003-1684-9319}\textsuperscript{2} \and Wendy Medina-Sarmiento\textsuperscript{1} \and Valentina Cepeda\textsuperscript{1} \and Marina Begoña Martínez-González \orcidlink{0000-0002-5840-6383}\textsuperscript{3} \and Juan David Leongómez \orcidlink{0000-0002-0092-6298}\textsuperscript{2}}
-\date{17 September, 2024}
+\date{18 September, 2024}
 
 \begin{document}
 \maketitle
@@ -1350,7 +1350,9 @@ Low & 128 & 21.50 & 2.25 & 18 & 25\\
 \end{Highlighting}
 \end{Shaded}
 
-\subsection{Sociodemographic factors}\label{sociodemographic-factors}
+\subsection{Distribution of values across variables}\label{distribution-of-values-across-variables}
+
+\subsubsection{Sociodemographic variables}\label{sociodemographic-variables}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -1410,11 +1412,11 @@ Low & 128 & 21.50 & 2.25 & 18 & 25\\
 
 \begin{figure}
 \centering
-\includegraphics{Supplementary_material_files/figure-latex/sociodemographic-factors-desc-plot-1.pdf}
-\caption{\label{fig:sociodemographic-factors-desc-plot}Distribution of values across sociodemographic variables, by condition.\textbf{a.} Distribution of values across numeric sociodemographic variables. Colored vertical lines indicate the mean value for each variable under each condition. \textbf{b.} Proportional number of participants across categorical variables.}
+\includegraphics{Supplementary_material_files/figure-latex/sociodemographic-desc-plot-1.pdf}
+\caption{\label{fig:sociodemographic-desc-plot}Distribution of values across sociodemographic variables, by condition. \textbf{a.} Distribution of values across numeric sociodemographic variables. Colored vertical lines indicate the mean value for each variable under each condition. \textbf{b.} Proportional number of participants across categorical variables.}
 \end{figure}
 
-\subsection{Access to resources}\label{access-to-resources}
+\subsubsection{Access to resources}\label{access-to-resources}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -1461,6 +1463,633 @@ Low & 128 & 21.50 & 2.25 & 18 & 25\\
 \caption{\label{fig:resource-desc-plot}Proportional number of participants across categorical variables that measure access to resources.}
 \end{figure}
 
+\subsubsection{Health-related variables}\label{health-related-variables}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{ggarrange}\NormalTok{(}
+  \CommentTok{\# Select relevant columns from desc\_quest and pivot them into a long format }
+\NormalTok{  desc\_quest }\SpecialCharTok{|\textgreater{}}
+    \FunctionTok{select}\NormalTok{(ID, Condition, Freq\_illness, SP\_health) }\SpecialCharTok{|\textgreater{}}
+  \CommentTok{\# Convert the Frequency of illness and Self{-}perceived health columns into separate rows}
+  \FunctionTok{pivot\_longer}\NormalTok{(Freq\_illness}\SpecialCharTok{:}\NormalTok{SP\_health,}
+                \AttributeTok{names\_to =} \StringTok{"Variable"}\NormalTok{,}
+                \AttributeTok{values\_to =} \StringTok{"Value"}\NormalTok{) }\SpecialCharTok{|\textgreater{}} 
+  \CommentTok{\# Clean up variable names by replacing underscores with spaces}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{Variable =} \FunctionTok{str\_replace\_all}\NormalTok{(Variable, }\StringTok{"\_"}\NormalTok{, }\StringTok{" "}\NormalTok{)) }\SpecialCharTok{|\textgreater{}}
+  \CommentTok{\# Rename variables}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{Variable =} \FunctionTok{str\_replace\_all}\NormalTok{(Variable, }\StringTok{"Freq"}\NormalTok{, }\StringTok{"Frequency of"}\NormalTok{)) }\SpecialCharTok{|\textgreater{}}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{Variable =} \FunctionTok{str\_replace\_all}\NormalTok{(Variable, }\StringTok{"SP"}\NormalTok{, }\StringTok{"Self{-}perceived"}\NormalTok{)) }\SpecialCharTok{|\textgreater{}}
+  \CommentTok{\# Convert the Value column to numeric}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{Value =} \FunctionTok{as.numeric}\NormalTok{(Value)) }\SpecialCharTok{|\textgreater{}} 
+  \CommentTok{\# Create a ggplot object}
+  \FunctionTok{ggplot}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ Value, }\AttributeTok{fill =}\NormalTok{ Condition, }\AttributeTok{color =}\NormalTok{ Condition)) }\SpecialCharTok{+}
+  \CommentTok{\# Plot density curves for each condition within each variable}
+  \FunctionTok{geom\_density}\NormalTok{(}\AttributeTok{alpha =} \FloatTok{0.3}\NormalTok{) }\SpecialCharTok{+}
+  \CommentTok{\# Divide the plot into facets by Variable}
+  \FunctionTok{facet\_wrap}\NormalTok{(}\SpecialCharTok{\textasciitilde{}}\NormalTok{Variable) }\SpecialCharTok{+}
+  \CommentTok{\# Add vertical lines to indicate mean values for each group}
+  \FunctionTok{stat\_summary}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{xintercept =} \FunctionTok{after\_stat}\NormalTok{(x), }\AttributeTok{y =} \DecValTok{0}\NormalTok{),}
+                \AttributeTok{fun =}\NormalTok{ mean, }\AttributeTok{geom =} \StringTok{"vline"}\NormalTok{, }\AttributeTok{orientation =} \StringTok{"y"}\NormalTok{) }\SpecialCharTok{+}
+  \CommentTok{\# Set up plot labels and title with NULL values for x and y axes.}
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{x =} \ConstantTok{NULL}\NormalTok{, }\AttributeTok{y =} \StringTok{"Density"}\NormalTok{),}
+  \CommentTok{\# Specify the widths of the two columns and common legend position (bottom)}
+  \AttributeTok{widths =} \FunctionTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{, }\DecValTok{1}\NormalTok{),}
+  \AttributeTok{common\_legend =} \ConstantTok{TRUE}\NormalTok{,}
+  \AttributeTok{legend =} \StringTok{"bottom"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}
+\centering
+\includegraphics{Supplementary_material_files/figure-latex/health-desc-plot-1.pdf}
+\caption{\label{fig:health-desc-plot}Distribution of values across numeric health-related variables. Colored vertical lines indicate the mean value for each variable under each condition.}
+\end{figure}
+
+\subsubsection{Food security}\label{food-security}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{ggarrange}\NormalTok{(}
+  \CommentTok{\# Select columns from desc\_quest, including \textquotesingle{}Escasez alimentaria\textquotesingle{} (food scarcity)}
+\NormalTok{  desc\_quest }\SpecialCharTok{|\textgreater{}}
+    \FunctionTok{select}\NormalTok{(ID, Condition, }\StringTok{"Escasez alimentaria1"}\SpecialCharTok{:}\StringTok{"Escasez alimentaria5"}\NormalTok{) }\SpecialCharTok{|\textgreater{}}
+    \CommentTok{\# Pivot the Escasez alimentaria1 to Escasez alimentaria5 columns into a long format}
+    \FunctionTok{pivot\_longer}\NormalTok{(}\StringTok{"Escasez alimentaria1"}\SpecialCharTok{:}\StringTok{"Escasez alimentaria5"}\NormalTok{,}
+      \AttributeTok{names\_to =} \StringTok{"Variable"}\NormalTok{,}
+      \AttributeTok{values\_to =} \StringTok{"Value"}\NormalTok{) }\SpecialCharTok{|\textgreater{}}
+    \CommentTok{\# Clean up variable names}
+    \FunctionTok{mutate}\NormalTok{(}\AttributeTok{Variable =} \FunctionTok{str\_replace\_all}\NormalTok{(Variable, }\StringTok{"Escasez alimentaria"}\NormalTok{, }\StringTok{""}\NormalTok{)) }\SpecialCharTok{|\textgreater{}}
+    \FunctionTok{mutate}\NormalTok{(}\AttributeTok{Variable =} \FunctionTok{str\_replace\_all}\NormalTok{(Variable, }\StringTok{"1"}\NormalTok{, }\StringTok{"1. Smaller food portions"}\NormalTok{)) }\SpecialCharTok{|\textgreater{}}
+    \FunctionTok{mutate}\NormalTok{(}\AttributeTok{Variable =} \FunctionTok{str\_replace\_all}\NormalTok{(Variable, }\StringTok{"2"}\NormalTok{, }\StringTok{"2. Reduced number of meals"}\NormalTok{)) }\SpecialCharTok{|\textgreater{}}
+    \FunctionTok{mutate}\NormalTok{(}\AttributeTok{Variable =} \FunctionTok{str\_replace\_all}\NormalTok{(Variable, }\StringTok{"3"}\NormalTok{, }\StringTok{"3. Food scarcity at home"}\NormalTok{)) }\SpecialCharTok{|\textgreater{}}
+    \FunctionTok{mutate}\NormalTok{(}\AttributeTok{Variable =} \FunctionTok{str\_replace\_all}\NormalTok{(Variable, }\StringTok{"4"}\NormalTok{, }\StringTok{"4. Sleeping with hunger"}\NormalTok{)) }\SpecialCharTok{|\textgreater{}}
+    \FunctionTok{mutate}\NormalTok{(}\AttributeTok{Variable =} \FunctionTok{str\_replace\_all}\NormalTok{(Variable, }\StringTok{"5"}\NormalTok{, }\StringTok{"5. Day and night without eating"}\NormalTok{)) }\SpecialCharTok{|\textgreater{}}
+    \CommentTok{\# Create a ggplot object for the first set of data}
+    \FunctionTok{ggplot}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{y =}\NormalTok{ Value, }\AttributeTok{fill =}\NormalTok{ Condition, }\AttributeTok{color =}\NormalTok{ Condition)) }\SpecialCharTok{+}
+    \CommentTok{\# Plot bar charts for each condition within each variable}
+    \FunctionTok{geom\_bar}\NormalTok{(}\AttributeTok{alpha =} \FloatTok{0.3}\NormalTok{, }\AttributeTok{position =} \FunctionTok{position\_dodge}\NormalTok{()) }\SpecialCharTok{+}
+    \CommentTok{\# Add text labels on top of the bars showing the proportion of each category}
+    \FunctionTok{geom\_text}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{label =}\NormalTok{ scales}\SpecialCharTok{::}\FunctionTok{percent}\NormalTok{(}\FunctionTok{after\_stat}\NormalTok{(prop), }\AttributeTok{accuracy =} \FloatTok{0.1}\NormalTok{)),}
+      \AttributeTok{vjust =} \StringTok{"inward"}\NormalTok{,}
+      \AttributeTok{position =} \FunctionTok{position\_dodge}\NormalTok{(.}\DecValTok{9}\NormalTok{),}
+      \AttributeTok{stat =} \StringTok{"prop"}\NormalTok{,}
+      \AttributeTok{color =} \StringTok{"black"}\NormalTok{,}
+      \AttributeTok{size =} \FloatTok{2.5}\NormalTok{) }\SpecialCharTok{+}
+    \CommentTok{\# Divide the plot into facets by Variable}
+    \FunctionTok{facet\_wrap}\NormalTok{(}\SpecialCharTok{\textasciitilde{}}\NormalTok{Variable, }\AttributeTok{scales =} \StringTok{"free"}\NormalTok{) }\SpecialCharTok{+}
+    \CommentTok{\# Set labels for the y{-}axis with a maximum width of 20 characters}
+    \FunctionTok{scale\_y\_discrete}\NormalTok{(}\AttributeTok{labels =} \FunctionTok{label\_wrap}\NormalTok{(}\DecValTok{20}\NormalTok{)) }\SpecialCharTok{+}
+    \CommentTok{\# Adjust the text size of the y{-}axis}
+    \FunctionTok{theme}\NormalTok{(}\AttributeTok{axis.text.y =} \FunctionTok{element\_text}\NormalTok{(}\AttributeTok{size =} \DecValTok{8}\NormalTok{)) }\SpecialCharTok{+}
+    \FunctionTok{labs}\NormalTok{(}\AttributeTok{x =} \ConstantTok{NULL}\NormalTok{, }\AttributeTok{y =} \ConstantTok{NULL}\NormalTok{, }\AttributeTok{title =} \StringTok{"Items"}\NormalTok{),}
+  \CommentTok{\# Select columns from desc\_quest dataframe, including Food\_insecurity column}
+\NormalTok{  desc\_quest }\SpecialCharTok{|\textgreater{}}
+    \FunctionTok{select}\NormalTok{(ID, Condition, Food\_insecurity) }\SpecialCharTok{|\textgreater{}}
+    \CommentTok{\# Convert the Food\_insecurity column into long format}
+    \FunctionTok{pivot\_longer}\NormalTok{(Food\_insecurity,}
+      \AttributeTok{names\_to =} \StringTok{"Variable"}\NormalTok{,}
+      \AttributeTok{values\_to =} \StringTok{"Value"}\NormalTok{) }\SpecialCharTok{|\textgreater{}}
+    \CommentTok{\# Convert the Value column to numeric}
+    \FunctionTok{mutate}\NormalTok{(}\AttributeTok{Value =} \FunctionTok{as.numeric}\NormalTok{(Value)) }\SpecialCharTok{|\textgreater{}}
+    \CommentTok{\# Clean up variable names}
+    \FunctionTok{mutate}\NormalTok{(}\AttributeTok{Variable =} \FunctionTok{str\_replace\_all}\NormalTok{(Variable, }\StringTok{"\_"}\NormalTok{, }\StringTok{" "}\NormalTok{)) }\SpecialCharTok{|\textgreater{}}
+    \CommentTok{\# Create a ggplot object for the second set of data}
+    \FunctionTok{ggplot}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ Value, }\AttributeTok{fill =}\NormalTok{ Condition, }\AttributeTok{color =}\NormalTok{ Condition)) }\SpecialCharTok{+}
+    \CommentTok{\# Plot density curves for each condition within each variable}
+    \FunctionTok{geom\_density}\NormalTok{(}\AttributeTok{alpha =} \FloatTok{0.3}\NormalTok{) }\SpecialCharTok{+}
+    \CommentTok{\# Divide the plot into facets by Variable}
+    \FunctionTok{facet\_wrap}\NormalTok{(}\SpecialCharTok{\textasciitilde{}}\NormalTok{Variable) }\SpecialCharTok{+}
+    \CommentTok{\# Add vertical lines to indicate mean values}
+    \FunctionTok{stat\_summary}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{xintercept =} \FunctionTok{after\_stat}\NormalTok{(x), }\AttributeTok{y =} \DecValTok{0}\NormalTok{),}
+      \AttributeTok{fun =}\NormalTok{ mean, }\AttributeTok{geom =} \StringTok{"vline"}\NormalTok{, }\AttributeTok{orientation =} \StringTok{"y"}\NormalTok{) }\SpecialCharTok{+}
+    \FunctionTok{labs}\NormalTok{(}\AttributeTok{x =} \ConstantTok{NULL}\NormalTok{, }\AttributeTok{y =} \ConstantTok{NULL}\NormalTok{, }\AttributeTok{title =} \StringTok{"Total"}\NormalTok{),}
+  \CommentTok{\# Specify the widths of the two columns and common legend position (bottom)}
+  \AttributeTok{widths =} \FunctionTok{c}\NormalTok{(}\DecValTok{3}\NormalTok{, }\DecValTok{1}\NormalTok{),}
+  \AttributeTok{common.legend =} \ConstantTok{TRUE}\NormalTok{,}
+  \AttributeTok{legend =} \StringTok{"bottom"}\NormalTok{,}
+  \AttributeTok{labels =} \StringTok{"auto"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}
+\centering
+\includegraphics{Supplementary_material_files/figure-latex/foodsec-desc-plot-1.pdf}
+\caption{\label{fig:foodsec-desc-plot}Distribution of values across food security variables, by condition. \textbf{a.} Proportional number of participants across ordinal items. \textbf{b.} Distribution of values for the toital score. Colored vertical lines indicate the mean value for participants in each condition.}
+\end{figure}
+
+\subsubsection{Hormonal variables}\label{hormonal-variables}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{ggarrange}\NormalTok{(}
+\NormalTok{  reg\_fin }\SpecialCharTok{|\textgreater{}}
+    \FunctionTok{select}\NormalTok{(ID, Condition, Body\_temperature) }\SpecialCharTok{|\textgreater{}}
+    \FunctionTok{pivot\_longer}\NormalTok{(Body\_temperature,}
+      \AttributeTok{names\_to =} \StringTok{"Variable"}\NormalTok{,}
+      \AttributeTok{values\_to =} \StringTok{"Value"}\NormalTok{) }\SpecialCharTok{|\textgreater{}}
+    \FunctionTok{mutate}\NormalTok{(}\AttributeTok{Value =} \FunctionTok{as.numeric}\NormalTok{(Value)) }\SpecialCharTok{|\textgreater{}}
+    \FunctionTok{ggplot}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ Value, }\AttributeTok{fill =}\NormalTok{ Condition, }\AttributeTok{color =}\NormalTok{ Condition)) }\SpecialCharTok{+}
+    \FunctionTok{geom\_density}\NormalTok{(}\AttributeTok{alpha =} \FloatTok{0.3}\NormalTok{) }\SpecialCharTok{+}
+    \FunctionTok{facet\_wrap}\NormalTok{(}\SpecialCharTok{\textasciitilde{}}\NormalTok{Variable) }\SpecialCharTok{+}
+    \FunctionTok{stat\_summary}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{xintercept =} \FunctionTok{after\_stat}\NormalTok{(x), }\AttributeTok{y =} \DecValTok{0}\NormalTok{),}
+      \AttributeTok{fun =}\NormalTok{ mean, }\AttributeTok{geom =} \StringTok{"vline"}\NormalTok{, }\AttributeTok{orientation =} \StringTok{"y"}\NormalTok{) }\SpecialCharTok{+}
+    \FunctionTok{labs}\NormalTok{(}\AttributeTok{x =} \ConstantTok{NULL}\NormalTok{, }\AttributeTok{y =} \ConstantTok{NULL}\NormalTok{),}
+\NormalTok{  reg\_fin }\SpecialCharTok{|\textgreater{}}
+    \FunctionTok{left\_join}\NormalTok{(desc\_quest, }\AttributeTok{by =} \FunctionTok{c}\NormalTok{(}\StringTok{"ID"}\NormalTok{, }\StringTok{"Condition"}\NormalTok{, }\StringTok{"Hormonal\_contraception"}\NormalTok{)) }\SpecialCharTok{|\textgreater{}}
+    \FunctionTok{select}\NormalTok{(ID, Condition, Ovulating, Hormonal\_contraception) }\SpecialCharTok{|\textgreater{}}
+    \FunctionTok{pivot\_longer}\NormalTok{(Ovulating}\SpecialCharTok{:}\NormalTok{Hormonal\_contraception,}
+      \AttributeTok{names\_to =} \StringTok{"Variable"}\NormalTok{,}
+      \AttributeTok{values\_to =} \StringTok{"Value"}\NormalTok{) }\SpecialCharTok{|\textgreater{}}
+    \FunctionTok{mutate}\NormalTok{(}\AttributeTok{Variable =} \FunctionTok{str\_replace\_all}\NormalTok{(Variable, }\StringTok{"\_"}\NormalTok{, }\StringTok{" "}\NormalTok{)) }\SpecialCharTok{|\textgreater{}}
+    \FunctionTok{ggplot}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{y =}\NormalTok{ Value, }\AttributeTok{fill =}\NormalTok{ Condition, }\AttributeTok{color =}\NormalTok{ Condition)) }\SpecialCharTok{+}
+    \FunctionTok{geom\_bar}\NormalTok{(}\AttributeTok{alpha =} \FloatTok{0.3}\NormalTok{, }\AttributeTok{position =} \FunctionTok{position\_dodge}\NormalTok{()) }\SpecialCharTok{+}
+    \FunctionTok{geom\_text}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{label =}\NormalTok{ scales}\SpecialCharTok{::}\FunctionTok{percent}\NormalTok{(}\FunctionTok{after\_stat}\NormalTok{(prop), }\AttributeTok{accuracy =} \FloatTok{0.1}\NormalTok{)),}
+      \AttributeTok{vjust =} \StringTok{"inward"}\NormalTok{,}
+      \AttributeTok{position =} \FunctionTok{position\_dodge}\NormalTok{(.}\DecValTok{9}\NormalTok{),}
+      \AttributeTok{stat =} \StringTok{"prop"}\NormalTok{,}
+      \AttributeTok{color =} \StringTok{"black"}\NormalTok{,}
+      \AttributeTok{size =} \FloatTok{2.5}\NormalTok{) }\SpecialCharTok{+}
+    \FunctionTok{facet\_wrap}\NormalTok{(}\SpecialCharTok{\textasciitilde{}}\NormalTok{Variable, }\AttributeTok{scales =} \StringTok{"free"}\NormalTok{) }\SpecialCharTok{+}
+    \FunctionTok{scale\_y\_discrete}\NormalTok{(}\AttributeTok{labels =} \FunctionTok{label\_wrap}\NormalTok{(}\DecValTok{20}\NormalTok{)) }\SpecialCharTok{+}
+    \FunctionTok{theme}\NormalTok{(}\AttributeTok{axis.text.y =} \FunctionTok{element\_text}\NormalTok{(}\AttributeTok{size =} \DecValTok{8}\NormalTok{)) }\SpecialCharTok{+}
+    \FunctionTok{labs}\NormalTok{(}\AttributeTok{x =} \ConstantTok{NULL}\NormalTok{, }\AttributeTok{y =} \ConstantTok{NULL}\NormalTok{),}
+  \AttributeTok{widths =} \FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{2}\NormalTok{),}
+  \AttributeTok{common.legend =} \ConstantTok{TRUE}\NormalTok{,}
+  \AttributeTok{legend =} \StringTok{"bottom"}\NormalTok{,}
+  \AttributeTok{labels =} \StringTok{"auto"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}
+\centering
+\includegraphics{Supplementary_material_files/figure-latex/hormone-desc-plot-1.pdf}
+\caption{\label{fig:hormone-desc-plot}Distribution of values across hormonal variables, by condition. \textbf{a.} Distribution of values for body temperature. Colored vertical lines indicate the mean value for participants in each condition. \textbf{b.} Proportional number of participants across categorical variables.}
+\end{figure}
+
+\subsubsection{Self-perceived conditions}\label{self-perceived-conditions}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{desc\_quest }\SpecialCharTok{|\textgreater{}}
+  \FunctionTok{select}\NormalTok{(ID, Condition, }\FunctionTok{starts\_with}\NormalTok{(}\StringTok{"SP\_"}\NormalTok{), }\SpecialCharTok{{-}}\NormalTok{SP\_health) }\SpecialCharTok{|\textgreater{}}
+  \FunctionTok{pivot\_longer}\NormalTok{(}\FunctionTok{where}\NormalTok{(is.numeric),}
+               \AttributeTok{names\_to =} \StringTok{"Variable"}\NormalTok{,}
+               \AttributeTok{values\_to =} \StringTok{"Value"}\NormalTok{) }\SpecialCharTok{|\textgreater{}} 
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{Variable =} \FunctionTok{str\_replace\_all}\NormalTok{(Variable, }\StringTok{"SP\_"}\NormalTok{, }\StringTok{""}\NormalTok{)) }\SpecialCharTok{|\textgreater{}}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{Variable =} \FunctionTok{str\_replace\_all}\NormalTok{(Variable, }\StringTok{"self\_"}\NormalTok{, }\StringTok{"self{-}"}\NormalTok{)) }\SpecialCharTok{|\textgreater{}}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{Variable =} \FunctionTok{str\_replace\_all}\NormalTok{(Variable, }\StringTok{"\_"}\NormalTok{, }\StringTok{" "}\NormalTok{)) }\SpecialCharTok{|\textgreater{}}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{Variable =} \FunctionTok{str\_to\_sentence}\NormalTok{(Variable)) }\SpecialCharTok{|\textgreater{}} 
+  \FunctionTok{ggplot}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ Value, }\AttributeTok{fill =}\NormalTok{ Condition, }\AttributeTok{color =}\NormalTok{ Condition)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_density}\NormalTok{(}\AttributeTok{alpha =} \FloatTok{0.3}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{theme}\NormalTok{(}\AttributeTok{legend.position =} \StringTok{"bottom"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{stat\_summary}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{xintercept =} \FunctionTok{after\_stat}\NormalTok{(x), }\AttributeTok{y =} \DecValTok{0}\NormalTok{),}
+               \AttributeTok{fun =}\NormalTok{ mean, }\AttributeTok{geom =} \StringTok{"vline"}\NormalTok{, }\AttributeTok{orientation =} \StringTok{"y"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{x =} \ConstantTok{NULL}\NormalTok{, }\AttributeTok{y =} \ConstantTok{NULL}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{facet\_wrap}\NormalTok{(}\SpecialCharTok{\textasciitilde{}}\NormalTok{Variable, }\AttributeTok{scales =} \StringTok{"free"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}
+\centering
+\includegraphics{Supplementary_material_files/figure-latex/psych-desc-plot-1.pdf}
+\caption{\label{fig:psych-desc-plot}Distribution of values across self-perceived conditions. Colored vertical lines indicate the mean value for participants in each condition.}
+\end{figure}
+
+\subsubsection{Last partner perception}\label{last-partner-perception}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{desc\_quest }\SpecialCharTok{|\textgreater{}}
+  \FunctionTok{select}\NormalTok{(ID, Condition, Partner\_masculinity, Partner\_dominance, }
+\NormalTok{         Partner\_attractiveness) }\SpecialCharTok{|\textgreater{}}
+  \FunctionTok{pivot\_longer}\NormalTok{(}\FunctionTok{where}\NormalTok{(is.numeric),}
+               \AttributeTok{names\_to =} \StringTok{"Variable"}\NormalTok{,}
+               \AttributeTok{values\_to =} \StringTok{"Value"}\NormalTok{) }\SpecialCharTok{|\textgreater{}} 
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{Variable =} \FunctionTok{str\_replace\_all}\NormalTok{(Variable, }\StringTok{"Partner\_"}\NormalTok{, }\StringTok{""}\NormalTok{)) }\SpecialCharTok{|\textgreater{}}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{Variable =} \FunctionTok{str\_to\_sentence}\NormalTok{(Variable)) }\SpecialCharTok{|\textgreater{}} 
+  \FunctionTok{ggplot}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ Value, }\AttributeTok{fill =}\NormalTok{ Condition, }\AttributeTok{color =}\NormalTok{ Condition)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_density}\NormalTok{(}\AttributeTok{alpha =} \FloatTok{0.3}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{theme}\NormalTok{(}\AttributeTok{legend.position =} \StringTok{"bottom"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{stat\_summary}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{xintercept =} \FunctionTok{after\_stat}\NormalTok{(x), }\AttributeTok{y =} \DecValTok{0}\NormalTok{),}
+               \AttributeTok{fun =}\NormalTok{ mean, }\AttributeTok{geom =} \StringTok{"vline"}\NormalTok{, }\AttributeTok{orientation =} \StringTok{"y"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{x =} \ConstantTok{NULL}\NormalTok{, }\AttributeTok{y =} \ConstantTok{NULL}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{facet\_wrap}\NormalTok{(}\SpecialCharTok{\textasciitilde{}}\NormalTok{Variable, }\AttributeTok{scales =} \StringTok{"free"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}
+\centering
+\includegraphics{Supplementary_material_files/figure-latex/partner-desc-plot-1.pdf}
+\caption{\label{fig:partner-desc-plot}Distribution of values across perceptions of the last partner by condition. Colored vertical lines indicate the mean value for participants in each condition.}
+\end{figure}
+
+\subsubsection{Context violence}\label{context-violence}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{ggarrange}\NormalTok{(desc\_quest }\SpecialCharTok{|\textgreater{}}
+            \FunctionTok{select}\NormalTok{(ID, Condition, }\FunctionTok{ends\_with}\NormalTok{(}\StringTok{"\_safety"}\NormalTok{), Freq\_robery) }\SpecialCharTok{|\textgreater{}}
+            \FunctionTok{pivot\_longer}\NormalTok{(}\FunctionTok{where}\NormalTok{(is.numeric),}
+                         \AttributeTok{names\_to =} \StringTok{"Variable"}\NormalTok{,}
+                         \AttributeTok{values\_to =} \StringTok{"Value"}\NormalTok{) }\SpecialCharTok{|\textgreater{}} 
+            \FunctionTok{mutate}\NormalTok{(}\AttributeTok{Value =} \FunctionTok{as.numeric}\NormalTok{(Value)) }\SpecialCharTok{|\textgreater{}} 
+            \FunctionTok{mutate}\NormalTok{(}\AttributeTok{Variable =} \FunctionTok{str\_replace\_all}\NormalTok{(Variable, }\StringTok{"\_safety"}\NormalTok{, }\StringTok{""}\NormalTok{)) }\SpecialCharTok{|\textgreater{}}
+            \FunctionTok{mutate}\NormalTok{(}\AttributeTok{Variable =} \FunctionTok{str\_replace\_all}\NormalTok{(Variable, }\StringTok{"Perceived\_"}\NormalTok{, }\StringTok{""}\NormalTok{)) }\SpecialCharTok{|\textgreater{}}
+            \FunctionTok{mutate}\NormalTok{(}\AttributeTok{Variable =} \FunctionTok{str\_replace\_all}\NormalTok{(Variable, }\StringTok{"Freq\_"}\NormalTok{, }\StringTok{"Frequency of "}\NormalTok{)) }\SpecialCharTok{|\textgreater{}}
+            \FunctionTok{mutate}\NormalTok{(}\AttributeTok{Variable =} \FunctionTok{str\_replace\_all}\NormalTok{(Variable, }\StringTok{"Perceived"}\NormalTok{, }\StringTok{"General perception"}\NormalTok{)) }\SpecialCharTok{|\textgreater{}}
+            \FunctionTok{mutate}\NormalTok{(}\AttributeTok{Variable =} \FunctionTok{str\_to\_sentence}\NormalTok{(Variable)) }\SpecialCharTok{|\textgreater{}} 
+            \FunctionTok{ggplot}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ Value, }\AttributeTok{fill =}\NormalTok{ Condition, }\AttributeTok{color =}\NormalTok{ Condition)) }\SpecialCharTok{+}
+            \FunctionTok{geom\_density}\NormalTok{(}\AttributeTok{alpha =} \FloatTok{0.3}\NormalTok{) }\SpecialCharTok{+}
+            \FunctionTok{labs}\NormalTok{(}\AttributeTok{title =} \StringTok{"Safety perception"}\NormalTok{) }\SpecialCharTok{+}
+            \FunctionTok{facet\_wrap}\NormalTok{(}\SpecialCharTok{\textasciitilde{}}\FunctionTok{factor}\NormalTok{(Variable, }\FunctionTok{c}\NormalTok{(}\StringTok{"Country"}\NormalTok{, }\StringTok{"City"}\NormalTok{, }\StringTok{"Neighborhood"}\NormalTok{, }\StringTok{"Home"}\NormalTok{,}
+                                           \StringTok{"Frequency of robery"}\NormalTok{, }\StringTok{"General perception"}\NormalTok{)),}
+                               \AttributeTok{scales =} \StringTok{"free"}\NormalTok{) }\SpecialCharTok{+}
+            \FunctionTok{stat\_summary}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{xintercept =} \FunctionTok{after\_stat}\NormalTok{(x), }\AttributeTok{y =} \DecValTok{0}\NormalTok{),}
+                         \AttributeTok{fun =}\NormalTok{ mean, }\AttributeTok{geom =} \StringTok{"vline"}\NormalTok{, }\AttributeTok{orientation =} \StringTok{"y"}\NormalTok{) }\SpecialCharTok{+}
+            \FunctionTok{labs}\NormalTok{(}\AttributeTok{x =} \ConstantTok{NULL}\NormalTok{, }\AttributeTok{y =} \ConstantTok{NULL}\NormalTok{),}
+          \FunctionTok{ggarrange}\NormalTok{(desc\_quest }\SpecialCharTok{|\textgreater{}}
+                      \FunctionTok{select}\NormalTok{(ID, Condition, }
+\NormalTok{                             Men\_perceived\_as\_dangerous) }\SpecialCharTok{|\textgreater{}} 
+                      \FunctionTok{pivot\_longer}\NormalTok{(Men\_perceived\_as\_dangerous,}
+                                   \AttributeTok{names\_to =} \StringTok{"Variable"}\NormalTok{,}
+                                   \AttributeTok{values\_to =} \StringTok{"Value"}\NormalTok{) }\SpecialCharTok{|\textgreater{}} 
+                      \FunctionTok{mutate}\NormalTok{(}\AttributeTok{Variable =} \FunctionTok{str\_replace\_all}\NormalTok{(Variable, }
+                                                        \StringTok{"\_"}\NormalTok{, }\StringTok{" "}\NormalTok{)) }\SpecialCharTok{|\textgreater{}} 
+                      \FunctionTok{mutate}\NormalTok{(}\AttributeTok{Variable =} \FunctionTok{str\_to\_sentence}\NormalTok{(Variable)) }\SpecialCharTok{|\textgreater{}} 
+                      \FunctionTok{ggplot}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ Value, }\AttributeTok{fill =}\NormalTok{ Condition, }\AttributeTok{color =}\NormalTok{ Condition)) }\SpecialCharTok{+}
+                      \FunctionTok{geom\_density}\NormalTok{(}\AttributeTok{alpha =} \FloatTok{0.3}\NormalTok{) }\SpecialCharTok{+}
+                      \FunctionTok{labs}\NormalTok{(}\AttributeTok{title =} \StringTok{"Men perceived as dangerous"}\NormalTok{) }\SpecialCharTok{+}
+                      \FunctionTok{facet\_wrap}\NormalTok{(}\SpecialCharTok{\textasciitilde{}}\NormalTok{Variable, }\AttributeTok{scales =} \StringTok{"free"}\NormalTok{) }\SpecialCharTok{+}
+                      \FunctionTok{stat\_summary}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{xintercept =} \FunctionTok{after\_stat}\NormalTok{(x), }\AttributeTok{y =} \DecValTok{0}\NormalTok{),}
+                                   \AttributeTok{fun =}\NormalTok{ mean, }\AttributeTok{geom =} \StringTok{"vline"}\NormalTok{, }\AttributeTok{orientation =} \StringTok{"y"}\NormalTok{) }\SpecialCharTok{+}
+                      \FunctionTok{theme}\NormalTok{(}\AttributeTok{axis.text.y =} \FunctionTok{element\_text}\NormalTok{(}\AttributeTok{size =} \DecValTok{8}\NormalTok{)) }\SpecialCharTok{+}
+                      \FunctionTok{labs}\NormalTok{(}\AttributeTok{x =} \ConstantTok{NULL}\NormalTok{, }\AttributeTok{y =} \ConstantTok{NULL}\NormalTok{),}
+\NormalTok{                    desc\_quest }\SpecialCharTok{|\textgreater{}}
+                      \FunctionTok{select}\NormalTok{(ID, Condition, Victim\_of\_armed\_conflict) }\SpecialCharTok{|\textgreater{}}
+                      \FunctionTok{pivot\_longer}\NormalTok{(Victim\_of\_armed\_conflict,}
+                                   \AttributeTok{names\_to =} \StringTok{"Variable"}\NormalTok{,}
+                                   \AttributeTok{values\_to =} \StringTok{"Value"}\NormalTok{) }\SpecialCharTok{|\textgreater{}} 
+                      \FunctionTok{mutate}\NormalTok{(}\AttributeTok{Variable =} \FunctionTok{str\_replace\_all}\NormalTok{(Variable, }
+                                                        \StringTok{"\_"}\NormalTok{, }\StringTok{" "}\NormalTok{)) }\SpecialCharTok{|\textgreater{}}
+                      \FunctionTok{ggplot}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{y =}\NormalTok{ Value, }\AttributeTok{fill =}\NormalTok{ Condition, }\AttributeTok{color =}\NormalTok{ Condition)) }\SpecialCharTok{+}
+                      \FunctionTok{geom\_bar}\NormalTok{(}\AttributeTok{alpha =} \FloatTok{0.3}\NormalTok{, }\AttributeTok{position =} \FunctionTok{position\_dodge}\NormalTok{()) }\SpecialCharTok{+}
+                      \FunctionTok{geom\_text}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{label =}\NormalTok{ scales}\SpecialCharTok{::}\FunctionTok{percent}\NormalTok{(}\FunctionTok{after\_stat}\NormalTok{(prop), }\AttributeTok{accuracy =} \FloatTok{0.1}\NormalTok{)),}
+                                \AttributeTok{vjust =} \StringTok{"inward"}\NormalTok{,}
+                                \AttributeTok{position =} \FunctionTok{position\_dodge}\NormalTok{(.}\DecValTok{9}\NormalTok{),}
+                                \AttributeTok{stat =} \StringTok{"prop"}\NormalTok{,}
+                                \AttributeTok{color =} \StringTok{"black"}\NormalTok{,}
+                                \AttributeTok{size =} \FloatTok{2.5}\NormalTok{) }\SpecialCharTok{+}
+                      \FunctionTok{labs}\NormalTok{(}\AttributeTok{title =} \StringTok{"Victim of armed conflict"}\NormalTok{) }\SpecialCharTok{+}
+                      \FunctionTok{facet\_wrap}\NormalTok{(}\SpecialCharTok{\textasciitilde{}}\NormalTok{Variable, }\AttributeTok{scales =} \StringTok{"free"}\NormalTok{) }\SpecialCharTok{+}
+                      \FunctionTok{scale\_y\_discrete}\NormalTok{(}\AttributeTok{labels =} \FunctionTok{label\_wrap}\NormalTok{(}\DecValTok{20}\NormalTok{)) }\SpecialCharTok{+}
+                      \FunctionTok{theme}\NormalTok{(}\AttributeTok{axis.text.y =} \FunctionTok{element\_text}\NormalTok{(}\AttributeTok{size =} \DecValTok{8}\NormalTok{)) }\SpecialCharTok{+}
+                      \FunctionTok{labs}\NormalTok{(}\AttributeTok{x =} \ConstantTok{NULL}\NormalTok{, }\AttributeTok{y =} \ConstantTok{NULL}\NormalTok{),}
+                    \AttributeTok{ncol =} \DecValTok{1}\NormalTok{,}
+                    \AttributeTok{labels =} \FunctionTok{c}\NormalTok{(}\StringTok{""}\NormalTok{, }\StringTok{"c"}\NormalTok{)),}
+          \AttributeTok{widths =} \FunctionTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{, }\DecValTok{1}\NormalTok{),}
+          \AttributeTok{common.legend =} \ConstantTok{TRUE}\NormalTok{,}
+          \AttributeTok{legend =} \StringTok{"bottom"}\NormalTok{,}
+          \AttributeTok{labels =} \StringTok{"auto"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}
+\centering
+\includegraphics{Supplementary_material_files/figure-latex/context-violence-desc-plot-1.pdf}
+\caption{\label{fig:context-violence-desc-plot}Distribution of values across perceptions of violence, by condition. \textbf{a.} Distribution of values across variables related to safety perception. \textbf{b.} Perceptions of men as dangerous. \textbf{c.} Proportional number of participants who reported being victims of the Colombian armed conflict. For panels a and b, colored vertical lines indicate the mean value for each variable under each condition.}
+\end{figure}
+
+\subsubsection{Gender and partner violence}\label{gender-and-partner-violence}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{ggarrange}\NormalTok{(desc\_quest }\SpecialCharTok{|\textgreater{}}
+            \FunctionTok{select}\NormalTok{(ID, Condition, Freq\_partner\_physical\_violence,}
+\NormalTok{                   , Freq\_partner\_sexual\_violence, Freq\_partner\_infidelity) }\SpecialCharTok{|\textgreater{}}
+            \FunctionTok{pivot\_longer}\NormalTok{(}\FunctionTok{where}\NormalTok{(is.numeric),}
+                         \AttributeTok{names\_to =} \StringTok{"Variable"}\NormalTok{,}
+                         \AttributeTok{values\_to =} \StringTok{"Value"}\NormalTok{) }\SpecialCharTok{|\textgreater{}} 
+            \FunctionTok{mutate}\NormalTok{(}\AttributeTok{Value =} \FunctionTok{as.numeric}\NormalTok{(Value)) }\SpecialCharTok{|\textgreater{}} 
+            \FunctionTok{mutate}\NormalTok{(}\AttributeTok{Variable =} \FunctionTok{str\_replace\_all}\NormalTok{(Variable, }\StringTok{"Freq\_partner\_"}\NormalTok{, }\StringTok{""}\NormalTok{)) }\SpecialCharTok{|\textgreater{}}
+            \FunctionTok{mutate}\NormalTok{(}\AttributeTok{Variable =} \FunctionTok{str\_replace\_all}\NormalTok{(Variable, }\StringTok{"\_"}\NormalTok{, }\StringTok{" "}\NormalTok{)) }\SpecialCharTok{|\textgreater{}}
+            \FunctionTok{mutate}\NormalTok{(}\AttributeTok{Variable =} \FunctionTok{str\_to\_sentence}\NormalTok{(Variable)) }\SpecialCharTok{|\textgreater{}} 
+            \FunctionTok{ggplot}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ Value, }\AttributeTok{fill =}\NormalTok{ Condition, }\AttributeTok{color =}\NormalTok{ Condition)) }\SpecialCharTok{+}
+            \FunctionTok{geom\_density}\NormalTok{(}\AttributeTok{alpha =} \FloatTok{0.3}\NormalTok{) }\SpecialCharTok{+}
+            \FunctionTok{facet\_wrap}\NormalTok{(}\SpecialCharTok{\textasciitilde{}}\FunctionTok{factor}\NormalTok{(Variable, }\FunctionTok{c}\NormalTok{(}\StringTok{"Physical violence"}\NormalTok{,}
+                                           \StringTok{"Sexual violence"}\NormalTok{,}
+                                           \StringTok{"Infidelity"}\NormalTok{)), }
+                       \AttributeTok{scales =} \StringTok{"free"}\NormalTok{, }\AttributeTok{ncol =} \DecValTok{1}\NormalTok{) }\SpecialCharTok{+}
+            \FunctionTok{stat\_summary}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{xintercept =} \FunctionTok{after\_stat}\NormalTok{(x), }\AttributeTok{y =} \DecValTok{0}\NormalTok{),}
+                         \AttributeTok{fun =}\NormalTok{ mean, }\AttributeTok{geom =} \StringTok{"vline"}\NormalTok{, }\AttributeTok{orientation =} \StringTok{"y"}\NormalTok{) }\SpecialCharTok{+}
+            \FunctionTok{labs}\NormalTok{(}\AttributeTok{x =} \ConstantTok{NULL}\NormalTok{, }\AttributeTok{y =} \ConstantTok{NULL}\NormalTok{),}
+\NormalTok{          desc\_quest }\SpecialCharTok{|\textgreater{}} 
+            \FunctionTok{select}\NormalTok{(ID, Condition, }
+\NormalTok{                   Victim\_of\_gender\_violence, }
+\NormalTok{                   Partner\_physical\_violence,}
+\NormalTok{                   Partner\_sexual\_violence,}
+\NormalTok{                   Sexual\_abuse) }\SpecialCharTok{|\textgreater{}} 
+            \FunctionTok{pivot\_longer}\NormalTok{(Victim\_of\_gender\_violence}\SpecialCharTok{:}\NormalTok{Sexual\_abuse,}
+                         \AttributeTok{names\_to =} \StringTok{"Variable"}\NormalTok{,}
+                         \AttributeTok{values\_to =} \StringTok{"Value"}\NormalTok{) }\SpecialCharTok{|\textgreater{}} 
+            \FunctionTok{mutate}\NormalTok{(}\AttributeTok{Value =} \FunctionTok{as.factor}\NormalTok{(Value)) }\SpecialCharTok{|\textgreater{}} 
+            \FunctionTok{mutate}\NormalTok{(}\AttributeTok{Variable =} \FunctionTok{str\_replace\_all}\NormalTok{(Variable, }
+                                              \StringTok{"\_"}\NormalTok{, }\StringTok{" "}\NormalTok{)) }\SpecialCharTok{|\textgreater{}} 
+            \FunctionTok{mutate}\NormalTok{(}\AttributeTok{Variable =} \FunctionTok{str\_to\_sentence}\NormalTok{(Variable)) }\SpecialCharTok{|\textgreater{}} 
+            \FunctionTok{ggplot}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{y =}\NormalTok{ Value, }\AttributeTok{fill =}\NormalTok{ Condition, }\AttributeTok{color =}\NormalTok{ Condition)) }\SpecialCharTok{+}
+            \FunctionTok{geom\_bar}\NormalTok{(}\AttributeTok{alpha =} \FloatTok{0.3}\NormalTok{, }\AttributeTok{position =} \FunctionTok{position\_dodge}\NormalTok{()) }\SpecialCharTok{+}
+            \FunctionTok{geom\_text}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{label =}\NormalTok{ scales}\SpecialCharTok{::}\FunctionTok{percent}\NormalTok{(}\FunctionTok{after\_stat}\NormalTok{(prop), }\AttributeTok{accuracy =} \FloatTok{0.1}\NormalTok{)),}
+                      \AttributeTok{vjust =} \StringTok{"inward"}\NormalTok{,}
+                      \AttributeTok{position =} \FunctionTok{position\_dodge}\NormalTok{(.}\DecValTok{9}\NormalTok{),}
+                      \AttributeTok{stat =} \StringTok{"prop"}\NormalTok{,}
+                      \AttributeTok{color =} \StringTok{"black"}\NormalTok{,}
+                      \AttributeTok{size =} \FloatTok{2.5}\NormalTok{) }\SpecialCharTok{+}
+            \FunctionTok{facet\_wrap}\NormalTok{(}\SpecialCharTok{\textasciitilde{}}\NormalTok{Variable, }
+                               \AttributeTok{scales =} \StringTok{"free"}\NormalTok{) }\SpecialCharTok{+}
+            \FunctionTok{scale\_y\_discrete}\NormalTok{(}\AttributeTok{labels =} \FunctionTok{label\_wrap}\NormalTok{(}\DecValTok{20}\NormalTok{)) }\SpecialCharTok{+}
+            \FunctionTok{theme}\NormalTok{(}\AttributeTok{axis.text.y =} \FunctionTok{element\_text}\NormalTok{(}\AttributeTok{size =} \DecValTok{8}\NormalTok{)) }\SpecialCharTok{+}
+            \FunctionTok{labs}\NormalTok{(}\AttributeTok{x =} \ConstantTok{NULL}\NormalTok{, }\AttributeTok{y =} \ConstantTok{NULL}\NormalTok{),}
+          \AttributeTok{widths =} \FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{3}\NormalTok{),}
+          \AttributeTok{common.legend =} \ConstantTok{TRUE}\NormalTok{,}
+          \AttributeTok{legend =} \StringTok{"bottom"}\NormalTok{,}
+          \AttributeTok{labels =} \StringTok{"auto"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}
+\centering
+\includegraphics{Supplementary_material_files/figure-latex/gender-violence-desc-plot-1.pdf}
+\caption{\label{fig:gender-violence-desc-plot}Distribution of values across gender and partner violence suffered by participants, by condition. \textbf{a.} Distribution of values across numeric variables. Colored vertical lines indicate the mean value for each variable under each condition. \textbf{b.} Proportional number of participants wacross categorical variables.}
+\end{figure}
+
+\subsubsection{Subjective evaluation of stimuli}\label{subjective-evaluation-of-stimuli-1}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{cond\_labs }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\StringTok{"Condition: High"}\NormalTok{, }\StringTok{"Condition: Low"}\NormalTok{)}
+\FunctionTok{names}\NormalTok{(cond\_labs) }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\StringTok{"High"}\NormalTok{, }\StringTok{"Low"}\NormalTok{)}
+
+\NormalTok{eval\_long }\SpecialCharTok{|\textgreater{}} 
+  \FunctionTok{left\_join}\NormalTok{(reg, }\AttributeTok{by =} \FunctionTok{c}\NormalTok{(}\StringTok{"ID"}\NormalTok{)) }\SpecialCharTok{|\textgreater{}} 
+  \FunctionTok{filter}\NormalTok{(ID }\SpecialCharTok{\%in\%} \FunctionTok{unique}\NormalTok{(dat}\SpecialCharTok{$}\NormalTok{ID)) }\SpecialCharTok{|\textgreater{}} 
+  \FunctionTok{rowwise}\NormalTok{() }\SpecialCharTok{|\textgreater{}} 
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{Sexual\_dimorphism =} \FunctionTok{ifelse}\NormalTok{(}\FunctionTok{grepl}\NormalTok{(}\StringTok{"F"}\NormalTok{, Stimulus), }\StringTok{"Feminine"}\NormalTok{, }\StringTok{"Masculine"}\NormalTok{)) }\SpecialCharTok{|\textgreater{}} 
+  \FunctionTok{select}\NormalTok{(Condition, Sexual\_dimorphism, Attractiveness, Masculinity) }\SpecialCharTok{|\textgreater{}} 
+  \FunctionTok{pivot\_longer}\NormalTok{(Attractiveness}\SpecialCharTok{:}\NormalTok{Masculinity,}
+               \AttributeTok{names\_to =} \StringTok{"Variable"}\NormalTok{,}
+               \AttributeTok{values\_to =} \StringTok{"Value"}\NormalTok{) }\SpecialCharTok{|\textgreater{}}
+  \FunctionTok{ggplot}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ Value, }\AttributeTok{fill =}\NormalTok{ Sexual\_dimorphism, }\AttributeTok{color =}\NormalTok{ Sexual\_dimorphism)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_density}\NormalTok{(}\AttributeTok{alpha =} \FloatTok{0.3}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{theme}\NormalTok{(}\AttributeTok{legend.position =} \StringTok{"bottom"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{y =} \StringTok{"Density"}\NormalTok{, }\AttributeTok{x =} \StringTok{"Score"}\NormalTok{, }\AttributeTok{color =} \StringTok{"Sexual dimorphism"}\NormalTok{, }\AttributeTok{fill =} \StringTok{"Sexual dimorphism"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{facet\_grid}\NormalTok{(Condition}\SpecialCharTok{\textasciitilde{}}\NormalTok{Variable, }\AttributeTok{scales =} \StringTok{"free"}\NormalTok{,}
+             \AttributeTok{labeller =} \FunctionTok{labeller}\NormalTok{(}\AttributeTok{Condition =}\NormalTok{ cond\_labs)) }\SpecialCharTok{+}
+  \FunctionTok{scale\_color\_manual}\NormalTok{(}\AttributeTok{values =} \FunctionTok{c}\NormalTok{(}\StringTok{"\#E69F00"}\NormalTok{, }\StringTok{"\#56B4E9"}\NormalTok{)) }\SpecialCharTok{+}
+  \FunctionTok{scale\_fill\_manual}\NormalTok{(}\AttributeTok{values =} \FunctionTok{c}\NormalTok{(}\StringTok{"\#E69F00"}\NormalTok{, }\StringTok{"\#56B4E9"}\NormalTok{)) }\SpecialCharTok{+}
+  \FunctionTok{stat\_summary}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{xintercept =} \FunctionTok{after\_stat}\NormalTok{(x), }\AttributeTok{y =} \DecValTok{0}\NormalTok{),}
+               \AttributeTok{fun =}\NormalTok{ mean, }\AttributeTok{geom =} \StringTok{"vline"}\NormalTok{, }\AttributeTok{orientation =} \StringTok{"y"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}
+\centering
+\includegraphics{Supplementary_material_files/figure-latex/stimuli-eval-desc-plot-1.pdf}
+\caption{\label{fig:stimuli-eval-desc-plot}Distribution of values across subjective evaluations of attractiveness and masculinity of the stimuli used in the experiment, split by sexual dimorphism manipulations (feminine, maculine). Panels on the left are for attractiveness scores, and on the right for masculinity scores. Top panels are for participants in the high condition, and on the bottom for the low condition. Colored vertical lines indicate the mean value for participants in each condition.}
+\end{figure}
+
+\subsection{Correlations}\label{correlations}
+
+\subsubsection{Correlations in partner perceptions}\label{correlations-in-partner-perceptions}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{quests\_fin }\SpecialCharTok{|\textgreater{}}
+  \FunctionTok{select}\NormalTok{(}
+\NormalTok{    Freq\_partner\_physical\_violence,}
+\NormalTok{    Freq\_partner\_sexual\_violence,}
+\NormalTok{    Freq\_partner\_infidelity,}
+\NormalTok{    Partner\_masculinity,}
+\NormalTok{    Partner\_dominance,}
+\NormalTok{    Partner\_attractiveness) }\SpecialCharTok{|\textgreater{}}
+  \FunctionTok{rename}\NormalTok{(}
+    \StringTok{"PPV"} \OtherTok{=} \StringTok{"Freq\_partner\_physical\_violence"}\NormalTok{,}
+    \StringTok{"PSV"} \OtherTok{=} \StringTok{"Freq\_partner\_sexual\_violence"}\NormalTok{,}
+    \StringTok{"PI"} \OtherTok{=} \StringTok{"Freq\_partner\_infidelity"}\NormalTok{,}
+    \StringTok{"Masculinity"} \OtherTok{=} \StringTok{"Partner\_masculinity"}\NormalTok{,}
+    \StringTok{"Dominance"} \OtherTok{=} \StringTok{"Partner\_dominance"}\NormalTok{,}
+    \StringTok{"Attractiveness"} \OtherTok{=} \StringTok{"Partner\_attractiveness"}\NormalTok{) }\SpecialCharTok{|\textgreater{}} 
+  \FunctionTok{ggcorr}\NormalTok{(}\AttributeTok{geom =} \StringTok{"blank"}\NormalTok{, }\AttributeTok{label =} \ConstantTok{TRUE}\NormalTok{, }\AttributeTok{label\_size =} \DecValTok{2}\NormalTok{,}
+         \AttributeTok{hjust =} \FloatTok{0.75}\NormalTok{, }\AttributeTok{label\_round =} \DecValTok{3}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{geom\_point}\NormalTok{(}\AttributeTok{size =} \DecValTok{10}\NormalTok{, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{color =}\NormalTok{ coefficient }\SpecialCharTok{\textgreater{}} \DecValTok{0}\NormalTok{, }\AttributeTok{alpha =} \FunctionTok{abs}\NormalTok{(coefficient) }\SpecialCharTok{\textgreater{}} \FloatTok{0.5}\NormalTok{)) }\SpecialCharTok{+}
+  \FunctionTok{scale\_alpha\_manual}\NormalTok{(}\AttributeTok{values =} \FunctionTok{c}\NormalTok{(}\StringTok{"TRUE"} \OtherTok{=} \FloatTok{0.3}\NormalTok{, }\StringTok{"FALSE"} \OtherTok{=} \DecValTok{0}\NormalTok{)) }\SpecialCharTok{+}
+  \FunctionTok{guides}\NormalTok{(}\AttributeTok{color =} \ConstantTok{FALSE}\NormalTok{, }\AttributeTok{alpha =} \ConstantTok{FALSE}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning: The `<scale>` argument of `guides()` cannot be `FALSE`. Use "none" instead as
+## of ggplot2 3.3.4.
+## This warning is displayed once every 8 hours.
+## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
+## generated.
+\end{verbatim}
+
+\includegraphics{Supplementary_material_files/figure-latex/unnamed-chunk-20-1.pdf}
+
+\subsubsection{Correlations table (general)}\label{correlations-table-general}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{desc\_quest }\SpecialCharTok{|\textgreater{}} 
+  \FunctionTok{left\_join}\NormalTok{(reg\_fin }\SpecialCharTok{|\textgreater{}} 
+              \FunctionTok{select}\NormalTok{(ID, Body\_temperature), }
+            \AttributeTok{by =} \FunctionTok{c}\NormalTok{(}\StringTok{"ID"}\NormalTok{)) }\SpecialCharTok{|\textgreater{}}
+  \FunctionTok{select}\NormalTok{(Age,}
+\NormalTok{         Freq\_illness,}
+         \FunctionTok{starts\_with}\NormalTok{(}\StringTok{"SP\_"}\NormalTok{),}
+\NormalTok{         Partner\_masculinity, Partner\_dominance, Partner\_attractiveness,}
+         \FunctionTok{ends\_with}\NormalTok{(}\StringTok{"\_safety"}\NormalTok{), Freq\_robery,}
+\NormalTok{         Freq\_partner\_physical\_violence, }
+\NormalTok{         Freq\_partner\_sexual\_violence, }
+\NormalTok{         Freq\_partner\_infidelity) }\SpecialCharTok{|\textgreater{}} 
+  \FunctionTok{rename\_with}\NormalTok{(}\SpecialCharTok{\textasciitilde{}}\FunctionTok{str\_replace\_all}\NormalTok{(., }\StringTok{"\_"}\NormalTok{, }\StringTok{" "}\NormalTok{)) }\SpecialCharTok{|\textgreater{}} 
+  \FunctionTok{rename\_with}\NormalTok{(}\SpecialCharTok{\textasciitilde{}}\FunctionTok{str\_replace\_all}\NormalTok{(., }\StringTok{"Freq"}\NormalTok{, }\StringTok{"Frequency of"}\NormalTok{)) }\SpecialCharTok{|\textgreater{}}
+  \FunctionTok{rename\_with}\NormalTok{(}\SpecialCharTok{\textasciitilde{}}\FunctionTok{str\_replace\_all}\NormalTok{(., }\StringTok{"Frequency of partner"}\NormalTok{, }\StringTok{"Partner"}\NormalTok{)) }\SpecialCharTok{|\textgreater{}}
+  \FunctionTok{rename\_with}\NormalTok{(}\SpecialCharTok{\textasciitilde{}}\FunctionTok{str\_replace\_all}\NormalTok{(., }\StringTok{"SP "}\NormalTok{, }\StringTok{""}\NormalTok{)) }\SpecialCharTok{|\textgreater{}}
+  \FunctionTok{rename\_with}\NormalTok{(}\SpecialCharTok{\textasciitilde{}}\FunctionTok{str\_replace\_all}\NormalTok{(., }\StringTok{"Perceived"}\NormalTok{, }\StringTok{""}\NormalTok{)) }\SpecialCharTok{|\textgreater{}}
+  \FunctionTok{rename\_with}\NormalTok{(}\SpecialCharTok{\textasciitilde{}}\FunctionTok{str\_replace\_all}\NormalTok{(., }\StringTok{"asculinity"}\NormalTok{, }\StringTok{"asc."}\NormalTok{)) }\SpecialCharTok{|\textgreater{}}
+  \FunctionTok{rename\_with}\NormalTok{(}\SpecialCharTok{\textasciitilde{}}\FunctionTok{str\_replace\_all}\NormalTok{(., }\StringTok{"ttractiveness"}\NormalTok{, }\StringTok{"ttr."}\NormalTok{)) }\SpecialCharTok{|\textgreater{}}
+  \FunctionTok{rename\_with}\NormalTok{(}\SpecialCharTok{\textasciitilde{}}\FunctionTok{str\_replace\_all}\NormalTok{(., }\StringTok{"Neighborhood"}\NormalTok{, }\StringTok{"Neighbor."}\NormalTok{)) }\SpecialCharTok{|\textgreater{}}
+  \FunctionTok{rename\_with}\NormalTok{(}\SpecialCharTok{\textasciitilde{}}\FunctionTok{str\_replace\_all}\NormalTok{(., }\StringTok{"Partner attr."}\NormalTok{, }\StringTok{"Attractive."}\NormalTok{)) }\SpecialCharTok{|\textgreater{}}
+  \FunctionTok{rename\_with}\NormalTok{(}\SpecialCharTok{\textasciitilde{}}\FunctionTok{str\_replace\_all}\NormalTok{(., }\StringTok{"Dominance"}\NormalTok{, }\StringTok{"Dom."}\NormalTok{)) }\SpecialCharTok{|\textgreater{}}
+  \FunctionTok{rename\_with}\NormalTok{(}\SpecialCharTok{\textasciitilde{}}\FunctionTok{str\_replace\_all}\NormalTok{(., }\StringTok{"Partner "}\NormalTok{, }\StringTok{""}\NormalTok{)) }\SpecialCharTok{|\textgreater{}}
+  \FunctionTok{rename\_with}\NormalTok{(}\SpecialCharTok{\textasciitilde{}}\FunctionTok{str\_to\_sentence}\NormalTok{(.)) }\SpecialCharTok{|\textgreater{}}
+  \FunctionTok{corr.stars}\NormalTok{() }\SpecialCharTok{|\textgreater{}}
+  \FunctionTok{rownames\_to\_column}\NormalTok{(}\AttributeTok{var =} \StringTok{" "}\NormalTok{) }\SpecialCharTok{|\textgreater{}} 
+\NormalTok{  dplyr}\SpecialCharTok{::}\FunctionTok{slice}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{1}\NormalTok{) }\SpecialCharTok{|\textgreater{}} 
+  \FunctionTok{kable}\NormalTok{(}\AttributeTok{digits =} \DecValTok{2}\NormalTok{,}
+        \AttributeTok{booktabs =} \ConstantTok{TRUE}\NormalTok{,}
+        \AttributeTok{align =} \FunctionTok{c}\NormalTok{(}\StringTok{"l"}\NormalTok{, }\FunctionTok{rep}\NormalTok{(}\StringTok{"c"}\NormalTok{, }\DecValTok{20}\NormalTok{)),}
+        \AttributeTok{linesep =} \StringTok{""}\NormalTok{,}
+        \AttributeTok{caption =} \StringTok{"Correlations between XXXXXX"}\NormalTok{,}
+        \AttributeTok{escape =} \ConstantTok{FALSE}\NormalTok{) }\SpecialCharTok{|\textgreater{}}
+  \FunctionTok{kable\_styling}\NormalTok{(}\AttributeTok{latex\_options =} \FunctionTok{c}\NormalTok{(}\StringTok{"HOLD\_position"}\NormalTok{),}
+                \AttributeTok{font\_size =} \DecValTok{5}\NormalTok{) }\SpecialCharTok{|\textgreater{}}
+  \FunctionTok{column\_spec}\NormalTok{(}\DecValTok{1}\NormalTok{, }\AttributeTok{width =} \StringTok{"1.2cm"}\NormalTok{) }\SpecialCharTok{|\textgreater{}}
+  \FunctionTok{column\_spec}\NormalTok{(}\DecValTok{2}\SpecialCharTok{:}\DecValTok{21}\NormalTok{, }\AttributeTok{width =} \StringTok{"0.7cm"}\NormalTok{) }\SpecialCharTok{|\textgreater{}}
+  \FunctionTok{add\_header\_above}\NormalTok{(}\FunctionTok{c}\NormalTok{(}\StringTok{" "}\NormalTok{, }
+                     \StringTok{"Age"} \OtherTok{=} \DecValTok{1}\NormalTok{, }
+                     \StringTok{"Health"} \OtherTok{=} \DecValTok{1}\NormalTok{,}
+                     \StringTok{"Self{-}perceived conditions"} \OtherTok{=} \DecValTok{7}\NormalTok{,}
+                     \StringTok{"Current/last partner}\SpecialCharTok{\textbackslash{}n}\StringTok{perception"} \OtherTok{=} \DecValTok{3}\NormalTok{,}
+                     \StringTok{"Perceived context}\SpecialCharTok{\textbackslash{}n}\StringTok{violence"} \OtherTok{=} \DecValTok{6}\NormalTok{,}
+                     \StringTok{"Frequency of}\SpecialCharTok{\textbackslash{}n}\StringTok{partner violence"} \OtherTok{=} \DecValTok{2}\NormalTok{),}
+                   \AttributeTok{bold =} \ConstantTok{TRUE}\NormalTok{) }\SpecialCharTok{|\textgreater{}} 
+  \FunctionTok{footnote}\NormalTok{(}\AttributeTok{general =} \FunctionTok{paste0}\NormalTok{(}\StringTok{"Values represent Pearson correlation coefficients ($r$). "}\NormalTok{,}
+                            \StringTok{"For significance, $\^{}\{}\SpecialCharTok{\textbackslash{}\textbackslash{}\textbackslash{}\textbackslash{}}\StringTok{dagger\}p$ \textless{} 0.1, *$p$ \textless{} 0.05, "}\NormalTok{,}
+                            \StringTok{"**$p$ \textless{} 0.01, ***$p$ \textless{} 0.001. "}\NormalTok{,}
+                            \StringTok{"Significant correlations are in bold."}\NormalTok{),}
+           \AttributeTok{threeparttable =} \ConstantTok{TRUE}\NormalTok{,}
+           \AttributeTok{footnote\_as\_chunk =} \ConstantTok{TRUE}\NormalTok{,}
+           \AttributeTok{escape =} \ConstantTok{FALSE}\NormalTok{) }\SpecialCharTok{|\textgreater{}}
+  \FunctionTok{landscape}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{landscape}\begin{table}[H]
+\centering
+\caption{\label{tab:unnamed-chunk-21}Correlations between XXXXXX}
+\centering
+\fontsize{5}{7}\selectfont
+\begin{threeparttable}
+\begin{tabular}[t]{>{\raggedright\arraybackslash}p{1.2cm}>{\centering\arraybackslash}p{0.7cm}>{\centering\arraybackslash}p{0.7cm}>{\centering\arraybackslash}p{0.7cm}>{\centering\arraybackslash}p{0.7cm}>{\centering\arraybackslash}p{0.7cm}>{\centering\arraybackslash}p{0.7cm}>{\centering\arraybackslash}p{0.7cm}>{\centering\arraybackslash}p{0.7cm}>{\centering\arraybackslash}p{0.7cm}>{\centering\arraybackslash}p{0.7cm}>{\centering\arraybackslash}p{0.7cm}>{\centering\arraybackslash}p{0.7cm}>{\centering\arraybackslash}p{0.7cm}>{\centering\arraybackslash}p{0.7cm}>{\centering\arraybackslash}p{0.7cm}>{\centering\arraybackslash}p{0.7cm}>{\centering\arraybackslash}p{0.7cm}>{\centering\arraybackslash}p{0.7cm}>{\centering\arraybackslash}p{0.7cm}>{\centering\arraybackslash}p{0.7cm}}
+\toprule
+\multicolumn{1}{c}{\textbf{ }} & \multicolumn{1}{c}{\textbf{Age}} & \multicolumn{1}{c}{\textbf{Health}} & \multicolumn{7}{c}{\textbf{Self-perceived conditions}} & \multicolumn{3}{c}{\textbf{\makecell[c]{Current/last partner\\perception}}} & \multicolumn{6}{c}{\textbf{\makecell[c]{Perceived context\\violence}}} & \multicolumn{2}{c}{\textbf{\makecell[c]{Frequency of\\partner violence}}} \\
+\cmidrule(l{3pt}r{3pt}){2-2} \cmidrule(l{3pt}r{3pt}){3-3} \cmidrule(l{3pt}r{3pt}){4-10} \cmidrule(l{3pt}r{3pt}){11-13} \cmidrule(l{3pt}r{3pt}){14-19} \cmidrule(l{3pt}r{3pt}){20-21}
+  & Age & Frequency of illness & Happiness & Financial security & Money control & Attr. & Self confidence & Self esteem & Health & Masc. & Dominance & Attractive. &  Country safety &  City safety &  Neighborhood safety &  Home safety &  Safety & Frequency of robery & Physical violence & Sexual violence\\
+\midrule
+Frequency of illness & -0.03 &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & \\
+Happiness & -0.05 & \textbf{-0.2***} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & \\
+Financial security & -0.1$^{\dagger}$ & -0.06 & \textbf{0.59***} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & \\
+Money control & 0.03 & \textbf{-0.18**} & \textbf{0.48***} & \textbf{0.62***} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & \\
+Attr. & -0.06 & \textbf{-0.16**} & \textbf{0.68***} & \textbf{0.46***} & \textbf{0.51***} &  &  &  &  &  &  &  &  &  &  &  &  &  &  & \\
+Self confidence & -0.07 & \textbf{-0.25***} & \textbf{0.73***} & \textbf{0.48***} & \textbf{0.51***} & \textbf{0.87***} &  &  &  &  &  &  &  &  &  &  &  &  &  & \\
+Self esteem & -0.06 & \textbf{-0.25***} & \textbf{0.75***} & \textbf{0.49***} & \textbf{0.53***} & \textbf{0.84***} & \textbf{0.93***} &  &  &  &  &  &  &  &  &  &  &  &  & \\
+Health & -0.02 & \textbf{-0.26***} & \textbf{0.69***} & \textbf{0.45***} & \textbf{0.45***} & \textbf{0.68***} & \textbf{0.72***} & \textbf{0.73***} &  &  &  &  &  &  &  &  &  &  &  & \\
+Masc. & \textbf{0.14*} & -0.1$^{\dagger}$ & \textbf{0.17**} & \textbf{0.18**} & \textbf{0.18**} & \textbf{0.21***} & \textbf{0.22***} & \textbf{0.25***} & \textbf{0.2***} &  &  &  &  &  &  &  &  &  &  & \\
+Dominance & 0.05 & -0.08 & \textbf{0.13*} & \textbf{0.17**} & \textbf{0.14*} & \textbf{0.17**} & \textbf{0.15**} & \textbf{0.19**} & \textbf{0.12*} & \textbf{0.72***} &  &  &  &  &  &  &  &  &  & \\
+Attractive. & \textbf{0.13*} & -0.05 & \textbf{0.17**} & \textbf{0.18**} & \textbf{0.19**} & \textbf{0.18**} & \textbf{0.19**} & \textbf{0.23***} & \textbf{0.18**} & \textbf{0.78***} & \textbf{0.6***} &  &  &  &  &  &  &  &  & \\
+Country safety & 0.02 & -0.02 & \textbf{0.19**} & 0.01 & 0.06 & \textbf{0.22***} & \textbf{0.21***} & \textbf{0.21***} & \textbf{0.17**} & -0.04 & 0.04 & -0.07 &  &  &  &  &  &  &  & \\
+City safety & 0.02 & -0.01 & \textbf{0.17**} & 0.02 & 0.04 & \textbf{0.21***} & \textbf{0.19**} & \textbf{0.19***} & \textbf{0.17**} & -0.06 & 0.03 & -0.08 & \textbf{0.82***} &  &  &  &  &  &  & \\
+Neighborhood safety & 0.11$^{\dagger}$ & -0.04 & \textbf{0.12*} & -0.08 & 0.00 & \textbf{0.12*} & 0.09 & 0.09 & 0.06 & 0.03 & 0.02 & -0.03 & \textbf{0.32***} & \textbf{0.32***} &  &  &  &  &  & \\
+Home safety & 0.01 & -0.07 & -0.03 & 0.01 & -0.03 & -0.01 & 0.00 & -0.03 & -0.03 & 0.03 & 0.01 & -0.04 & \textbf{-0.24***} & \textbf{-0.31***} & \textbf{0.32***} &  &  &  &  & \\
+Safety & 0.06 & -0.06 & \textbf{0.16**} & -0.02 & 0.02 & \textbf{0.19**} & \textbf{0.18**} & \textbf{0.17**} & \textbf{0.13*} & 0.00 & 0.04 & -0.08 & \textbf{0.64***} & \textbf{0.61***} & \textbf{0.8***} & \textbf{0.46***} &  &  &  & \\
+Frequency of robery & -0.11$^{\dagger}$ & 0.10 & -0.03 & 0.01 & -0.05 & -0.09 & -0.09 & -0.11$^{\dagger}$ & -0.09 & -0.02 & -0.02 & 0.00 & 0.04 & 0.05 & 0.11$^{\dagger}$ & 0.09 & \textbf{0.12*} &  &  & \\
+Physical violence & \textbf{0.19**} & 0.06 & -0.03 & 0.00 & -0.04 & -0.01 & -0.08 & -0.08 & -0.03 & -0.03 & 0.01 & -0.06 & 0.07 & 0.04 & 0.05 & 0.01 & 0.06 & 0.00 &  & \\
+Sexual violence & 0.02 & -0.05 & 0.09 & 0.08 & 0.02 & 0.08 & 0.03 & 0.04 & 0.07 & 0.03 & 0.08 & 0.07 & 0.04 & 0.09 & -0.03 & -0.08 & -0.01 & 0.06 & \textbf{0.18**} & \\
+Infidelity & \textbf{0.2***} & 0.03 & -0.03 & -0.07 & -0.05 & 0.06 & 0.04 & -0.02 & -0.05 & \textbf{0.13*} & 0.08 & 0.06 & 0.09 & 0.08 & 0.09 & -0.02 & 0.09 & -0.01 & \textbf{0.25***} & 0.01\\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}[para]
+\item \textit{Note: } 
+\item Values represent Pearson correlation coefficients ($r$). For significance, $^{\dagger}p$ < 0.1, *$p$ < 0.05, **$p$ < 0.01, ***$p$ < 0.001. Significant correlations are in bold.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
+\end{landscape}
+
+\subsubsection{Correlations table (fixations, subjective evaluations and violence)}\label{correlations-table-fixations-subjective-evaluations-and-violence}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{dat\_main\_corr }\OtherTok{\textless{}{-}}\NormalTok{ dat }\SpecialCharTok{|\textgreater{}} 
+  \FunctionTok{select}\NormalTok{(ID, Condition, Relationship,}
+\NormalTok{         TFD, DFF, NF,}
+\NormalTok{         Masculinity, Attractiveness,}
+\NormalTok{         Partner\_attractiveness}\SpecialCharTok{:}\NormalTok{Partner\_masculinity,}
+         \FunctionTok{ends\_with}\NormalTok{(}\StringTok{"\_safety"}\NormalTok{), Freq\_robery,}
+         \FunctionTok{starts\_with}\NormalTok{(}\StringTok{"Freq\_partner\_"}\NormalTok{)) }\SpecialCharTok{|\textgreater{}} 
+  \FunctionTok{group\_by}\NormalTok{(ID, Condition, Relationship) }\SpecialCharTok{|\textgreater{}} 
+  \FunctionTok{summarise\_all}\NormalTok{(mean)}
+
+\NormalTok{dat\_main\_corr }\SpecialCharTok{|\textgreater{}} 
+  \FunctionTok{filter}\NormalTok{(Condition }\SpecialCharTok{==} \StringTok{"High"}\NormalTok{) }\SpecialCharTok{|\textgreater{}} 
+  \FunctionTok{ungroup}\NormalTok{() }\SpecialCharTok{|\textgreater{}} 
+  \FunctionTok{select}\NormalTok{(TFD}\SpecialCharTok{:}\NormalTok{Freq\_partner\_infidelity) }\SpecialCharTok{|\textgreater{}} 
+  \FunctionTok{rename\_with}\NormalTok{(}\SpecialCharTok{\textasciitilde{}}\FunctionTok{str\_replace\_all}\NormalTok{(., }\StringTok{"\_"}\NormalTok{, }\StringTok{" "}\NormalTok{)) }\SpecialCharTok{|\textgreater{}} 
+  \FunctionTok{rename\_with}\NormalTok{(}\SpecialCharTok{\textasciitilde{}}\FunctionTok{str\_replace\_all}\NormalTok{(., }\StringTok{"Freq"}\NormalTok{, }\StringTok{"Frequency of"}\NormalTok{)) }\SpecialCharTok{|\textgreater{}}
+  \FunctionTok{rename\_with}\NormalTok{(}\SpecialCharTok{\textasciitilde{}}\FunctionTok{str\_replace\_all}\NormalTok{(., }\StringTok{"Frequency of partner"}\NormalTok{, }\StringTok{"Partner"}\NormalTok{)) }\SpecialCharTok{|\textgreater{}}
+  \FunctionTok{corr.stars}\NormalTok{() }\SpecialCharTok{|\textgreater{}}
+  \FunctionTok{rownames\_to\_column}\NormalTok{(}\AttributeTok{var =} \StringTok{" "}\NormalTok{) }\SpecialCharTok{|\textgreater{}} 
+\NormalTok{  dplyr}\SpecialCharTok{::}\FunctionTok{slice}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{1}\NormalTok{) }\SpecialCharTok{|\textgreater{}} 
+  \FunctionTok{kable}\NormalTok{(}\AttributeTok{digits =} \DecValTok{2}\NormalTok{,}
+        \AttributeTok{booktabs =} \ConstantTok{TRUE}\NormalTok{,}
+        \AttributeTok{align =} \FunctionTok{c}\NormalTok{(}\StringTok{"l"}\NormalTok{, }\FunctionTok{rep}\NormalTok{(}\StringTok{"c"}\NormalTok{, }\DecValTok{20}\NormalTok{)),}
+        \AttributeTok{linesep =} \StringTok{""}\NormalTok{,}
+        \AttributeTok{caption =} \StringTok{"Correlations between XXXXXX"}\NormalTok{,}
+        \AttributeTok{escape =} \ConstantTok{FALSE}\NormalTok{) }\SpecialCharTok{|\textgreater{}}
+  \FunctionTok{kable\_styling}\NormalTok{(}\AttributeTok{latex\_options =} \FunctionTok{c}\NormalTok{(}\StringTok{"HOLD\_position"}\NormalTok{),}
+                \AttributeTok{font\_size =} \DecValTok{5}\NormalTok{) }\SpecialCharTok{|\textgreater{}}
+  \FunctionTok{column\_spec}\NormalTok{(}\DecValTok{1}\NormalTok{, }\AttributeTok{width =} \StringTok{"1.2cm"}\NormalTok{) }\SpecialCharTok{|\textgreater{}}
+  \FunctionTok{column\_spec}\NormalTok{(}\DecValTok{2}\SpecialCharTok{:}\DecValTok{21}\NormalTok{, }\AttributeTok{width =} \StringTok{"0.7cm"}\NormalTok{) }\SpecialCharTok{|\textgreater{}}
+  \FunctionTok{add\_header\_above}\NormalTok{(}\FunctionTok{c}\NormalTok{(}\StringTok{" "}\NormalTok{, }
+                     \StringTok{"Age"} \OtherTok{=} \DecValTok{1}\NormalTok{, }
+                     \StringTok{"Health"} \OtherTok{=} \DecValTok{1}\NormalTok{,}
+                     \StringTok{"Self{-}perceived conditions"} \OtherTok{=} \DecValTok{7}\NormalTok{,}
+                     \StringTok{"Current/last partner}\SpecialCharTok{\textbackslash{}n}\StringTok{perception"} \OtherTok{=} \DecValTok{3}\NormalTok{,}
+                     \StringTok{"Perceived context}\SpecialCharTok{\textbackslash{}n}\StringTok{violence"} \OtherTok{=} \DecValTok{6}\NormalTok{,}
+                     \StringTok{"Frequency of partner}\SpecialCharTok{\textbackslash{}n}\StringTok{violence"} \OtherTok{=} \DecValTok{2}\NormalTok{),}
+                   \AttributeTok{bold =} \ConstantTok{TRUE}\NormalTok{) }\SpecialCharTok{|\textgreater{}} 
+  \FunctionTok{footnote}\NormalTok{(}\AttributeTok{general =} \FunctionTok{paste0}\NormalTok{(}\StringTok{"Values represent Pearson correlation coefficients ($r$). "}\NormalTok{,}
+                            \StringTok{"For significance, $\^{}\{}\SpecialCharTok{\textbackslash{}\textbackslash{}\textbackslash{}\textbackslash{}}\StringTok{dagger\}p$ \textless{} 0.1, *$p$ \textless{} 0.05, "}\NormalTok{,}
+                            \StringTok{"**$p$ \textless{} 0.01, ***$p$ \textless{} 0.001. "}\NormalTok{,}
+                            \StringTok{"Significant correlations are in bold."}\NormalTok{),}
+           \AttributeTok{threeparttable =} \ConstantTok{TRUE}\NormalTok{,}
+           \AttributeTok{footnote\_as\_chunk =} \ConstantTok{TRUE}\NormalTok{,}
+           \AttributeTok{escape =} \ConstantTok{FALSE}\NormalTok{) }\SpecialCharTok{|\textgreater{}}
+  \FunctionTok{landscape}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{landscape}\begin{table}[H]
+\centering
+\caption{\label{tab:unnamed-chunk-22}Correlations between XXXXXX}
+\centering
+\fontsize{5}{7}\selectfont
+\begin{threeparttable}
+\begin{tabular}[t]{>{\raggedright\arraybackslash}p{1.2cm}>{\centering\arraybackslash}p{0.7cm}>{\centering\arraybackslash}p{0.7cm}>{\centering\arraybackslash}p{0.7cm}>{\centering\arraybackslash}p{0.7cm}>{\centering\arraybackslash}p{0.7cm}>{\centering\arraybackslash}p{0.7cm}>{\centering\arraybackslash}p{0.7cm}>{\centering\arraybackslash}p{0.7cm}>{\centering\arraybackslash}p{0.7cm}>{\centering\arraybackslash}p{0.7cm}>{\centering\arraybackslash}p{0.7cm}>{\centering\arraybackslash}p{0.7cm}>{\centering\arraybackslash}p{0.7cm}>{\centering\arraybackslash}p{0.7cm}>{\centering\arraybackslash}p{0.7cm}>{\centering\arraybackslash}p{0.7cm}>{\centering\arraybackslash}p{0.7cm}>{}p{0.7cm}>{}p{0.7cm}>{}p{0.7cm}}
+\toprule
+\multicolumn{1}{c}{\textbf{ }} & \multicolumn{1}{c}{\textbf{Age}} & \multicolumn{1}{c}{\textbf{Health}} & \multicolumn{7}{c}{\textbf{Self-perceived conditions}} & \multicolumn{3}{c}{\textbf{\makecell[c]{Current/last partner\\perception}}} & \multicolumn{6}{c}{\textbf{\makecell[c]{Perceived context\\violence}}} & \multicolumn{2}{c}{\textbf{\makecell[c]{Frequency of partner\\violence}}} \\
+\cmidrule(l{3pt}r{3pt}){2-2} \cmidrule(l{3pt}r{3pt}){3-3} \cmidrule(l{3pt}r{3pt}){4-10} \cmidrule(l{3pt}r{3pt}){11-13} \cmidrule(l{3pt}r{3pt}){14-19} \cmidrule(l{3pt}r{3pt}){20-21}
+  & TFD & DFF & NF & Masculinity & Attractiveness & Partner attractiveness & Partner dominance & Partner masculinity & Perceived country safety & Perceived city safety & Perceived neighborhood safety & Perceived home safety & Perceived safety & Condition physical safety & Frequency of robery & Partner physical violence & Partner sexual violence\\
+\midrule
+DFF & -0.03 &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & \\
+NF & \textbf{0.82***} & \textbf{-0.62***} &  &  &  &  &  &  &  &  &  &  &  &  &  &  & \\
+Masculinity & \textbf{0.13*} & 0.07 & 0.06 &  &  &  &  &  &  &  &  &  &  &  &  &  & \\
+Attractiveness & 0.02 & \textbf{-0.13*} & 0.08 & \textbf{0.49***} &  &  &  &  &  &  &  &  &  &  &  &  & \\
+Partner attractiveness & -0.04 & 0.05 & -0.05 & 0.00 & -0.01 &  &  &  &  &  &  &  &  &  &  &  & \\
+Partner dominance & -0.07 & -0.03 & -0.05 & -0.04 & -0.01 & \textbf{0.63***} &  &  &  &  &  &  &  &  &  &  & \\
+Partner masculinity & -0.07 & 0.08 & -0.11$^{\dagger}$ & -0.01 & -0.03 & \textbf{0.75***} & \textbf{0.71***} &  &  &  &  &  &  &  &  &  & \\
+Perceived country safety & -0.05 & -0.05 & -0.08 & \textbf{0.14*} & 0.05 & -0.06 & -0.03 & -0.05 &  &  &  &  &  &  &  &  & \\
+Perceived city safety & -0.03 & -0.08 & -0.03 & \textbf{0.12*} & 0.00 & -0.06 & 0.02 & -0.02 & \textbf{0.82***} &  &  &  &  &  &  &  & \\
+Perceived neighborhood safety & -0.1$^{\dagger}$ & 0.00 & -0.1$^{\dagger}$ & \textbf{0.18**} & \textbf{0.24***} & 0.01 & 0.00 & 0.05 & \textbf{0.38***} & \textbf{0.34***} &  &  &  &  &  &  & \\
+Perceived home safety & -0.09 & 0.08 & -0.07 & 0.04 & \textbf{0.12*} & \textbf{-0.11*} & \textbf{-0.12*} & -0.05 & \textbf{-0.16**} & \textbf{-0.21***} & \textbf{0.34***} &  &  &  &  &  & \\
+Perceived safety & \textbf{-0.11*} & -0.01 & \textbf{-0.11*} & \textbf{0.18**} & \textbf{0.17**} & -0.09$^{\dagger}$ & -0.06 & -0.03 & \textbf{0.68***} & \textbf{0.63***} & \textbf{0.8***} & \textbf{0.51***} &  &  &  &  & \\
+Condition physical safety & 0.01 & 0.05 & 0.00 & 0.08 & 0.00 & 0.09$^{\dagger}$ & 0.07 & 0.1$^{\dagger}$ & -0.03 & \textbf{-0.11*} & 0.02 & -0.11$^{\dagger}$ & -0.09 &  &  &  & \\
+Frequency of robery & -0.01 & 0.08 & -0.04 & 0.05 & \textbf{0.13*} & -0.04 & -0.08 & -0.03 & 0.08 & 0.06 & \textbf{0.18**} & \textbf{0.15**} & \textbf{0.19***} & -0.09 &  &  & \\
+Partner physical violence & 0.09$^{\dagger}$ & -0.12$^{\dagger}$ & 0.08 & 0.08 & 0.00 & 0.00 & 0.06 & 0.01 & \textbf{0.13*} & \textbf{0.14**} & \textbf{0.17**} & 0.08 & \textbf{0.2***} & -0.02 & -0.03 &  & \\
+Partner sexual violence & \textbf{0.12*} & -0.07 & \textbf{0.15**} & -0.04 & 0.01 & 0.07 & 0.1$^{\dagger}$ & 0.05 & 0.02 & 0.1$^{\dagger}$ & -0.01 & -0.07 & 0.00 & 0.05 & -0.02 & 0.09$^{\dagger}$ & \\
+Partner infidelity & -0.02 & 0.07 & -0.02 & -0.05 & 0.04 & 0.08 & 0.06 & 0.08 & \textbf{0.12*} & 0.07 & \textbf{0.18**} & 0.02 & \textbf{0.14**} & -0.01 & 0.01 & \textbf{0.13*} & -0.03\\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}[para]
+\item \textit{Note: } 
+\item Values represent Pearson correlation coefficients ($r$). For significance, $^{\dagger}p$ < 0.1, *$p$ < 0.05, **$p$ < 0.01, ***$p$ < 0.001. Significant correlations are in bold.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
+\end{landscape}
+
 \section{Session info (for reproducibility)}\label{session}
 
 \begin{Shaded}
@@ -1478,10 +2107,10 @@ Low & 128 & 21.50 & 2.25 & 18 & 25\\
 \emph{stats4}, \emph{stats}, \emph{graphics}, \emph{grDevices}, \emph{utils}, \emph{datasets}, \emph{methods} and \emph{base}
 
 \textbf{other attached packages:}
-\emph{pander(v.0.6.5)}, \emph{effectsize(v.0.8.9)}, \emph{bbmle(v.1.0.25.1)}, \emph{gtools(v.3.9.5)}, \emph{FactoMineR(v.2.11)}, \emph{factoextra(v.1.0.7)}, \emph{scales(v.1.3.0)}, \emph{GGally(v.2.2.1)}, \emph{performance(v.0.12.2)}, \emph{kableExtra(v.1.4.0)}, \emph{emmeans(v.1.10.3)}, \emph{lmerTest(v.3.1-3)}, \emph{lme4(v.1.1-35.5)}, \emph{Matrix(v.1.7-0)}, \emph{readxl(v.1.4.3)}, \emph{ggpubr(v.0.6.0)}, \emph{lubridate(v.1.9.3)}, \emph{forcats(v.1.0.0)}, \emph{stringr(v.1.5.1)}, \emph{dplyr(v.1.1.4)}, \emph{purrr(v.1.0.2)}, \emph{readr(v.2.1.5)}, \emph{tidyr(v.1.3.1)}, \emph{tibble(v.3.2.1)}, \emph{ggplot2(v.3.5.1)}, \emph{tidyverse(v.2.0.0)}, \emph{ggstats(v.0.6.0)}, \emph{MASS(v.7.3-61)}, \emph{car(v.3.1-2)}, \emph{carData(v.3.0-5)} and \emph{knitr(v.1.48)}
+\emph{pander(v.0.6.5)}, \emph{Hmisc(v.5.1-3)}, \emph{effectsize(v.0.8.9)}, \emph{bbmle(v.1.0.25.1)}, \emph{gtools(v.3.9.5)}, \emph{FactoMineR(v.2.11)}, \emph{factoextra(v.1.0.7)}, \emph{scales(v.1.3.0)}, \emph{GGally(v.2.2.1)}, \emph{performance(v.0.12.2)}, \emph{kableExtra(v.1.4.0)}, \emph{emmeans(v.1.10.3)}, \emph{lmerTest(v.3.1-3)}, \emph{lme4(v.1.1-35.5)}, \emph{Matrix(v.1.7-0)}, \emph{readxl(v.1.4.3)}, \emph{ggpubr(v.0.6.0)}, \emph{lubridate(v.1.9.3)}, \emph{forcats(v.1.0.0)}, \emph{stringr(v.1.5.1)}, \emph{dplyr(v.1.1.4)}, \emph{purrr(v.1.0.2)}, \emph{readr(v.2.1.5)}, \emph{tidyr(v.1.3.1)}, \emph{tibble(v.3.2.1)}, \emph{ggplot2(v.3.5.1)}, \emph{tidyverse(v.2.0.0)}, \emph{ggstats(v.0.6.0)}, \emph{MASS(v.7.3-61)}, \emph{car(v.3.1-2)}, \emph{carData(v.3.0-5)} and \emph{knitr(v.1.48)}
 
 \textbf{loaded via a namespace (and not attached):}
-\emph{gridExtra(v.2.3)}, \emph{rlang(v.1.1.4)}, \emph{magrittr(v.2.0.3)}, \emph{compiler(v.4.4.1)}, \emph{systemfonts(v.1.1.0)}, \emph{vctrs(v.0.6.5)}, \emph{pkgconfig(v.2.0.3)}, \emph{fastmap(v.1.2.0)}, \emph{backports(v.1.5.0)}, \emph{labeling(v.0.4.3)}, \emph{utf8(v.1.2.4)}, \emph{rmarkdown(v.2.28)}, \emph{tzdb(v.0.4.0)}, \emph{nloptr(v.2.1.1)}, \emph{xfun(v.0.47)}, \emph{flashClust(v.1.01-2)}, \emph{highr(v.0.11)}, \emph{broom(v.1.0.6)}, \emph{cluster(v.2.1.6)}, \emph{R6(v.2.5.1)}, \emph{stringi(v.1.8.4)}, \emph{RColorBrewer(v.1.1-3)}, \emph{boot(v.1.3-30)}, \emph{cellranger(v.1.1.0)}, \emph{numDeriv(v.2016.8-1.1)}, \emph{estimability(v.1.5.1)}, \emph{Rcpp(v.1.0.13)}, \emph{bookdown(v.0.40)}, \emph{parameters(v.0.22.1)}, \emph{splines(v.4.4.1)}, \emph{timechange(v.0.3.0)}, \emph{tidyselect(v.1.2.1)}, \emph{rstudioapi(v.0.16.0)}, \emph{abind(v.1.4-5)}, \emph{yaml(v.2.3.10)}, \emph{lattice(v.0.22-5)}, \emph{plyr(v.1.8.9)}, \emph{withr(v.3.0.1)}, \emph{bayestestR(v.0.14.0)}, \emph{coda(v.0.19-4.1)}, \emph{evaluate(v.0.24.0)}, \emph{xml2(v.1.3.6)}, \emph{pillar(v.1.9.0)}, \emph{DT(v.0.33)}, \emph{insight(v.0.20.2)}, \emph{generics(v.0.1.3)}, \emph{hms(v.1.1.3)}, \emph{munsell(v.0.5.1)}, \emph{minqa(v.1.2.7)}, \emph{xtable(v.1.8-4)}, \emph{leaps(v.3.2)}, \emph{glue(v.1.7.0)}, \emph{scatterplot3d(v.0.3-44)}, \emph{tools(v.4.4.1)}, \emph{ggsignif(v.0.6.4)}, \emph{mvtnorm(v.1.2-5)}, \emph{cowplot(v.1.1.3)}, \emph{grid(v.4.4.1)}, \emph{bdsmatrix(v.1.3-7)}, \emph{datawizard(v.0.12.2)}, \emph{colorspace(v.2.1-1)}, \emph{nlme(v.3.1-165)}, \emph{cli(v.3.6.3)}, \emph{fansi(v.1.0.6)}, \emph{viridisLite(v.0.4.2)}, \emph{svglite(v.2.1.3)}, \emph{gtable(v.0.3.5)}, \emph{rstatix(v.0.7.2)}, \emph{digest(v.0.6.37)}, \emph{ggrepel(v.0.9.5)}, \emph{htmlwidgets(v.1.6.4)}, \emph{farver(v.2.1.2)}, \emph{htmltools(v.0.5.8.1)}, \emph{lifecycle(v.1.0.4)} and \emph{multcompView(v.0.1-10)}
+\emph{gridExtra(v.2.3)}, \emph{sandwich(v.3.1-0)}, \emph{rlang(v.1.1.4)}, \emph{magrittr(v.2.0.3)}, \emph{multcomp(v.1.4-26)}, \emph{compiler(v.4.4.1)}, \emph{systemfonts(v.1.1.0)}, \emph{vctrs(v.0.6.5)}, \emph{crayon(v.1.5.3)}, \emph{pkgconfig(v.2.0.3)}, \emph{fastmap(v.1.2.0)}, \emph{backports(v.1.5.0)}, \emph{labeling(v.0.4.3)}, \emph{utf8(v.1.2.4)}, \emph{rmarkdown(v.2.28)}, \emph{tzdb(v.0.4.0)}, \emph{nloptr(v.2.1.1)}, \emph{xfun(v.0.47)}, \emph{flashClust(v.1.01-2)}, \emph{highr(v.0.11)}, \emph{broom(v.1.0.6)}, \emph{cluster(v.2.1.6)}, \emph{R6(v.2.5.1)}, \emph{stringi(v.1.8.4)}, \emph{RColorBrewer(v.1.1-3)}, \emph{rpart(v.4.1.23)}, \emph{boot(v.1.3-30)}, \emph{cellranger(v.1.1.0)}, \emph{numDeriv(v.2016.8-1.1)}, \emph{estimability(v.1.5.1)}, \emph{Rcpp(v.1.0.13)}, \emph{bookdown(v.0.40)}, \emph{zoo(v.1.8-12)}, \emph{base64enc(v.0.1-3)}, \emph{parameters(v.0.22.0)}, \emph{nnet(v.7.3-19)}, \emph{splines(v.4.4.1)}, \emph{timechange(v.0.3.0)}, \emph{tidyselect(v.1.2.1)}, \emph{rstudioapi(v.0.16.0)}, \emph{abind(v.1.4-5)}, \emph{yaml(v.2.3.10)}, \emph{codetools(v.0.2-20)}, \emph{lattice(v.0.22-5)}, \emph{plyr(v.1.8.9)}, \emph{bayestestR(v.0.13.2)}, \emph{withr(v.3.0.1)}, \emph{coda(v.0.19-4.1)}, \emph{evaluate(v.0.24.0)}, \emph{foreign(v.0.8-86)}, \emph{survival(v.3.7-0)}, \emph{xml2(v.1.3.6)}, \emph{pillar(v.1.9.0)}, \emph{checkmate(v.2.3.2)}, \emph{DT(v.0.33)}, \emph{insight(v.0.20.2)}, \emph{generics(v.0.1.3)}, \emph{hms(v.1.1.3)}, \emph{munsell(v.0.5.1)}, \emph{minqa(v.1.2.7)}, \emph{xtable(v.1.8-4)}, \emph{leaps(v.3.2)}, \emph{glue(v.1.7.0)}, \emph{scatterplot3d(v.0.3-44)}, \emph{tools(v.4.4.1)}, \emph{data.table(v.1.15.4)}, \emph{ggsignif(v.0.6.4)}, \emph{mvtnorm(v.1.2-5)}, \emph{cowplot(v.1.1.3)}, \emph{grid(v.4.4.1)}, \emph{datawizard(v.0.12.2)}, \emph{bdsmatrix(v.1.3-7)}, \emph{colorspace(v.2.1-1)}, \emph{nlme(v.3.1-165)}, \emph{htmlTable(v.2.4.3)}, \emph{Formula(v.1.2-5)}, \emph{cli(v.3.6.3)}, \emph{fansi(v.1.0.6)}, \emph{viridisLite(v.0.4.2)}, \emph{svglite(v.2.1.3)}, \emph{gtable(v.0.3.5)}, \emph{rstatix(v.0.7.2)}, \emph{digest(v.0.6.37)}, \emph{ggrepel(v.0.9.5)}, \emph{TH.data(v.1.1-2)}, \emph{farver(v.2.1.2)}, \emph{htmlwidgets(v.1.6.4)}, \emph{htmltools(v.0.5.8.1)}, \emph{lifecycle(v.1.0.4)} and \emph{multcompView(v.0.1-10)}
 
 \section{Supplementary references}\label{refs}
 
