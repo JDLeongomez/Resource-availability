@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.9.16)  18 SEP 2024 12:27
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.9.16)  18 SEP 2024 18:40
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1278,7 +1278,7 @@ File: ts1lmtt.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 [4]
 
 [5]
-<Supplementary_material_files/figure-latex/estimated-age-hist-1.pdf, id=161, 361.35pt x 216.81pt>
+<Supplementary_material_files/figure-latex/estimated-age-hist-1.pdf, id=167, 361.35pt x 216.81pt>
 File: Supplementary_material_files/figure-latex/estimated-age-hist-1.pdf Graphic file (type pdf)
 <use Supplementary_material_files/figure-latex/estimated-age-hist-1.pdf>
 Package pdftex.def Info: Supplementary_material_files/figure-latex/estimated-age-hist-1.pdf  used on input line 472.
@@ -1339,7 +1339,7 @@ Underfull \vbox (badness 10000) detected at line 809
 [12]
 
 [13]
-<Supplementary_material_files/figure-latex/pca-sef-plot-1.pdf, id=210, 867.24pt x 578.16pt>
+<Supplementary_material_files/figure-latex/pca-sef-plot-1.pdf, id=216, 867.24pt x 578.16pt>
 File: Supplementary_material_files/figure-latex/pca-sef-plot-1.pdf Graphic file (type pdf)
 <use Supplementary_material_files/figure-latex/pca-sef-plot-1.pdf>
 Package pdftex.def Info: Supplementary_material_files/figure-latex/pca-sef-plot-1.pdf  used on input line 906.
@@ -1353,7 +1353,7 @@ LaTeX Warning: Reference `tab:pca-sef-plot' on page 15 undefined on input line 9
 
 
 [15 <./Supplementary_material_files/figure-latex/pca-sef-plot-1.pdf>]
-<Supplementary_material_files/figure-latex/pca-mpd-plot-1.pdf, id=228, 867.24pt x 578.16pt>
+<Supplementary_material_files/figure-latex/pca-mpd-plot-1.pdf, id=234, 867.24pt x 578.16pt>
 File: Supplementary_material_files/figure-latex/pca-mpd-plot-1.pdf Graphic file (type pdf)
 <use Supplementary_material_files/figure-latex/pca-mpd-plot-1.pdf>
 Package pdftex.def Info: Supplementary_material_files/figure-latex/pca-mpd-plot-1.pdf  used on input line 1001.
@@ -1373,540 +1373,123 @@ Package pdftex.def Info: Supplementary_material_files/figure-latex/pca-mpd-plot-
 [21]
 
 [22]
-<Supplementary_material_files/figure-latex/sociodemographic-desc-plot-1.pdf, id=267, 867.24pt x 433.62pt>
+
+[23]
+<Supplementary_material_files/figure-latex/sociodemographic-desc-plot-1.pdf, id=277, 867.24pt x 433.62pt>
 File: Supplementary_material_files/figure-latex/sociodemographic-desc-plot-1.pdf Graphic file (type pdf)
 <use Supplementary_material_files/figure-latex/sociodemographic-desc-plot-1.pdf>
-Package pdftex.def Info: Supplementary_material_files/figure-latex/sociodemographic-desc-plot-1.pdf  used on input line 1415.
+Package pdftex.def Info: Supplementary_material_files/figure-latex/sociodemographic-desc-plot-1.pdf  used on input line 1442.
 (pdftex.def)             Requested size: 500.48529pt x 250.24265pt.
 
 
-[23]
-Overfull \vbox (1.15462pt too high) detected at line 1458
- []
-
-
-
 [24 <./Supplementary_material_files/figure-latex/sociodemographic-desc-plot-1.pdf>]
-<Supplementary_material_files/figure-latex/resource-desc-plot-1.pdf, id=287, 867.24pt x 433.62pt>
+<Supplementary_material_files/figure-latex/resource-desc-plot-1.pdf, id=293, 867.24pt x 433.62pt>
 File: Supplementary_material_files/figure-latex/resource-desc-plot-1.pdf Graphic file (type pdf)
 <use Supplementary_material_files/figure-latex/resource-desc-plot-1.pdf>
-Package pdftex.def Info: Supplementary_material_files/figure-latex/resource-desc-plot-1.pdf  used on input line 1462.
+Package pdftex.def Info: Supplementary_material_files/figure-latex/resource-desc-plot-1.pdf  used on input line 1489.
 (pdftex.def)             Requested size: 500.48529pt x 250.24265pt.
 
 
 [25 <./Supplementary_material_files/figure-latex/resource-desc-plot-1.pdf>]
-<Supplementary_material_files/figure-latex/health-desc-plot-1.pdf, id=302, 867.24pt x 433.62pt>
+<Supplementary_material_files/figure-latex/health-desc-plot-1.pdf, id=308, 867.24pt x 433.62pt>
 File: Supplementary_material_files/figure-latex/health-desc-plot-1.pdf Graphic file (type pdf)
 <use Supplementary_material_files/figure-latex/health-desc-plot-1.pdf>
-Package pdftex.def Info: Supplementary_material_files/figure-latex/health-desc-plot-1.pdf  used on input line 1505.
+Package pdftex.def Info: Supplementary_material_files/figure-latex/health-desc-plot-1.pdf  used on input line 1532.
 (pdftex.def)             Requested size: 500.48529pt x 250.24265pt.
 
 
 [26 <./Supplementary_material_files/figure-latex/health-desc-plot-1.pdf>]
-<Supplementary_material_files/figure-latex/foodsec-desc-plot-1.pdf, id=316, 867.24pt x 433.62pt>
+<Supplementary_material_files/figure-latex/foodsec-desc-plot-1.pdf, id=322, 867.24pt x 433.62pt>
 File: Supplementary_material_files/figure-latex/foodsec-desc-plot-1.pdf Graphic file (type pdf)
 <use Supplementary_material_files/figure-latex/foodsec-desc-plot-1.pdf>
-Package pdftex.def Info: Supplementary_material_files/figure-latex/foodsec-desc-plot-1.pdf  used on input line 1577.
+Package pdftex.def Info: Supplementary_material_files/figure-latex/foodsec-desc-plot-1.pdf  used on input line 1604.
 (pdftex.def)             Requested size: 500.48529pt x 250.24265pt.
 
 
 [27]
-Overfull \vbox (2.10863pt too high) detected at line 1622
+Overfull \vbox (2.10863pt too high) detected at line 1649
  []
 
 
 
 [28 <./Supplementary_material_files/figure-latex/foodsec-desc-plot-1.pdf>]
-<Supplementary_material_files/figure-latex/hormone-desc-plot-1.pdf, id=335, 867.24pt x 289.08pt>
+<Supplementary_material_files/figure-latex/hormone-desc-plot-1.pdf, id=341, 867.24pt x 289.08pt>
 File: Supplementary_material_files/figure-latex/hormone-desc-plot-1.pdf Graphic file (type pdf)
 <use Supplementary_material_files/figure-latex/hormone-desc-plot-1.pdf>
-Package pdftex.def Info: Supplementary_material_files/figure-latex/hormone-desc-plot-1.pdf  used on input line 1626.
+Package pdftex.def Info: Supplementary_material_files/figure-latex/hormone-desc-plot-1.pdf  used on input line 1653.
 (pdftex.def)             Requested size: 500.48529pt x 166.82841pt.
-<Supplementary_material_files/figure-latex/psych-desc-plot-1.pdf, id=336, 867.24pt x 433.62pt>
+<Supplementary_material_files/figure-latex/psych-desc-plot-1.pdf, id=342, 867.24pt x 433.62pt>
 File: Supplementary_material_files/figure-latex/psych-desc-plot-1.pdf Graphic file (type pdf)
 <use Supplementary_material_files/figure-latex/psych-desc-plot-1.pdf>
-Package pdftex.def Info: Supplementary_material_files/figure-latex/psych-desc-plot-1.pdf  used on input line 1655.
+Package pdftex.def Info: Supplementary_material_files/figure-latex/psych-desc-plot-1.pdf  used on input line 1682.
 (pdftex.def)             Requested size: 500.48529pt x 250.24265pt.
 
 
 [29 <./Supplementary_material_files/figure-latex/hormone-desc-plot-1.pdf>]
-<Supplementary_material_files/figure-latex/partner-desc-plot-1.pdf, id=351, 867.24pt x 289.08pt>
+<Supplementary_material_files/figure-latex/partner-desc-plot-1.pdf, id=357, 867.24pt x 289.08pt>
 File: Supplementary_material_files/figure-latex/partner-desc-plot-1.pdf Graphic file (type pdf)
 <use Supplementary_material_files/figure-latex/partner-desc-plot-1.pdf>
-Package pdftex.def Info: Supplementary_material_files/figure-latex/partner-desc-plot-1.pdf  used on input line 1683.
+Package pdftex.def Info: Supplementary_material_files/figure-latex/partner-desc-plot-1.pdf  used on input line 1710.
 (pdftex.def)             Requested size: 500.48529pt x 166.82841pt.
 
 
 [30 <./Supplementary_material_files/figure-latex/psych-desc-plot-1.pdf>]
 
 [31 <./Supplementary_material_files/figure-latex/partner-desc-plot-1.pdf>]
-<Supplementary_material_files/figure-latex/context-violence-desc-plot-1.pdf, id=379, 867.24pt x 433.62pt>
+<Supplementary_material_files/figure-latex/context-violence-desc-plot-1.pdf, id=385, 867.24pt x 433.62pt>
 File: Supplementary_material_files/figure-latex/context-violence-desc-plot-1.pdf Graphic file (type pdf)
 <use Supplementary_material_files/figure-latex/context-violence-desc-plot-1.pdf>
-Package pdftex.def Info: Supplementary_material_files/figure-latex/context-violence-desc-plot-1.pdf  used on input line 1759.
+Package pdftex.def Info: Supplementary_material_files/figure-latex/context-violence-desc-plot-1.pdf  used on input line 1786.
 (pdftex.def)             Requested size: 500.48529pt x 250.24265pt.
 
 
 [32 <./Supplementary_material_files/figure-latex/context-violence-desc-plot-1.pdf>]
-<Supplementary_material_files/figure-latex/gender-violence-desc-plot-1.pdf, id=394, 867.24pt x 433.62pt>
+<Supplementary_material_files/figure-latex/gender-violence-desc-plot-1.pdf, id=401, 867.24pt x 433.62pt>
 File: Supplementary_material_files/figure-latex/gender-violence-desc-plot-1.pdf Graphic file (type pdf)
 <use Supplementary_material_files/figure-latex/gender-violence-desc-plot-1.pdf>
-Package pdftex.def Info: Supplementary_material_files/figure-latex/gender-violence-desc-plot-1.pdf  used on input line 1821.
+Package pdftex.def Info: Supplementary_material_files/figure-latex/gender-violence-desc-plot-1.pdf  used on input line 1848.
 (pdftex.def)             Requested size: 500.48529pt x 250.24265pt.
 
 
 [33]
-<Supplementary_material_files/figure-latex/stimuli-eval-desc-plot-1.pdf, id=399, 867.24pt x 433.62pt>
+<Supplementary_material_files/figure-latex/stimuli-eval-desc-plot-1.pdf, id=406, 867.24pt x 433.62pt>
 File: Supplementary_material_files/figure-latex/stimuli-eval-desc-plot-1.pdf Graphic file (type pdf)
 <use Supplementary_material_files/figure-latex/stimuli-eval-desc-plot-1.pdf>
-Package pdftex.def Info: Supplementary_material_files/figure-latex/stimuli-eval-desc-plot-1.pdf  used on input line 1856.
+Package pdftex.def Info: Supplementary_material_files/figure-latex/stimuli-eval-desc-plot-1.pdf  used on input line 1883.
 (pdftex.def)             Requested size: 500.48529pt x 250.24265pt.
 
 
 [34 <./Supplementary_material_files/figure-latex/gender-violence-desc-plot-1.pdf>]
 
 [35 <./Supplementary_material_files/figure-latex/stimuli-eval-desc-plot-1.pdf>]
-<Supplementary_material_files/figure-latex/unnamed-chunk-20-1.pdf, id=428, 867.24pt x 578.16pt>
-File: Supplementary_material_files/figure-latex/unnamed-chunk-20-1.pdf Graphic file (type pdf)
-<use Supplementary_material_files/figure-latex/unnamed-chunk-20-1.pdf>
-Package pdftex.def Info: Supplementary_material_files/figure-latex/unnamed-chunk-20-1.pdf  used on input line 1897.
-(pdftex.def)             Requested size: 500.48529pt x 333.65685pt.
 
-
-[36 <./Supplementary_material_files/figure-latex/unnamed-chunk-20-1.pdf>]
+[36{/home/jdl/.TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-mathit.enc}{/home/jdl/.TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc}]
 
 [37]
-Overfull \hbox (10.41692pt too wide) in paragraph at lines 1969--1969
- []|\T1/lmr/m/n/5 Frequency 
- []
-
-
-Overfull \hbox (10.19475pt too wide) in paragraph at lines 1969--1969
- []|\T1/lmr/m/n/5 Happiness| 
- []
-
-
-Overfull \hbox (7.81326pt too wide) in paragraph at lines 1969--1969
- []|\T1/lmr/m/n/5 Financial 
- []
-
-
-Overfull \hbox (13.02132pt too wide) in paragraph at lines 1969--1969
- []|\T1/lmr/m/n/5 Dominance| 
- []
-
-
-Overfull \hbox (12.59091pt too wide) in paragraph at lines 1969--1969
- []|\T1/lmr/m/n/5 Attractive.| 
- []
-
-
-Overfull \hbox (4.59735pt too wide) in paragraph at lines 1969--1969
- []|\T1/lmr/m/n/5 Country 
- []
-
-
-Overfull \hbox (21.7233pt too wide) in paragraph at lines 1969--1969
- []|\T1/lmr/m/n/5 Neighborhood 
- []
-
-
-Overfull \hbox (10.41692pt too wide) in paragraph at lines 1969--1969
- []|\T1/lmr/m/n/5 Frequency 
- []
-
-
-Overfull \hbox (4.96562pt too wide) in paragraph at lines 1969--1969
- []|\T1/lmr/m/n/5 Physical 
- []
-
-
-Overfull \hbox (1.22192pt too wide) in paragraph at lines 1972--1972
- \T1/lmr/bx/n/5 0.2***| 
- []
-
-
-Overfull \hbox (5.01358pt too wide) in paragraph at lines 1973--1973
- []|\T1/lmr/bx/n/5 0.59***| 
- []
-
-
-Overfull \hbox (1.22192pt too wide) in paragraph at lines 1974--1974
- \T1/lmr/bx/n/5 0.18**| 
- []
-
-
-Overfull \hbox (5.01358pt too wide) in paragraph at lines 1974--1974
- []|\T1/lmr/bx/n/5 0.48***| 
- []
-
-
-Overfull \hbox (5.01358pt too wide) in paragraph at lines 1974--1974
- []|\T1/lmr/bx/n/5 0.62***| 
- []
-
-
-Overfull \hbox (1.22192pt too wide) in paragraph at lines 1975--1975
- \T1/lmr/bx/n/5 0.16**| 
- []
-
-
-Overfull \hbox (5.01358pt too wide) in paragraph at lines 1975--1975
- []|\T1/lmr/bx/n/5 0.68***| 
- []
-
-
-Overfull \hbox (5.01358pt too wide) in paragraph at lines 1975--1975
- []|\T1/lmr/bx/n/5 0.46***| 
- []
-
-
-Overfull \hbox (5.01358pt too wide) in paragraph at lines 1975--1975
- []|\T1/lmr/bx/n/5 0.51***| 
- []
-
-
-Overfull \hbox (5.01358pt too wide) in paragraph at lines 1976--1976
- \T1/lmr/bx/n/5 0.25***| 
- []
-
-
-Overfull \hbox (5.01358pt too wide) in paragraph at lines 1976--1976
- []|\T1/lmr/bx/n/5 0.73***| 
- []
-
-
-Overfull \hbox (5.01358pt too wide) in paragraph at lines 1976--1976
- []|\T1/lmr/bx/n/5 0.48***| 
- []
-
-
-Overfull \hbox (5.01358pt too wide) in paragraph at lines 1976--1976
- []|\T1/lmr/bx/n/5 0.51***| 
- []
-
-
-Overfull \hbox (5.01358pt too wide) in paragraph at lines 1976--1976
- []|\T1/lmr/bx/n/5 0.87***| 
- []
-
-
-Overfull \hbox (5.01358pt too wide) in paragraph at lines 1977--1977
- \T1/lmr/bx/n/5 0.25***| 
- []
-
-
-Overfull \hbox (5.01358pt too wide) in paragraph at lines 1977--1977
- []|\T1/lmr/bx/n/5 0.75***| 
- []
-
-
-Overfull \hbox (5.01358pt too wide) in paragraph at lines 1977--1977
- []|\T1/lmr/bx/n/5 0.49***| 
- []
-
-
-Overfull \hbox (5.01358pt too wide) in paragraph at lines 1977--1977
- []|\T1/lmr/bx/n/5 0.53***| 
- []
-
-
-Overfull \hbox (5.01358pt too wide) in paragraph at lines 1977--1977
- []|\T1/lmr/bx/n/5 0.84***| 
- []
-
-
-Overfull \hbox (5.01358pt too wide) in paragraph at lines 1977--1977
- []|\T1/lmr/bx/n/5 0.93***| 
- []
-
-
-Overfull \hbox (5.01358pt too wide) in paragraph at lines 1978--1978
- \T1/lmr/bx/n/5 0.26***| 
- []
-
-
-Overfull \hbox (5.01358pt too wide) in paragraph at lines 1978--1978
- []|\T1/lmr/bx/n/5 0.69***| 
- []
-
-
-Overfull \hbox (5.01358pt too wide) in paragraph at lines 1978--1978
- []|\T1/lmr/bx/n/5 0.45***| 
- []
-
-
-Overfull \hbox (5.01358pt too wide) in paragraph at lines 1978--1978
- []|\T1/lmr/bx/n/5 0.45***| 
- []
-
-
-Overfull \hbox (5.01358pt too wide) in paragraph at lines 1978--1978
- []|\T1/lmr/bx/n/5 0.68***| 
- []
-
-
-Overfull \hbox (5.01358pt too wide) in paragraph at lines 1978--1978
- []|\T1/lmr/bx/n/5 0.72***| 
- []
-
-
-Overfull \hbox (5.01358pt too wide) in paragraph at lines 1978--1978
- []|\T1/lmr/bx/n/5 0.73***| 
- []
-
-
-Overfull \hbox (1.22192pt too wide) in paragraph at lines 1979--1979
- []|\T1/lmr/bx/n/5 0.17**| 
- []
-
-
-Overfull \hbox (1.22192pt too wide) in paragraph at lines 1979--1979
- []|\T1/lmr/bx/n/5 0.18**| 
- []
-
-
-Overfull \hbox (1.22192pt too wide) in paragraph at lines 1979--1979
- []|\T1/lmr/bx/n/5 0.18**| 
- []
-
-
-Overfull \hbox (5.01358pt too wide) in paragraph at lines 1979--1979
- []|\T1/lmr/bx/n/5 0.21***| 
- []
-
-
-Overfull \hbox (5.01358pt too wide) in paragraph at lines 1979--1979
- []|\T1/lmr/bx/n/5 0.22***| 
- []
-
-
-Overfull \hbox (5.01358pt too wide) in paragraph at lines 1979--1979
- []|\T1/lmr/bx/n/5 0.25***| 
- []
-
-
-Overfull \hbox (1.22192pt too wide) in paragraph at lines 1979--1979
- []|\T1/lmr/bx/n/5 0.2***| 
- []
-
-
-Overfull \hbox (1.22192pt too wide) in paragraph at lines 1980--1980
- []|\T1/lmr/bx/n/5 0.17**| 
- []
-
-
-Overfull \hbox (1.22192pt too wide) in paragraph at lines 1980--1980
- []|\T1/lmr/bx/n/5 0.17**| 
- []
-
-
-Overfull \hbox (1.22192pt too wide) in paragraph at lines 1980--1980
- []|\T1/lmr/bx/n/5 0.15**| 
- []
-
-
-Overfull \hbox (1.22192pt too wide) in paragraph at lines 1980--1980
- []|\T1/lmr/bx/n/5 0.19**| 
- []
-
-
-Overfull \hbox (5.01358pt too wide) in paragraph at lines 1980--1980
- []|\T1/lmr/bx/n/5 0.72***| 
- []
-
-
-Overfull \hbox (1.22192pt too wide) in paragraph at lines 1981--1981
- []|\T1/lmr/bx/n/5 0.17**| 
- []
-
-
-Overfull \hbox (1.22192pt too wide) in paragraph at lines 1981--1981
- []|\T1/lmr/bx/n/5 0.18**| 
- []
-
-
-Overfull \hbox (1.22192pt too wide) in paragraph at lines 1981--1981
- []|\T1/lmr/bx/n/5 0.19**| 
- []
-
-
-Overfull \hbox (1.22192pt too wide) in paragraph at lines 1981--1981
- []|\T1/lmr/bx/n/5 0.18**| 
- []
-
-
-Overfull \hbox (1.22192pt too wide) in paragraph at lines 1981--1981
- []|\T1/lmr/bx/n/5 0.19**| 
- []
-
-
-Overfull \hbox (5.01358pt too wide) in paragraph at lines 1981--1981
- []|\T1/lmr/bx/n/5 0.23***| 
- []
-
-
-Overfull \hbox (1.22192pt too wide) in paragraph at lines 1981--1981
- []|\T1/lmr/bx/n/5 0.18**| 
- []
-
-
-Overfull \hbox (5.01358pt too wide) in paragraph at lines 1981--1981
- []|\T1/lmr/bx/n/5 0.78***| 
- []
-
-
-Overfull \hbox (1.22192pt too wide) in paragraph at lines 1981--1981
- []|\T1/lmr/bx/n/5 0.6***| 
- []
-
-
-Overfull \hbox (1.22192pt too wide) in paragraph at lines 1982--1982
- []|\T1/lmr/bx/n/5 0.19**| 
- []
-
-
-Overfull \hbox (5.01358pt too wide) in paragraph at lines 1982--1982
- []|\T1/lmr/bx/n/5 0.22***| 
- []
-
-
-Overfull \hbox (5.01358pt too wide) in paragraph at lines 1982--1982
- []|\T1/lmr/bx/n/5 0.21***| 
- []
-
-
-Overfull \hbox (5.01358pt too wide) in paragraph at lines 1982--1982
- []|\T1/lmr/bx/n/5 0.21***| 
- []
-
-
-Overfull \hbox (1.22192pt too wide) in paragraph at lines 1982--1982
- []|\T1/lmr/bx/n/5 0.17**| 
- []
-
-
-Overfull \hbox (1.22192pt too wide) in paragraph at lines 1983--1983
- []|\T1/lmr/bx/n/5 0.17**| 
- []
-
-
-Overfull \hbox (5.01358pt too wide) in paragraph at lines 1983--1983
- []|\T1/lmr/bx/n/5 0.21***| 
- []
-
-
-Overfull \hbox (1.22192pt too wide) in paragraph at lines 1983--1983
- []|\T1/lmr/bx/n/5 0.19**| 
- []
-
-
-Overfull \hbox (5.01358pt too wide) in paragraph at lines 1983--1983
- []|\T1/lmr/bx/n/5 0.19***| 
- []
-
-
-Overfull \hbox (1.22192pt too wide) in paragraph at lines 1983--1983
- []|\T1/lmr/bx/n/5 0.17**| 
- []
-
-
-Overfull \hbox (5.01358pt too wide) in paragraph at lines 1983--1983
- []|\T1/lmr/bx/n/5 0.82***| 
- []
-
-
-Overfull \hbox (7.49692pt too wide) in paragraph at lines 1984--1984
-[]|\T1/lmr/m/n/5 Neighborhood 
- []
-
-
-Overfull \hbox (5.01358pt too wide) in paragraph at lines 1984--1984
- []|\T1/lmr/bx/n/5 0.32***| 
- []
-
-
-Overfull \hbox (5.01358pt too wide) in paragraph at lines 1984--1984
- []|\T1/lmr/bx/n/5 0.32***| 
- []
-
-
-Overfull \hbox (5.01358pt too wide) in paragraph at lines 1985--1985
- \T1/lmr/bx/n/5 0.24***| 
- []
-
-
-Overfull \hbox (5.01358pt too wide) in paragraph at lines 1985--1985
- \T1/lmr/bx/n/5 0.31***| 
- []
-
-
-Overfull \hbox (5.01358pt too wide) in paragraph at lines 1985--1985
- []|\T1/lmr/bx/n/5 0.32***| 
- []
-
-
-Overfull \hbox (1.22192pt too wide) in paragraph at lines 1986--1986
- []|\T1/lmr/bx/n/5 0.16**| 
- []
-
-
-Overfull \hbox (1.22192pt too wide) in paragraph at lines 1986--1986
- []|\T1/lmr/bx/n/5 0.19**| 
- []
-
-
-Overfull \hbox (1.22192pt too wide) in paragraph at lines 1986--1986
- []|\T1/lmr/bx/n/5 0.18**| 
- []
-
-
-Overfull \hbox (1.22192pt too wide) in paragraph at lines 1986--1986
- []|\T1/lmr/bx/n/5 0.17**| 
- []
-
-
-Overfull \hbox (5.01358pt too wide) in paragraph at lines 1986--1986
- []|\T1/lmr/bx/n/5 0.64***| 
- []
-
-
-Overfull \hbox (5.01358pt too wide) in paragraph at lines 1986--1986
- []|\T1/lmr/bx/n/5 0.61***| 
- []
-
-
-Overfull \hbox (1.22192pt too wide) in paragraph at lines 1986--1986
- []|\T1/lmr/bx/n/5 0.8***| 
- []
-
-
-Overfull \hbox (5.01358pt too wide) in paragraph at lines 1986--1986
- []|\T1/lmr/bx/n/5 0.46***| 
- []
-
-
-Overfull \hbox (1.22192pt too wide) in paragraph at lines 1988--1988
- []|\T1/lmr/bx/n/5 0.19**| 
- []
-
+LaTeX Font Info:    Calculating math sizes for size <4> on input line 2021.
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <4> on input line 2021.
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <2.79999> on input line 2021.
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <2> on input line 2021.
 
-Overfull \hbox (1.22192pt too wide) in paragraph at lines 1989--1989
- []|\T1/lmr/bx/n/5 0.18**| 
+Overfull \hbox (2.92746pt too wide) in paragraph at lines 2025--2025
+ []|\T1/lmr/m/n/4 Frequency 
  []
 
 
-Overfull \hbox (1.22192pt too wide) in paragraph at lines 1990--1990
- []|\T1/lmr/bx/n/5 0.2***| 
+Overfull \hbox (1.86116pt too wide) in paragraph at lines 2025--2025
+ []|\T1/lmr/m/n/4 Neighbor. 
  []
 
 
-Overfull \hbox (5.01358pt too wide) in paragraph at lines 1990--1990
- []|\T1/lmr/bx/n/5 0.25***| 
+Overfull \hbox (2.92746pt too wide) in paragraph at lines 2025--2025
+ []|\T1/lmr/m/n/4 Frequency 
  []
 
 
-Overfull \hbox (7.83318pt too wide) in paragraph at lines 1965--1998
+Overfull \hbox (31.77531pt too wide) in paragraph at lines 2021--2056
  [] 
  []
 
@@ -1914,294 +1497,98 @@ Overfull \hbox (7.83318pt too wide) in paragraph at lines 1965--1998
 
 [38
 
-{/home/jdl/.TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc}{/home/jdl/.TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-mathit.enc}]
+]
+Underfull \vbox (badness 10000) detected at line 2152
+ []
+
+
 
 [39
 
 ]
-Overfull \hbox (14.88248pt too wide) in paragraph at lines 2064--2064
- []|\T1/lmr/m/n/5 Masculinity| 
+
+[40]
+LaTeX Font Info:    Calculating math sizes for size <4.2> on input line 2161.
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <4.2> on input line 2161.
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <2.93997> on input line 2161.
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <2.09999> on input line 2161.
+
+Overfull \hbox (0.95029pt too wide) in paragraph at lines 2165--2165
+ []|\T1/lmr/m/n/4.2 Condition 
  []
 
 
-Overfull \hbox (22.86848pt too wide) in paragraph at lines 2064--2064
- []|\T1/lmr/m/n/5 Attractiveness| 
+Overfull \hbox (1.58014pt too wide) in paragraph at lines 2165--2165
+ []|\T1/lmr/m/n/4.2 Frequency 
  []
 
 
-Overfull \hbox (2.74309pt too wide) in paragraph at lines 2064--2064
- []|\T1/lmr/m/n/5 Partner 
- []
-
-
-Overfull \hbox (2.74309pt too wide) in paragraph at lines 2064--2064
- []|\T1/lmr/m/n/5 Partner 
- []
-
-
-Overfull \hbox (2.74309pt too wide) in paragraph at lines 2064--2064
- []|\T1/lmr/m/n/5 Partner 
- []
-
-
-Overfull \hbox (8.50708pt too wide) in paragraph at lines 2064--2064
- []|\T1/lmr/m/n/5 Perceived 
- []
-
-
-Overfull \hbox (8.50708pt too wide) in paragraph at lines 2064--2064
- []|\T1/lmr/m/n/5 Perceived 
- []
-
-
-Overfull \hbox (8.50708pt too wide) in paragraph at lines 2064--2064
- []|\T1/lmr/m/n/5 Perceived 
- []
-
-
-Overfull \hbox (8.50708pt too wide) in paragraph at lines 2064--2064
- []|\T1/lmr/m/n/5 Perceived 
- []
-
-
-Overfull \hbox (8.50708pt too wide) in paragraph at lines 2064--2064
- []|\T1/lmr/m/n/5 Perceived 
- []
-
-
-Overfull \hbox (9.66716pt too wide) in paragraph at lines 2064--2064
- []|\T1/lmr/m/n/5 Condition 
- []
-
-
-Overfull \hbox (10.41692pt too wide) in paragraph at lines 2064--2064
- []|\T1/lmr/m/n/5 Frequency 
- []
-
-
-Overfull \hbox (2.74309pt too wide) in paragraph at lines 2064--2064
- []|\T1/lmr/m/n/5 Partner 
- []
-
-
-Overfull \hbox (2.74309pt too wide) in paragraph at lines 2064--2065
- []|\T1/lmr/m/n/5 Partner 
- []
-
-
-Overfull \hbox (5.01358pt too wide) in paragraph at lines 2067--2067
- []|\T1/lmr/bx/n/5 0.82***| 
- []
-
-
-Overfull \hbox (5.01358pt too wide) in paragraph at lines 2067--2067
- \T1/lmr/bx/n/5 0.62***| 
- []
-
-
-Overfull \hbox (0.6561pt too wide) in paragraph at lines 2068--2068
-[]|\T1/lmr/m/n/5 Masculinity|  
- []
-
-
-Overfull \hbox (8.6421pt too wide) in paragraph at lines 2069--2069
-[]|\T1/lmr/m/n/5 Attractiveness|  
- []
-
-
-Overfull \hbox (5.01358pt too wide) in paragraph at lines 2069--2069
- []|\T1/lmr/bx/n/5 0.49***| 
- []
-
-
-Overfull \hbox (5.01358pt too wide) in paragraph at lines 2071--2071
- []|\T1/lmr/bx/n/5 0.63***| 
- []
-
-
-Overfull \hbox (5.01358pt too wide) in paragraph at lines 2072--2072
- []|\T1/lmr/bx/n/5 0.75***| 
- []
-
-
-Overfull \hbox (5.01358pt too wide) in paragraph at lines 2072--2072
- []|\T1/lmr/bx/n/5 0.71***| 
- []
-
-
-Overfull \hbox (5.01358pt too wide) in paragraph at lines 2074--2074
- []|\T1/lmr/bx/n/5 0.82***| 
- []
-
-
-Overfull \hbox (1.22192pt too wide) in paragraph at lines 2075--2075
- []|\T1/lmr/bx/n/5 0.18**| 
- []
-
-
-Overfull \hbox (5.01358pt too wide) in paragraph at lines 2075--2075
- []|\T1/lmr/bx/n/5 0.24***| 
- []
-
-
-Overfull \hbox (5.01358pt too wide) in paragraph at lines 2075--2075
- []|\T1/lmr/bx/n/5 0.38***| 
- []
-
-
-Overfull \hbox (5.01358pt too wide) in paragraph at lines 2075--2075
- []|\T1/lmr/bx/n/5 0.34***| 
- []
-
-
-Overfull \hbox (1.22192pt too wide) in paragraph at lines 2076--2076
- \T1/lmr/bx/n/5 0.16**| 
- []
-
-
-Overfull \hbox (5.01358pt too wide) in paragraph at lines 2076--2076
- \T1/lmr/bx/n/5 0.21***| 
- []
-
-
-Overfull \hbox (5.01358pt too wide) in paragraph at lines 2076--2076
- []|\T1/lmr/bx/n/5 0.34***| 
- []
-
-
-Overfull \hbox (1.22192pt too wide) in paragraph at lines 2077--2077
- []|\T1/lmr/bx/n/5 0.18**| 
- []
-
-
-Overfull \hbox (1.22192pt too wide) in paragraph at lines 2077--2077
- []|\T1/lmr/bx/n/5 0.17**| 
- []
-
-
-Overfull \hbox (5.01358pt too wide) in paragraph at lines 2077--2077
- []|\T1/lmr/bx/n/5 0.68***| 
- []
-
-
-Overfull \hbox (5.01358pt too wide) in paragraph at lines 2077--2077
- []|\T1/lmr/bx/n/5 0.63***| 
- []
-
-
-Overfull \hbox (1.22192pt too wide) in paragraph at lines 2077--2077
- []|\T1/lmr/bx/n/5 0.8***| 
- []
-
-
-Overfull \hbox (5.01358pt too wide) in paragraph at lines 2077--2077
- []|\T1/lmr/bx/n/5 0.51***| 
- []
-
-
-Overfull \hbox (1.22192pt too wide) in paragraph at lines 2079--2079
- []|\T1/lmr/bx/n/5 0.18**| 
- []
-
-
-Overfull \hbox (1.22192pt too wide) in paragraph at lines 2079--2079
- []|\T1/lmr/bx/n/5 0.15**| 
- []
-
-
-Overfull \hbox (5.01358pt too wide) in paragraph at lines 2079--2079
- []|\T1/lmr/bx/n/5 0.19***| 
- []
-
-
-Overfull \hbox (1.22192pt too wide) in paragraph at lines 2080--2080
- []|\T1/lmr/bx/n/5 0.14**| 
- []
-
-
-Overfull \hbox (1.22192pt too wide) in paragraph at lines 2080--2080
- []|\T1/lmr/bx/n/5 0.17**| 
- []
-
-
-Overfull \hbox (1.22192pt too wide) in paragraph at lines 2080--2080
- []|\T1/lmr/bx/n/5 0.2***| 
- []
-
-
-Overfull \hbox (1.22192pt too wide) in paragraph at lines 2081--2081
- []|\T1/lmr/bx/n/5 0.15**| 
- []
-
-
-Overfull \hbox (1.22192pt too wide) in paragraph at lines 2082--2082
- []|\T1/lmr/bx/n/5 0.18**| 
- []
-
-
-Overfull \hbox (1.22192pt too wide) in paragraph at lines 2082--2082
- []|\T1/lmr/bx/n/5 0.14**| 
- []
-
-
-
-[40
-
-]
-Underfull \hbox (badness 5681) in paragraph at lines 2109--2111
-\T1/lmr/m/it/10 Fac-toMineR(v.2.11)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 fac-toex-tra(v.1.0.7)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 scales(v.1.3.0)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 GGally(v.2.2.1)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 per-for-mance(v.0.12.2)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 kable-Ex-
- []
-
-
-Underfull \hbox (badness 3872) in paragraph at lines 2109--2111
-\T1/lmr/m/it/10 tra(v.1.4.0)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 em-means(v.1.10.3)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 lmerTest(v.3.1-3)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 lme4(v.1.1-35.5)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 Matrix(v.1.7-0)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 readxl(v.1.4.3)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 gg-
- []
-
-
-Underfull \hbox (badness 2409) in paragraph at lines 2112--2114
-[]\T1/lmr/bx/n/10 loaded via a names-pace (and not at-tached): \T1/lmr/m/it/10 gridEx-tra(v.2.3)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 sandwich(v.3.1-0)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 rlang(v.1.1.4)\T1/lmr/m/n/10 ,
- []
-
-
-Underfull \hbox (badness 1019) in paragraph at lines 2112--2114
-\T1/lmr/m/it/10 magrittr(v.2.0.3)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 multcomp(v.1.4-26)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 com-piler(v.4.4.1)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 sys-tem-fonts(v.1.1.0)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 vc-trs(v.0.6.5)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 crayon(v.1.5.3)\T1/lmr/m/n/10 ,
- []
-
-
-Underfull \hbox (badness 3919) in paragraph at lines 2112--2114
-\T1/lmr/m/it/10 pkg-con-fig(v.2.0.3)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 fastmap(v.1.2.0)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 back-ports(v.1.5.0)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 la-bel-ing(v.0.4.3)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 utf8(v.1.2.4)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 rmark-down(v.2.28)\T1/lmr/m/n/10 ,
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 2112--2114
-\T1/lmr/m/it/10 R6(v.2.5.1)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 stringi(v.1.8.4)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 RColorBrewer(v.1.1-3)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 rpart(v.4.1.23)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 boot(v.1.3-30)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 cell-ranger(v.1.1.0)\T1/lmr/m/n/10 ,
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 2112--2114
-\T1/lmr/m/it/10 abind(v.1.4-5)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 yaml(v.2.3.10)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 codetools(v.0.2-20)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 lattice(v.0.22-5)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 plyr(v.1.8.9)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 bayestestR(v.0.13.2)\T1/lmr/m/n/10 ,
- []
-
-
-Underfull \hbox (badness 3323) in paragraph at lines 2112--2114
-\T1/lmr/m/it/10 withr(v.3.0.1)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 coda(v.0.19-4.1)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 eval-u-ate(v.0.24.0)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 foreign(v.0.8-86)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 survival(v.3.7-0)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 xml2(v.1.3.6)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 pil-
- []
-
-
-Overfull \hbox (4.012pt too wide) in paragraph at lines 2112--2114
-\T1/lmr/m/it/10 minqa(v.1.2.7)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 xtable(v.1.8-4)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 leaps(v.3.2)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 glue(v.1.7.0)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 scatterplot3d(v.0.3-44)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 tools(v.4.4.1)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 data.table(v.1.15.4)\T1/lmr/m/n/10 ,
- []
-
-
-Underfull \hbox (badness 1953) in paragraph at lines 2112--2114
-\T1/lmr/m/it/10 ggsig-nif(v.0.6.4)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 mvtnorm(v.1.2-5)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 cow-plot(v.1.1.3)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 grid(v.4.4.1)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 datawiz-ard(v.0.12.2)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 bdsmatrix(v.1.3-7)\T1/lmr/m/n/10 ,
+Overfull \hbox (12.27643pt too wide) in paragraph at lines 2161--2218
+ [] 
  []
 
 
 
 [41
 
-] (./Supplementary_material.aux)
+]
+Underfull \vbox (badness 10000) detected at line 2329
+ []
+
+
+
+[42
+
+]
+
+[43]
+
+[44]
+Underfull \hbox (badness 5681) in paragraph at lines 2431--2433
+\T1/lmr/m/it/10 Fac-toMineR(v.2.11)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 fac-toex-tra(v.1.0.7)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 scales(v.1.3.0)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 GGally(v.2.2.1)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 per-for-mance(v.0.12.2)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 kable-Ex-
+ []
+
+
+Underfull \hbox (badness 3872) in paragraph at lines 2431--2433
+\T1/lmr/m/it/10 tra(v.1.4.0)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 em-means(v.1.10.3)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 lmerTest(v.3.1-3)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 lme4(v.1.1-35.5)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 Matrix(v.1.7-0)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 readxl(v.1.4.3)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 gg-
+ []
+
+
+Underfull \hbox (badness 2409) in paragraph at lines 2434--2436
+[]\T1/lmr/bx/n/10 loaded via a names-pace (and not at-tached): \T1/lmr/m/it/10 gridEx-tra(v.2.3)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 sandwich(v.3.1-0)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 rlang(v.1.1.4)\T1/lmr/m/n/10 ,
+ []
+
+
+Overfull \hbox (6.40103pt too wide) in paragraph at lines 2434--2436
+\T1/lmr/m/it/10 fastmap(v.1.2.0)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 back-ports(v.1.5.0)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 la-bel-ing(v.0.4.3)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 utf8(v.1.2.4)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 rmark-down(v.2.28)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 tzdb(v.0.4.0)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 nloptr(v.2.1.1)\T1/lmr/m/n/10 ,
+ []
+
+
+Underfull \hbox (badness 4954) in paragraph at lines 2434--2436
+\T1/lmr/m/it/10 glue(v.1.7.0)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 scatterplot3d(v.0.3-44)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 tools(v.4.4.1)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 data.table(v.1.15.4)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 ggsig-nif(v.0.6.4)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 mvtnorm(v.1.2-
+ []
+
+
+Underfull \hbox (badness 1616) in paragraph at lines 2434--2436
+\T1/lmr/m/it/10 5)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 cow-plot(v.1.1.3)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 grid(v.4.4.1)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 datawiz-ard(v.0.12.2)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 bdsmatrix(v.1.3-7)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 colorspace(v.2.1-1)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 nlme(v.3.1-
+ []
+
+
+Underfull \hbox (badness 2393) in paragraph at lines 2434--2436
+\T1/lmr/m/it/10 165)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 htmlTable(v.2.4.3)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 Formula(v.1.2-5)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 cli(v.3.6.3)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 fansi(v.1.0.6)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 viridis-Lite(v.0.4.2)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 svglite(v.2.1.3)\T1/lmr/m/n/10 ,
+ []
+
+
+Underfull \hbox (badness 1127) in paragraph at lines 2434--2436
+\T1/lmr/m/it/10 gtable(v.0.3.5)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 rstatix(v.0.7.2)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 di-gest(v.0.6.37)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 ggre-pel(v.0.9.5)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 TH.data(v.1.1-2)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 farver(v.2.1.2)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 html-wid-
+ []
+
+
+
+[45] (./Supplementary_material.aux)
  ***********
 LaTeX2e <2024-06-01> patch level 2
 L3 programming layer <2024-08-30>
@@ -2214,18 +1601,18 @@ Package logreq Info: Writing requests to 'Supplementary_material.run.xml'.
 
  ) 
 Here is how much of TeX's memory you used:
- 36631 strings out of 475480
- 696701 string characters out of 5775841
- 1813571 words of memory out of 5000000
- 58531 multiletter control sequences out of 15000+600000
- 630275 words of font info for 87 fonts, out of 8000000 for 9000
+ 36681 strings out of 475480
+ 697202 string characters out of 5775841
+ 1859096 words of memory out of 5000000
+ 58571 multiletter control sequences out of 15000+600000
+ 670465 words of font info for 122 fonts, out of 8000000 for 9000
  36 hyphenation exceptions out of 8191
- 84i,19n,87p,2328b,5237s stack positions out of 10000i,1000n,20000p,200000b,200000s
-</home/jdl/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx10.pfb></home/jdl/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx12.pfb></home/jdl/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx5.pfb></home/jdl/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmmi5.pfb></home/jdl/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmr10.pfb></home/jdl/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmr12.pfb></home/jdl/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmr17.pfb></home/jdl/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmr5.pfb></home/jdl/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmr7.pfb></home/jdl/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmr8.pfb></home/jdl/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmri10.pfb></home/jdl/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmri7.pfb></home/jdl/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmri8.pfb></home/jdl/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmsy5.pfb></home/jdl/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmtk10.pfb></home/jdl/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmtt10.pfb>
-Output written on Supplementary_material.pdf (41 pages, 781756 bytes).
+ 84i,20n,87p,2304b,5237s stack positions out of 10000i,1000n,20000p,200000b,200000s
+</home/jdl/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx10.pfb></home/jdl/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx12.pfb></home/jdl/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx5.pfb></home/jdl/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmmi10.pfb></home/jdl/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmmi5.pfb></home/jdl/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmr10.pfb></home/jdl/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmr12.pfb></home/jdl/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmr17.pfb></home/jdl/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmr5.pfb></home/jdl/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmr7.pfb></home/jdl/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmr8.pfb></home/jdl/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmri10.pfb></home/jdl/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmri7.pfb></home/jdl/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmri8.pfb></home/jdl/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmsy5.pfb></home/jdl/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmsy7.pfb></home/jdl/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmtk10.pfb></home/jdl/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmtt10.pfb>
+Output written on Supplementary_material.pdf (45 pages, 798711 bytes).
 PDF statistics:
- 734 PDF objects out of 1000 (max. 8388607)
- 622 compressed objects within 7 object streams
- 121 named destinations out of 1000 (max. 500000)
- 443 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 770 PDF objects out of 1000 (max. 8388607)
+ 652 compressed objects within 7 object streams
+ 131 named destinations out of 1000 (max. 500000)
+ 454 words of extra memory for PDF output out of 10000 (max. 10000000)
 

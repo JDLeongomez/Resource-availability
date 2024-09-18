@@ -1050,6 +1050,33 @@ quests_fin <- quests_clean |>
   filter(ID %in% unique(dat$ID))
 ```
 
+#### Differences in fixations to masculinized and feminized stimuli
+
+To test bias in fixation patterns according to the sexual dimorphism manipulation, difference scores (masculinized - feminized) were calculated
+
+```{r}
+dat_dif <- dat |> 
+  group_by(ID, 
+           Stimulus, 
+           Condition, 
+           Relationship,
+           Sexual_orientation,
+           Freq_partner_physical_violence,
+           Freq_partner_sexual_violence,
+           Freq_partner_infidelity,
+           Relationship_current,
+           Men_perceived_as_dangerous) |> 
+  summarise(DFF_dif = DFF[Sexual_dimorphism == "Masculinized"] - DFF[Sexual_dimorphism == "Feminized"],
+            TFD_dif = TFD[Sexual_dimorphism == "Masculinized"] - TFD[Sexual_dimorphism == "Feminized"],
+            NF_dif = NF[Sexual_dimorphism == "Masculinized"] - NF[Sexual_dimorphism == "Feminized"],
+            Attr_dif = Attractiveness[Sexual_dimorphism == "Masculinized"] - Attractiveness[Sexual_dimorphism == "Feminized"],
+            Masc_dif = Masculinity[Sexual_dimorphism == "Masculinized"] - Masculinity[Sexual_dimorphism == "Feminized"]) |> 
+  ungroup() |> 
+  mutate(across(where(is.character), as.factor))
+```
+
+
+
 # Descriptives
 
 ## Number and age of participants in each condition
@@ -1411,7 +1438,7 @@ desc_quest |>
   facet_wrap(~Variable, scales = "free")
 ```
 
-### Last partner perception
+### Current/last partner perception
 
 ```{r partner-desc-plot, message = FALSE, warning = FALSE, results = "hold", fig.cap = "Distribution of values across perceptions of the last partner by condition. Colored vertical lines indicate the mean value for participants in each condition.", fig.height = 4}
 desc_quest |>
@@ -1582,7 +1609,7 @@ eval_long |>
 
 ## Correlations
 
-### Correlations in partner perceptions
+### Correlations between partner perceptions
 
 ```{r}
 quests_fin |>
@@ -1594,20 +1621,33 @@ quests_fin |>
     Partner_dominance,
     Partner_attractiveness) |>
   rename(
-    "PPV" = "Freq_partner_physical_violence",
-    "PSV" = "Freq_partner_sexual_violence",
-    "PI" = "Freq_partner_infidelity",
+    "Physical violence" = "Freq_partner_physical_violence",
+    "Sexual violence" = "Freq_partner_sexual_violence",
+    "Infidelity" = "Freq_partner_infidelity",
     "Masculinity" = "Partner_masculinity",
     "Dominance" = "Partner_dominance",
     "Attractiveness" = "Partner_attractiveness") |> 
-  ggcorr(geom = "blank", label = TRUE, label_size = 2,
-         hjust = 0.75, label_round = 3) +
-  geom_point(size = 10, aes(color = coefficient > 0, alpha = abs(coefficient) > 0.5)) +
-  scale_alpha_manual(values = c("TRUE" = 0.3, "FALSE" = 0)) +
-  guides(color = FALSE, alpha = FALSE)
+  corr.stars() |>
+  rownames_to_column(var = " ") |> 
+  dplyr::slice(-1) |> 
+  kable(digits = 2,
+        booktabs = TRUE,
+        align = c("l", rep("c", 5)),
+        linesep = "",
+        caption = "Correlations between partner perceptions",
+        escape = FALSE) |>
+  kable_styling(latex_options = c("HOLD_position")) |>
+  footnote(general = paste0("Values represent Pearson correlation coefficients ($r$). ",
+                            "Physical violence, sexual violence, and infidelity are frequencies. ",
+                            "For significance, $^{\\\\dagger}p$ < 0.1, *$p$ < 0.05, ",
+                            "**$p$ < 0.01, ***$p$ < 0.001. ",
+                            "Significant correlations are in bold."),
+           threeparttable = TRUE,
+           footnote_as_chunk = TRUE,
+           escape = FALSE)
 ```
 
-### Correlations table (general)
+### Correlations between XXXXXX
 
 ```{r}
 desc_quest |> 
@@ -1625,15 +1665,15 @@ desc_quest |>
   rename_with(~str_replace_all(., "_", " ")) |> 
   rename_with(~str_replace_all(., "Freq", "Frequency of")) |>
   rename_with(~str_replace_all(., "Frequency of partner", "Partner")) |>
-  rename_with(~str_replace_all(., "SP ", "")) |>
   rename_with(~str_replace_all(., "Perceived", "")) |>
   rename_with(~str_replace_all(., "asculinity", "asc.")) |>
   rename_with(~str_replace_all(., "ttractiveness", "ttr.")) |>
-  rename_with(~str_replace_all(., "Neighborhood", "Neighbor.")) |>
-  rename_with(~str_replace_all(., "Partner attr.", "Attractive.")) |>
-  rename_with(~str_replace_all(., "Dominance", "Dom.")) |>
+  rename_with(~str_replace_all(., "ominance", "om.")) |>
+  rename_with(~str_replace_all(., " neighborhood", "Neighbor.")) |>
   rename_with(~str_replace_all(., "Partner ", "")) |>
   rename_with(~str_to_sentence(.)) |>
+  rename_with(~str_replace_all(., "Sp", "S.P.")) |>
+  rename_with(~str_trim(.)) |>
   corr.stars() |>
   rownames_to_column(var = " ") |> 
   dplyr::slice(-1) |> 
@@ -1644,9 +1684,9 @@ desc_quest |>
         caption = "Correlations between XXXXXX",
         escape = FALSE) |>
   kable_styling(latex_options = c("HOLD_position"),
-                font_size = 5) |>
+                font_size = 4) |>
   column_spec(1, width = "1.2cm") |>
-  column_spec(2:21, width = "0.7cm") |>
+  column_spec(2:21, width = "0.75cm") |>
   add_header_above(c(" ", 
                      "Age" = 1, 
                      "Health" = 1,
@@ -1656,6 +1696,9 @@ desc_quest |>
                      "Frequency of\npartner violence" = 2),
                    bold = TRUE) |> 
   footnote(general = paste0("Values represent Pearson correlation coefficients ($r$). ",
+                            "S.P. = self-perceived; masc. = masculinity; 
+                            dom. = dominance; attr. = attractiveness;  
+                            neighbor. = neighborhood. ",
                             "For significance, $^{\\\\dagger}p$ < 0.1, *$p$ < 0.05, ",
                             "**$p$ < 0.01, ***$p$ < 0.001. ",
                             "Significant correlations are in bold."),
@@ -1665,7 +1708,7 @@ desc_quest |>
   landscape()
 ```
 
-### Correlations table (fixations, subjective evaluations and violence)
+### Correlations between fixations, subjective evaluations of stimuli, partner perceptions, and violence
 
 ```{r}
 dat_main_corr <- dat |> 
@@ -1678,35 +1721,77 @@ dat_main_corr <- dat |>
   group_by(ID, Condition, Relationship) |> 
   summarise_all(mean)
 
-dat_main_corr |> 
+dat_main_corr_high <- dat_main_corr |> 
   filter(Condition == "High") |> 
   ungroup() |> 
   select(TFD:Freq_partner_infidelity) |> 
   rename_with(~str_replace_all(., "_", " ")) |> 
   rename_with(~str_replace_all(., "Freq", "Frequency of")) |>
   rename_with(~str_replace_all(., "Frequency of partner", "Partner")) |>
+  rename_with(~str_replace_all(., "Perceived", "")) |>
+  rename_with(~str_replace_all(., "asculinity", "asc.")) |>
+  rename_with(~str_replace_all(., "ttractiveness", "ttr.")) |>
+  rename_with(~str_replace_all(., "ominance", "om.")) |>
+  rename_with(~str_replace_all(., " neighborhood", "Neighbor.")) |>
+  rename_with(~str_to_sentence(.)) |>
+    rename("TFD" = "Tfd", 
+         "DFF" = "Dff", 
+         "NF" = "Nf") |> 
+  rename_with(~str_trim(.)) |>
   corr.stars() |>
   rownames_to_column(var = " ") |> 
-  dplyr::slice(-1) |> 
+  dplyr::slice(-1)
+  
+dat_main_corr_low <- dat_main_corr |> 
+  filter(Condition == "High") |> 
+  ungroup() |> 
+  select(TFD:Freq_partner_infidelity) |> 
+  rename_with(~str_replace_all(., "_", " ")) |> 
+  rename_with(~str_replace_all(., "Freq", "Frequency of")) |>
+  rename_with(~str_replace_all(., "Frequency of partner", "Partner")) |>
+  rename_with(~str_replace_all(., "Perceived", "")) |>
+  rename_with(~str_replace_all(., "asculinity", "asc.")) |>
+  rename_with(~str_replace_all(., "ttractiveness", "ttr.")) |>
+  rename_with(~str_replace_all(., "ominance", "om.")) |>
+  rename_with(~str_replace_all(., " neighborhood", "Neighbor.")) |>
+  rename_with(~str_to_sentence(.)) |>
+    rename("TFD" = "Tfd", 
+         "DFF" = "Dff", 
+         "NF" = "Nf") |> 
+  rename_with(~str_trim(.)) |>
+  corr.stars() |>
+  rownames_to_column(var = " ") |> 
+  dplyr::slice(-1)  
+  
+dat_main_corr_high |> 
+  bind_rows(dat_main_corr_low) |> 
   kable(digits = 2,
         booktabs = TRUE,
         align = c("l", rep("c", 20)),
         linesep = "",
-        caption = "Correlations between XXXXXX",
+        caption = "Correlations between fixations, subjective evaluations of stimuli, 
+        partner perceptions, and violence by Condition",
         escape = FALSE) |>
   kable_styling(latex_options = c("HOLD_position"),
-                font_size = 5) |>
-  column_spec(1, width = "1.2cm") |>
-  column_spec(2:21, width = "0.7cm") |>
+                font_size = 4.2) |>
+  column_spec(1, width = "2.5cm") |>
+  column_spec(2:21, width = "0.84cm") |>
   add_header_above(c(" ", 
-                     "Age" = 1, 
-                     "Health" = 1,
-                     "Self-perceived conditions" = 7,
+                     "Fixations" = 3, 
+                     "Stimulus ratings" = 2,
                      "Current/last partner\nperception" = 3,
-                     "Perceived context\nviolence" = 6,
-                     "Frequency of partner\nviolence" = 2),
+                     "Perceived context\nviolence" = 7,
+                     "Frequency of\npartner violence" = 2),
                    bold = TRUE) |> 
+  pack_rows("Condition: High", 1, 17,
+            hline_after = TRUE) |> 
+  pack_rows("Condition: Low", 18, 34,
+            hline_after = TRUE, hline_before = TRUE) |> 
   footnote(general = paste0("Values represent Pearson correlation coefficients ($r$). ",
+                            "TDF = Total Fixation Duration; DFF = Duration of First Fixation;
+                            NF = Number of Fixations; masc. = masculinity;
+                            dom. = dominance; attr. = attractiveness;  
+                            neighbor. = neighborhood. ",
                             "For significance, $^{\\\\dagger}p$ < 0.1, *$p$ < 0.05, ",
                             "**$p$ < 0.01, ***$p$ < 0.001. ",
                             "Significant correlations are in bold."),
@@ -1715,6 +1800,115 @@ dat_main_corr |>
            escape = FALSE) |>
   landscape()
 ```
+
+### Correlations between partner violence and difference scores between responses to masculinized and feminized stimuli
+
+```{r}
+dat_choice_dif <- dat |> 
+  mutate(Choice = as.numeric(recode(Choice,
+                                    "Yes" =  "1",
+                                    "No" = "0"))) |> 
+  group_by(ID, Sexual_dimorphism, Relationship, Condition) |> 
+  summarise(Choice = sum(Choice)) |> 
+  group_by(ID, Sexual_dimorphism, Relationship, Condition) |> 
+  summarise(Choice_count = sum(Choice)) |> 
+  ungroup() |> 
+  group_by(ID, Relationship, Condition) |> 
+  summarise(Choice_dif = Choice_count[Sexual_dimorphism == "Masculinized"] - 
+              Choice_count[Sexual_dimorphism == "Feminized"])
+
+dat_dif_short <- dat_dif |> 
+  group_by(ID, Relationship, Condition) |> 
+  summarise(Freq_partner_physical_violence = mean(Freq_partner_physical_violence),
+            Freq_partner_sexual_violence = mean(Freq_partner_sexual_violence), 
+            Freq_partner_infidelity = mean(Freq_partner_infidelity),
+            Men_perceived_as_dangerous = mean(Men_perceived_as_dangerous),
+            DFF_dif = mean(DFF_dif),
+            TFD_dif = mean(TFD_dif),
+            NF_dif = mean(NF_dif),
+            Attr_dif = mean(Attr_dif),
+            Masc_dif = mean(Masc_dif)) |> 
+  left_join(dat_choice_dif |> 
+              select(ID, Relationship, Condition, Choice_dif), 
+            by = c("ID", "Relationship", "Condition")) |> 
+  rename("PPV" = "Freq_partner_physical_violence",
+         "PSV" = "Freq_partner_sexual_violence",      
+         "PI" =  "Freq_partner_infidelity",
+         "MPD" = "Men_perceived_as_dangerous",
+         "DFF" = "DFF_dif",
+         "TFD" = "TFD_dif",
+         "NF" =  "NF_dif",
+         "Attr." = "Attr_dif",
+         "Masc." = "Masc_dif",
+         "Choice" = "Choice_dif") |> 
+  ungroup()
+  
+dat_dif_short |> 
+  filter(Relationship == "Short term" & Condition == "Low") |> 
+  select(where(is.numeric)) |> 
+  corr.stars() |>
+  rownames_to_column(var = " ") |> 
+  dplyr::slice(-1) |> 
+  bind_rows(dat_dif_short |>
+              filter(Relationship == "Long term" & Condition == "Low") |>
+              select(where(is.numeric)) |> 
+              corr.stars() |>
+              rownames_to_column(var = " ") |> 
+              dplyr::slice(-1)) |> 
+  bind_rows(dat_dif_short |> 
+              filter(Relationship == "Short term" & Condition == "High") |> 
+              select(where(is.numeric)) |> 
+              corr.stars() |>
+              rownames_to_column(var = " ") |> 
+              dplyr::slice(-1)) |> 
+  bind_rows(dat_dif_short |>
+              filter(Relationship == "Long term" & Condition == "High") |>
+              select(where(is.numeric)) |> 
+              corr.stars() |>
+              rownames_to_column(var = " ") |> 
+              dplyr::slice(-1)) |> 
+  kable(digits = 2,
+        booktabs = TRUE,
+        align = c("l", rep("c", 10)),
+        linesep = "",
+        caption = "Two tables created by knitr::kables().",
+        escape = FALSE) |>
+  kable_styling(latex_options = c("HOLD_position", "scale_down")) |>
+  add_header_above(c(" ",
+                     " " = 4, 
+                     "Difference scores\n(masculinized - feminized)" = 5),
+                   bold = TRUE) |>
+  pack_rows("Low condition, short-term relationship", 1, 9,
+            hline_after = TRUE) |> 
+  pack_rows("Low condition, long-term relationship", 10, 18,
+            hline_after = TRUE, hline_before = TRUE) |>
+  pack_rows("High condition, short-term relationship", 19, 27,
+            hline_after = TRUE, hline_before = TRUE) |> 
+  pack_rows("High condition, long-term relationship", 28, 36,
+            hline_after = TRUE, hline_before = TRUE) |> 
+  footnote(general = paste0("Values represent Pearson correlation coefficients ($r$). ",
+                            "PPV = Frequency of partner physical violence; 
+                            PSV = Frequency of partner sexual violence;
+                            PI =  Frequency of partner infidelity; 
+                            MPD = Men perceived as dangerous;
+                            DFF = Duration of First Fixation; 
+                            TDF = Total Fixation Duration; 
+                            NF = Number of Fixations; 
+                            attr. = attractiveness; 
+                            masc. = masculinity. ", 
+                            "For variables that were evaluated in response to each stimulus 
+                            (DFF, TFD, NF, Attr., Masc. and Choice), correlations are
+                            with the difference between responses to masculinized minus 
+                            feminized stimuli, so that higher (and possitive values) indicate 
+                            a stronger preference for masculinized stimuli. ",
+                            "For significance, $^{\\\\dagger}p$ < 0.1, *$p$ < 0.05, ",
+                            "**$p$ < 0.01, ***$p$ < 0.001. ",
+                            "Significant correlations are in bold."),
+           threeparttable = TRUE,
+           footnote_as_chunk = TRUE,
+           escape = FALSE)
+```
+
 
 # Session info (for reproducibility) {#session}
 
