@@ -222,6 +222,7 @@ All packages used in this file can be directly installed from the Comprehensive 
 \FunctionTok{library}\NormalTok{(gtools)}
 \FunctionTok{library}\NormalTok{(bbmle)}
 \FunctionTok{library}\NormalTok{(effectsize)}
+\FunctionTok{library}\NormalTok{(insight)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -307,6 +308,56 @@ This function creates a correlation matrix, and displays significance (function 
 \end{Highlighting}
 \end{Shaded}
 
+\subsubsection{\texorpdfstring{\texttt{lmer.anova.tab}}{lmer.anova.tab}}\label{lmer.anova.tab}
+
+This function takes a model, and creates an ANOVA-type table of fixed effects, formatted in \LaTeX.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{lmer.anova.tab }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(model) \{}
+  
+\NormalTok{  r2 }\OtherTok{\textless{}{-}} \FunctionTok{r2\_nakagawa}\NormalTok{(model)}
+
+\NormalTok{  tab }\OtherTok{\textless{}{-}} \FunctionTok{anova}\NormalTok{(model) }\SpecialCharTok{|\textgreater{}}
+    \FunctionTok{rownames\_to\_column}\NormalTok{(}\AttributeTok{var =} \StringTok{"Effect"}\NormalTok{) }\SpecialCharTok{|\textgreater{}} 
+    \FunctionTok{mutate}\NormalTok{(}\AttributeTok{Effect =} \FunctionTok{str\_replace\_all}\NormalTok{(Effect, }\StringTok{"\_"}\NormalTok{, }\StringTok{" "}\NormalTok{),}
+           \AttributeTok{Effect =} \FunctionTok{str\_replace\_all}\NormalTok{(Effect, }\StringTok{":"}\NormalTok{, }\StringTok{" × "}\NormalTok{),}
+           \AttributeTok{df =} \FunctionTok{paste0}\NormalTok{(NumDF, }\StringTok{", "}\NormalTok{, }\FunctionTok{round}\NormalTok{(DenDF, }\DecValTok{2}\NormalTok{))) }\SpecialCharTok{|\textgreater{}} 
+    \FunctionTok{rename}\NormalTok{(}\StringTok{"F"} \OtherTok{=} \StringTok{"F value"}\NormalTok{,}
+           \StringTok{"p"} \OtherTok{=} \StringTok{"Pr(\textgreater{}F)"}\NormalTok{) }\SpecialCharTok{|\textgreater{}}
+    \FunctionTok{mutate}\NormalTok{(}\AttributeTok{F =} \FunctionTok{round}\NormalTok{(F, }\DecValTok{2}\NormalTok{),}
+           \AttributeTok{p =} \FunctionTok{pval.lev}\NormalTok{(p)) }\SpecialCharTok{|\textgreater{}} 
+    \FunctionTok{select}\NormalTok{(Effect, F, df, p) }\SpecialCharTok{|\textgreater{}} 
+    \FunctionTok{add\_row}\NormalTok{(}\AttributeTok{Effect =} \FunctionTok{paste0}\NormalTok{(}\StringTok{"Conditional = "}\NormalTok{, }\FunctionTok{round}\NormalTok{(r2}\SpecialCharTok{$}\NormalTok{R2\_conditional, }\DecValTok{2}\NormalTok{))) }\SpecialCharTok{|\textgreater{}} 
+    \FunctionTok{add\_row}\NormalTok{(}\AttributeTok{Effect =} \FunctionTok{paste0}\NormalTok{(}\StringTok{"Marginal = "}\NormalTok{,}\FunctionTok{signif}\NormalTok{(r2}\SpecialCharTok{$}\NormalTok{R2\_marginal, }\DecValTok{2}\NormalTok{))) }\SpecialCharTok{|\textgreater{}} 
+    \FunctionTok{rename}\NormalTok{(}\StringTok{"FIxed effect"} \OtherTok{=} \StringTok{"Effect"}\NormalTok{,}
+           \StringTok{"}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{textit\{df\}"} \OtherTok{=} \StringTok{"df"}\NormalTok{,}
+           \StringTok{"}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{textit\{F\}"} \OtherTok{=} \StringTok{"F"}\NormalTok{,}
+           \StringTok{"}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{textit\{p\}"} \OtherTok{=} \StringTok{"p"}\NormalTok{)}
+  
+\NormalTok{  caption }\OtherTok{\textless{}{-}} \FunctionTok{paste0}\NormalTok{(}\StringTok{"ANOVA{-}type table of fixed effects for the "}\NormalTok{, }\FunctionTok{find\_response}\NormalTok{(model), }\StringTok{" model"}\NormalTok{)}
+  
+\NormalTok{  n\_rows }\OtherTok{\textless{}{-}} \FunctionTok{dim}\NormalTok{(tab)[}\DecValTok{1}\NormalTok{]}
+  
+\NormalTok{  taa }\OtherTok{\textless{}{-}} \FunctionTok{kable}\NormalTok{(tab,}
+               \AttributeTok{digits =} \DecValTok{2}\NormalTok{,}
+               \AttributeTok{booktabs =} \ConstantTok{TRUE}\NormalTok{,}
+               \AttributeTok{align =} \FunctionTok{c}\NormalTok{(}\StringTok{"l"}\NormalTok{, }\FunctionTok{rep}\NormalTok{(}\StringTok{"c"}\NormalTok{, }\DecValTok{3}\NormalTok{)),}
+               \AttributeTok{linesep =} \StringTok{""}\NormalTok{,}
+               \AttributeTok{caption =}\NormalTok{ caption,}
+               \AttributeTok{escape =} \ConstantTok{FALSE}\NormalTok{) }\SpecialCharTok{|\textgreater{}}
+    \FunctionTok{kable\_styling}\NormalTok{(}\AttributeTok{latex\_options =} \FunctionTok{c}\NormalTok{(}\StringTok{"HOLD\_position"}\NormalTok{, }\StringTok{"scale\_down"}\NormalTok{)) }\SpecialCharTok{|\textgreater{}}
+    \FunctionTok{pack\_rows}\NormalTok{(}\StringTok{"Nakagawa\textquotesingle{}s $R\^{}2$"}\NormalTok{,}
+              \AttributeTok{start\_row =}\NormalTok{ n\_rows}\DecValTok{{-}1}\NormalTok{, }\AttributeTok{end\_row =}\NormalTok{ n\_rows,}
+              \AttributeTok{hline\_after =} \ConstantTok{TRUE}\NormalTok{, }\AttributeTok{hline\_before =} \ConstantTok{TRUE}\NormalTok{,}
+              \AttributeTok{escape =} \ConstantTok{FALSE}\NormalTok{) }\CommentTok{\#|\textgreater{} }
+    \CommentTok{\#row\_spec(n\_rows{-}1, align = "right") |\textgreater{} }
+    \CommentTok{\#row\_spec(row = 8, align = "right")}
+  \FunctionTok{return}\NormalTok{(taa)}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
 \subsection{Independent stimuli evaluation}\label{independent-stimuli-evaluation}
 
 The sex typicality of all stimuli was manipulated to either enhance or reduce their sex-typical characteristics. Since all the stimuli were male faces, this involved masculinizing them to increase their typical sex characteristics and feminizing them to reduce those characteristics. Masculinized and feminized versions were independently rated for masculinity and estimated age by a panel of raters (not participants).
@@ -388,7 +439,7 @@ First, masculinity rating given to the masculinized and feminized versions of ea
 
 \begin{table}[H]
 \centering
-\caption{\label{tab:unnamed-chunk-5}Difference in independent masculinity ratings given to each stimulus,
+\caption{\label{tab:unnamed-chunk-6}Difference in independent masculinity ratings given to each stimulus,
                according to its sexual dimorphism manipulation (feminized - masculinized)}
 \centering
 \resizebox{\ifdim\width>\linewidth\linewidth\else\width\fi}{!}{
@@ -955,7 +1006,7 @@ Men perceived as dangerous
 
 \begin{table}[H]
 \centering
-\caption{\label{tab:unnamed-chunk-9}Correlation between variables and PCA dimensions}
+\caption{\label{tab:unnamed-chunk-10}Correlation between variables and PCA dimensions}
 \centering
 \resizebox{\ifdim\width>\linewidth\linewidth\else\width\fi}{!}{
 \begin{tabular}[t]{lcc}
@@ -1307,7 +1358,7 @@ To test bias in fixation patterns according to the sexual dimorphism manipulatio
 
 \begin{table}[H]
 \centering
-\caption{\label{tab:unnamed-chunk-19}Number and age of participants in each condition}
+\caption{\label{tab:unnamed-chunk-20}Number and age of participants in each condition}
 \centering
 \resizebox{\ifdim\width>\linewidth\linewidth\else\width\fi}{!}{
 \begin{tabular}[t]{cccccc}
@@ -1933,7 +1984,7 @@ Low & 128 & 21.50 & 2.25 & 18 & 25\\
 
 \begin{table}[H]
 \centering
-\caption{\label{tab:unnamed-chunk-21}Correlations between partner perceptions}
+\caption{\label{tab:unnamed-chunk-22}Correlations between partner perceptions}
 \centering
 \begin{threeparttable}
 \begin{tabular}[t]{lccccc}
@@ -2019,7 +2070,7 @@ Attractiveness & -0.06 & 0.07 & 0.06 & \textbf{0.78***} & \textbf{0.6***}\\
 
 \begin{landscape}\begin{table}[H]
 \centering
-\caption{\label{tab:unnamed-chunk-22}Correlations between XXXXXX}
+\caption{\label{tab:unnamed-chunk-23}Correlations between XXXXXX}
 \centering
 \fontsize{3.9}{5.9}\selectfont
 \begin{threeparttable}
@@ -2158,7 +2209,7 @@ Infidelity & \textbf{0.2***} & 0.03 & -0.03 & -0.07 & -0.05 & 0.06 & 0.04 & -0.0
 
 \begin{landscape}\begin{table}[H]
 \centering
-\caption{\label{tab:unnamed-chunk-23}Correlations between fixations, subjective evaluations of stimuli, 
+\caption{\label{tab:unnamed-chunk-24}Correlations between fixations, subjective evaluations of stimuli, 
         partner perceptions, and violence by Condition}
 \centering
 \fontsize{4.2}{6.2}\selectfont
@@ -2336,7 +2387,7 @@ Infidelity & \textbf{0.2***} & 0.03 & -0.03 & -0.07 & -0.05 & 0.06 & 0.04 & -0.0
 
 \begin{table}[H]
 \centering
-\caption{\label{tab:unnamed-chunk-24}Correlations between partner violence and mean difference scores between 
+\caption{\label{tab:unnamed-chunk-25}Correlations between partner violence and mean difference scores between 
         responses to masculinized and feminized stimuli}
 \centering
 \resizebox{\ifdim\width>\linewidth\linewidth\else\width\fi}{!}{
@@ -2462,7 +2513,7 @@ Infidelity & \textbf{0.2***} & 0.03 & -0.03 & -0.07 & -0.05 & 0.06 & 0.04 & -0.0
 
 \begin{table}[H]
 \centering
-\caption{\label{tab:unnamed-chunk-25}Mean scores and comparison of resource availability dimensions by condition}
+\caption{\label{tab:unnamed-chunk-26}Mean scores and comparison of resource availability dimensions by condition}
 \centering
 \resizebox{\ifdim\width>\linewidth\linewidth\else\width\fi}{!}{
 \begin{threeparttable}
@@ -2560,6 +2611,70 @@ Physical Safety & 1.90 & 6.27 & 27.36 & \textbf{< 0.0001} & 3.42\\
 \caption{\label{fig:sex-dimor-check-plot}Effect of sexual dimorphisim manipulation on ratings of \textbf{(a)} masculinity and \textbf{(b)} attractiveness, by condition (High, Low). Reported significance are contrasts between sexual dimorphisim levels (feminized, masculinized) from linear mixed models including the fixed effects of condition, sexual dimorphism, and their interaction, as well as random intercepts per participants. In both models the main (within-subject) effect of the sexual dimorphism manipulation was significant, but not the main effect of condition or its interaction with sexual dimorphism. Mean ratings and 95\% CIs are in black. ***\textit{p} \textless{} 0.001.}
 \end{figure}
 
+\section{Models of the experimental design}\label{models-of-the-experimental-design}
+
+\subsection{Model 1: DFF}\label{model-1-dff}
+
+\subsubsection{Data}\label{data}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{dat\_m1 }\OtherTok{\textless{}{-}}\NormalTok{ dat }\SpecialCharTok{|\textgreater{}} 
+  \FunctionTok{select}\NormalTok{(DFF, Condition, Relationship, Sexual\_dimorphism,}
+\NormalTok{         ID, Stimulus,}
+\NormalTok{         Freq\_partner\_physical\_violence, Freq\_partner\_sexual\_violence,}
+\NormalTok{         Freq\_partner\_infidelity, Men\_perceived\_as\_dangerous,}
+\NormalTok{         Perceived\_home\_safety) }\SpecialCharTok{|\textgreater{}} 
+  \FunctionTok{filter}\NormalTok{(DFF }\SpecialCharTok{\textgreater{}=} \DecValTok{100} \SpecialCharTok{\&}\NormalTok{ DFF }\SpecialCharTok{\textless{}=} \DecValTok{1000}\NormalTok{) }\SpecialCharTok{|\textgreater{}} 
+  \FunctionTok{drop\_na}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\subsubsection{Fit linear mixed model}\label{fit-linear-mixed-model}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{mod1 }\OtherTok{\textless{}{-}} \FunctionTok{lmer}\NormalTok{(DFF }\SpecialCharTok{\textasciitilde{}}\NormalTok{ Condition }\SpecialCharTok{*}\NormalTok{ Relationship }\SpecialCharTok{*}\NormalTok{ Sexual\_dimorphism }\SpecialCharTok{+}
+\NormalTok{               (}\DecValTok{1} \SpecialCharTok{|}\NormalTok{ ID) }\SpecialCharTok{+}\NormalTok{ (}\DecValTok{1} \SpecialCharTok{|}\NormalTok{ Stimulus), }
+             \AttributeTok{data =}\NormalTok{ dat\_m1,}
+             \AttributeTok{na.action =} \StringTok{"na.fail"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\paragraph{ANOVA-type table}\label{anova-type-table}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{lmer.anova.tab}\NormalTok{(}\AttributeTok{model =}\NormalTok{ mod1)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{table}[H]
+\centering
+\caption{\label{tab:unnamed-chunk-29}ANOVA-type table of fixed effects for the DFF model}
+\centering
+\resizebox{\ifdim\width>\linewidth\linewidth\else\width\fi}{!}{
+\begin{tabular}[t]{lccc}
+\toprule
+FIxed effect & \textit{F} & \textit{df} & \textit{p}\\
+\midrule
+Condition & 0.06 & 1, 290.03 & 0.8\\
+Relationship & 0.08 & 1, 33648.27 & 0.77\\
+Sexual dimorphism & 11.80 & 1, 33640.71 & \textbf{< 0.001}\\
+Condition × Relationship & 0.14 & 1, 33648.5 & 0.71\\
+Condition × Sexual dimorphism & 0.01 & 1, 33640.25 & 0.93\\
+Relationship × Sexual dimorphism & 0.46 & 1, 33639.66 & 0.5\\
+Condition × Relationship × Sexual dimorphism & 1.24 & 1, 33639.52 & 0.26\\
+\addlinespace[0.3em]
+\hline
+\multicolumn{4}{l}{\textbf{Nakagawa's $R^2$}}\\
+\hline
+\hspace{1em}Conditional = 0.17 &  &  & \\
+\hspace{1em}Marginal = 0.00038 &  &  & \\
+\bottomrule
+\end{tabular}}
+\end{table}
+
 \section{Session info (for reproducibility)}\label{session}
 
 \begin{Shaded}
@@ -2577,10 +2692,10 @@ Physical Safety & 1.90 & 6.27 & 27.36 & \textbf{< 0.0001} & 3.42\\
 \emph{stats4}, \emph{stats}, \emph{graphics}, \emph{grDevices}, \emph{utils}, \emph{datasets}, \emph{methods} and \emph{base}
 
 \textbf{other attached packages:}
-\emph{pander(v.0.6.5)}, \emph{Hmisc(v.5.1-3)}, \emph{effectsize(v.0.8.9)}, \emph{bbmle(v.1.0.25.1)}, \emph{gtools(v.3.9.5)}, \emph{FactoMineR(v.2.11)}, \emph{factoextra(v.1.0.7)}, \emph{scales(v.1.3.0)}, \emph{GGally(v.2.2.1)}, \emph{performance(v.0.12.2)}, \emph{kableExtra(v.1.4.0)}, \emph{emmeans(v.1.10.3)}, \emph{lmerTest(v.3.1-3)}, \emph{lme4(v.1.1-35.5)}, \emph{Matrix(v.1.7-0)}, \emph{readxl(v.1.4.3)}, \emph{ggpubr(v.0.6.0)}, \emph{lubridate(v.1.9.3)}, \emph{forcats(v.1.0.0)}, \emph{stringr(v.1.5.1)}, \emph{dplyr(v.1.1.4)}, \emph{purrr(v.1.0.2)}, \emph{readr(v.2.1.5)}, \emph{tidyr(v.1.3.1)}, \emph{tibble(v.3.2.1)}, \emph{ggplot2(v.3.5.1)}, \emph{tidyverse(v.2.0.0)}, \emph{ggstats(v.0.6.0)}, \emph{MASS(v.7.3-61)}, \emph{car(v.3.1-2)}, \emph{carData(v.3.0-5)} and \emph{knitr(v.1.48)}
+\emph{pander(v.0.6.5)}, \emph{Hmisc(v.5.1-3)}, \emph{insight(v.0.20.2)}, \emph{effectsize(v.0.8.9)}, \emph{bbmle(v.1.0.25.1)}, \emph{gtools(v.3.9.5)}, \emph{FactoMineR(v.2.11)}, \emph{factoextra(v.1.0.7)}, \emph{scales(v.1.3.0)}, \emph{GGally(v.2.2.1)}, \emph{performance(v.0.12.2)}, \emph{kableExtra(v.1.4.0)}, \emph{emmeans(v.1.10.3)}, \emph{lmerTest(v.3.1-3)}, \emph{lme4(v.1.1-35.5)}, \emph{Matrix(v.1.7-0)}, \emph{readxl(v.1.4.3)}, \emph{ggpubr(v.0.6.0)}, \emph{lubridate(v.1.9.3)}, \emph{forcats(v.1.0.0)}, \emph{stringr(v.1.5.1)}, \emph{dplyr(v.1.1.4)}, \emph{purrr(v.1.0.2)}, \emph{readr(v.2.1.5)}, \emph{tidyr(v.1.3.1)}, \emph{tibble(v.3.2.1)}, \emph{ggplot2(v.3.5.1)}, \emph{tidyverse(v.2.0.0)}, \emph{ggstats(v.0.6.0)}, \emph{MASS(v.7.3-61)}, \emph{car(v.3.1-2)}, \emph{carData(v.3.0-5)} and \emph{knitr(v.1.48)}
 
 \textbf{loaded via a namespace (and not attached):}
-\emph{gridExtra(v.2.3)}, \emph{sandwich(v.3.1-0)}, \emph{rlang(v.1.1.4)}, \emph{magrittr(v.2.0.3)}, \emph{multcomp(v.1.4-26)}, \emph{compiler(v.4.4.1)}, \emph{systemfonts(v.1.1.0)}, \emph{vctrs(v.0.6.5)}, \emph{pkgconfig(v.2.0.3)}, \emph{fastmap(v.1.2.0)}, \emph{backports(v.1.5.0)}, \emph{labeling(v.0.4.3)}, \emph{utf8(v.1.2.4)}, \emph{rmarkdown(v.2.28)}, \emph{tzdb(v.0.4.0)}, \emph{nloptr(v.2.1.1)}, \emph{xfun(v.0.47)}, \emph{flashClust(v.1.01-2)}, \emph{highr(v.0.11)}, \emph{parallel(v.4.4.1)}, \emph{broom(v.1.0.6)}, \emph{cluster(v.2.1.6)}, \emph{R6(v.2.5.1)}, \emph{stringi(v.1.8.4)}, \emph{RColorBrewer(v.1.1-3)}, \emph{rpart(v.4.1.23)}, \emph{boot(v.1.3-30)}, \emph{cellranger(v.1.1.0)}, \emph{numDeriv(v.2016.8-1.1)}, \emph{estimability(v.1.5.1)}, \emph{Rcpp(v.1.0.13)}, \emph{bookdown(v.0.40)}, \emph{zoo(v.1.8-12)}, \emph{base64enc(v.0.1-3)}, \emph{parameters(v.0.22.0)}, \emph{nnet(v.7.3-19)}, \emph{splines(v.4.4.1)}, \emph{timechange(v.0.3.0)}, \emph{tidyselect(v.1.2.1)}, \emph{rstudioapi(v.0.16.0)}, \emph{abind(v.1.4-5)}, \emph{yaml(v.2.3.10)}, \emph{codetools(v.0.2-20)}, \emph{lattice(v.0.22-5)}, \emph{plyr(v.1.8.9)}, \emph{bayestestR(v.0.13.2)}, \emph{withr(v.3.0.1)}, \emph{coda(v.0.19-4.1)}, \emph{evaluate(v.0.24.0)}, \emph{foreign(v.0.8-86)}, \emph{survival(v.3.7-0)}, \emph{xml2(v.1.3.6)}, \emph{pillar(v.1.9.0)}, \emph{checkmate(v.2.3.2)}, \emph{DT(v.0.33)}, \emph{insight(v.0.20.2)}, \emph{generics(v.0.1.3)}, \emph{hms(v.1.1.3)}, \emph{munsell(v.0.5.1)}, \emph{minqa(v.1.2.7)}, \emph{xtable(v.1.8-4)}, \emph{leaps(v.3.2)}, \emph{glue(v.1.7.0)}, \emph{scatterplot3d(v.0.3-44)}, \emph{tools(v.4.4.1)}, \emph{data.table(v.1.15.4)}, \emph{ggsignif(v.0.6.4)}, \emph{mvtnorm(v.1.2-5)}, \emph{cowplot(v.1.1.3)}, \emph{grid(v.4.4.1)}, \emph{datawizard(v.0.12.2)}, \emph{bdsmatrix(v.1.3-7)}, \emph{colorspace(v.2.1-1)}, \emph{nlme(v.3.1-165)}, \emph{htmlTable(v.2.4.3)}, \emph{Formula(v.1.2-5)}, \emph{cli(v.3.6.3)}, \emph{fansi(v.1.0.6)}, \emph{viridisLite(v.0.4.2)}, \emph{svglite(v.2.1.3)}, \emph{gtable(v.0.3.5)}, \emph{rstatix(v.0.7.2)}, \emph{digest(v.0.6.37)}, \emph{pbkrtest(v.0.5.3)}, \emph{ggrepel(v.0.9.5)}, \emph{TH.data(v.1.1-2)}, \emph{farver(v.2.1.2)}, \emph{htmlwidgets(v.1.6.4)}, \emph{htmltools(v.0.5.8.1)}, \emph{lifecycle(v.1.0.4)} and \emph{multcompView(v.0.1-10)}
+\emph{gridExtra(v.2.3)}, \emph{rlang(v.1.1.4)}, \emph{magrittr(v.2.0.3)}, \emph{compiler(v.4.4.1)}, \emph{systemfonts(v.1.1.0)}, \emph{vctrs(v.0.6.5)}, \emph{pkgconfig(v.2.0.3)}, \emph{fastmap(v.1.2.0)}, \emph{backports(v.1.5.0)}, \emph{labeling(v.0.4.3)}, \emph{utf8(v.1.2.4)}, \emph{rmarkdown(v.2.28)}, \emph{tzdb(v.0.4.0)}, \emph{nloptr(v.2.1.1)}, \emph{xfun(v.0.47)}, \emph{flashClust(v.1.01-2)}, \emph{highr(v.0.11)}, \emph{parallel(v.4.4.1)}, \emph{broom(v.1.0.6)}, \emph{cluster(v.2.1.6)}, \emph{R6(v.2.5.1)}, \emph{stringi(v.1.8.4)}, \emph{RColorBrewer(v.1.1-3)}, \emph{rpart(v.4.1.23)}, \emph{boot(v.1.3-30)}, \emph{cellranger(v.1.1.0)}, \emph{numDeriv(v.2016.8-1.1)}, \emph{estimability(v.1.5.1)}, \emph{Rcpp(v.1.0.13)}, \emph{bookdown(v.0.40)}, \emph{base64enc(v.0.1-3)}, \emph{parameters(v.0.22.1)}, \emph{nnet(v.7.3-19)}, \emph{splines(v.4.4.1)}, \emph{timechange(v.0.3.0)}, \emph{tidyselect(v.1.2.1)}, \emph{rstudioapi(v.0.16.0)}, \emph{abind(v.1.4-5)}, \emph{yaml(v.2.3.10)}, \emph{lattice(v.0.22-5)}, \emph{plyr(v.1.8.9)}, \emph{withr(v.3.0.1)}, \emph{bayestestR(v.0.14.0)}, \emph{coda(v.0.19-4.1)}, \emph{evaluate(v.0.24.0)}, \emph{foreign(v.0.8-86)}, \emph{xml2(v.1.3.6)}, \emph{pillar(v.1.9.0)}, \emph{checkmate(v.2.3.2)}, \emph{DT(v.0.33)}, \emph{generics(v.0.1.3)}, \emph{hms(v.1.1.3)}, \emph{munsell(v.0.5.1)}, \emph{minqa(v.1.2.7)}, \emph{xtable(v.1.8-4)}, \emph{leaps(v.3.2)}, \emph{glue(v.1.7.0)}, \emph{scatterplot3d(v.0.3-44)}, \emph{tools(v.4.4.1)}, \emph{data.table(v.1.15.4)}, \emph{ggsignif(v.0.6.4)}, \emph{mvtnorm(v.1.2-5)}, \emph{cowplot(v.1.1.3)}, \emph{grid(v.4.4.1)}, \emph{bdsmatrix(v.1.3-7)}, \emph{datawizard(v.0.12.2)}, \emph{colorspace(v.2.1-1)}, \emph{nlme(v.3.1-165)}, \emph{htmlTable(v.2.4.3)}, \emph{Formula(v.1.2-5)}, \emph{cli(v.3.6.3)}, \emph{fansi(v.1.0.6)}, \emph{viridisLite(v.0.4.2)}, \emph{svglite(v.2.1.3)}, \emph{gtable(v.0.3.5)}, \emph{rstatix(v.0.7.2)}, \emph{digest(v.0.6.37)}, \emph{pbkrtest(v.0.5.3)}, \emph{ggrepel(v.0.9.5)}, \emph{htmlwidgets(v.1.6.4)}, \emph{farver(v.2.1.2)}, \emph{htmltools(v.0.5.8.1)}, \emph{lifecycle(v.1.0.4)} and \emph{multcompView(v.0.1-10)}
 
 \section{Supplementary references}\label{refs}
 

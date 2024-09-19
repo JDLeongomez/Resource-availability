@@ -167,6 +167,7 @@ library(FactoMineR)
 library(gtools)
 library(bbmle)
 library(effectsize)
+library(insight)
 ```
 
 ## Custom functions
@@ -244,6 +245,52 @@ corr.stars <- function(x) {
   Rnew <- cbind(Rnew[1:length(Rnew) - 1])
   # Return the final correlation matrix with significance stars.
   return(Rnew)
+}
+```
+
+### `lmer.anova.tab`
+
+This function takes a model, and creates an ANOVA-type table of fixed effects, formatted in \LaTeX.
+
+```{r}
+lmer.anova.tab <- function(model) {
+  
+  r2 <- r2_nakagawa(model)
+
+  tab <- anova(model) |>
+    rownames_to_column(var = "Effect") |> 
+    mutate(Effect = str_replace_all(Effect, "_", " "),
+           Effect = str_replace_all(Effect, ":", " × "),
+           df = paste0(NumDF, ", ", round(DenDF, 2))) |> 
+    rename("F" = "F value",
+           "p" = "Pr(>F)") |>
+    mutate(F = round(F, 2),
+           p = pval.lev(p)) |> 
+    select(Effect, F, df, p) |> 
+    add_row(Effect = paste0("Conditional = ", round(r2$R2_conditional, 2))) |> 
+    add_row(Effect = paste0("Marginal = ",signif(r2$R2_marginal, 2))) |> 
+    rename("FIxed effect" = "Effect",
+           "\\textit{df}" = "df",
+           "\\textit{F}" = "F",
+           "\\textit{p}" = "p")
+  
+  caption <- paste0("ANOVA-type table of fixed effects for the ", find_response(model), " model")
+  
+  n_rows <- dim(tab)[1]
+  
+  taa <- kable(tab,
+               digits = 2,
+               booktabs = TRUE,
+               align = c("l", rep("c", 3)),
+               linesep = "",
+               caption = caption,
+               escape = FALSE) |>
+    kable_styling(latex_options = c("HOLD_position", "scale_down")) |>
+    pack_rows("Nakagawa's $R^2$",
+              start_row = n_rows-1, end_row = n_rows,
+              hline_after = TRUE, hline_before = TRUE,
+              escape = FALSE)
+  return(taa)
 }
 ```
 
@@ -1079,8 +1126,6 @@ dat_dif <- dat |>
   ungroup() |> 
   mutate(across(where(is.character), as.factor))
 ```
-
-
 
 # Descriptives
 
@@ -2018,6 +2063,38 @@ ggarrange(p_mancheck_masc, p_mancheck_attr,
           labels = "auto")  |> 
   annotate_figure(bottom = text_grob("Sexual dimorphism",
                                   size = 11))
+```
+
+# Models of the experimental design
+
+## Model 1: DFF
+
+### Data
+
+```{r}
+dat_m1 <- dat |> 
+  select(DFF, Condition, Relationship, Sexual_dimorphism,
+         ID, Stimulus,
+         Freq_partner_physical_violence, Freq_partner_sexual_violence,
+         Freq_partner_infidelity, Men_perceived_as_dangerous,
+         Perceived_home_safety) |> 
+  filter(DFF >= 100 & DFF <= 1000) |> 
+  drop_na()
+```
+
+### Fit linear mixed model
+
+```{r}
+mod1 <- lmer(DFF ~ Condition * Relationship * Sexual_dimorphism +
+               (1 | ID) + (1 | Stimulus), 
+             data = dat_m1,
+             na.action = "na.fail")
+```
+
+#### ANOVA-type table
+
+```{r}
+lmer.anova.tab(model = mod1)
 ```
 
 # Session info (for reproducibility) {#session}
