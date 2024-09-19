@@ -1876,7 +1876,8 @@ dat_dif_short |>
         booktabs = TRUE,
         align = c("l", rep("c", 10)),
         linesep = "",
-        caption = "Two tables created by knitr::kables().",
+        caption = "Correlations between partner violence and mean difference scores between 
+        responses to masculinized and feminized stimuli",
         escape = FALSE) |>
   kable_styling(latex_options = c("HOLD_position", "scale_down")) |>
   add_header_above(c(" ",
@@ -1914,6 +1915,110 @@ dat_dif_short |>
            escape = FALSE)
 ```
 
+# Manipulation check
+
+## Resource availability dimensions by condition
+
+```{r}
+reg_fin |> 
+  select(starts_with("Condition")) |> 
+  pivot_longer(cols = contains("_"),
+               names_to = "Dimension",
+               values_to = "Score") |> 
+  group_by(Dimension) |> 
+  summarise("Mean (Low)" = mean(Score[reg_fin$Condition == "Low"]),
+            "Mean (High)" = mean(Score[reg_fin$Condition == "High"]),
+            "\\textit{t}" = t.test(Score ~ Condition)$statistic,
+            "\\textit{p}" = t.test(Score ~ Condition)$p.value,
+            "\\textit{g}" = hedges_g(Score ~ Condition)$Hedges_g) |> 
+  ungroup() |> 
+  mutate(Dimension = str_replace_all(Dimension, "_", " "),
+         Dimension = str_remove_all(Dimension, "Condition "),
+         Dimension = str_to_title(Dimension)) |> 
+  mutate("\\textit{p}" = pval.lev("\\textit{p}")) |> 
+  kable(digits = 2,
+        booktabs = TRUE,
+        align = c("l", rep("c", 5)),
+        linesep = "",
+        caption = "Mean scores and comparison of resource availability dimensions by condition",
+        escape = FALSE) |>
+  kable_styling(latex_options = c("HOLD_position", "scale_down")) |>
+  add_header_above(c(" ",
+                     "Condition" = 2,
+                     " " = 3),
+                   bold = TRUE) |> 
+  footnote(general = "Results are from Welch's \\\\textit{t}-test. 
+           As effect size, Hedges' \\\\textit{g} values are reported.",
+           threeparttable = TRUE,
+           footnote_as_chunk = TRUE,
+           escape = FALSE)
+```
+
+## Effect of sexual dimorphisim manipulation on masculinity and attractiveness ratings, by condition
+
+```{r sex-dimor-check-plot, message = FALSE, warning = FALSE, results = "hold", fig.cap = "Effect of sexual dimorphisim manipulation on ratings of \\textbf{(a)} masculinity and \\textbf{(b)} attractiveness, by condition (High, Low). Reported significance are contrasts between sexual dimorphisim levels (feminized, masculinized) from linear mixed models including the fixed effects of condition, sexual dimorphism, and their interaction, as well as random intercepts per participants. In both models the main (within-subject) effect of the sexual dimorphism manipulation was significant, but not the main effect of condition or its interaction with sexual dimorphism. Mean ratings and 95% CIs are in black. ***\\textit{p} < 0.001.", fig.height = 4}
+# Clean data fro models
+eval_desc <- dat |>
+  group_by(ID, Sexual_dimorphism, Condition) |> 
+  summarise(Masculinity = mean(Masculinity),
+            Attractiveness = mean(Attractiveness))
+
+# Masculinity
+mod_masc <- lmer(Masculinity ~ Sexual_dimorphism * Condition + (1 | ID), data = eval_desc)
+# anova(mod_masc)
+contr_mod_masc <- as.data.frame(pairs(emmeans(mod_masc,
+                                              ~ Sexual_dimorphism | Condition))) |> 
+  separate(contrast, c("group1", "group2"), " - ") |> 
+  mutate(p.signif = stars.pval(p.value))
+
+p_mancheck_masc <- ggplot(eval_desc, aes(x = Sexual_dimorphism, y = Masculinity, color = Sexual_dimorphism)) +
+  geom_jitter(alpha = 0.5) +
+  stat_summary(fun.data = "mean_cl_boot",
+               color = "black", 
+               size = 0.3) +
+  stat_summary(fun.y = mean, 
+               colour = "black", 
+               geom = "line", 
+               aes(group = 1)) +
+  stat_pvalue_manual(contr_mod_masc, label = "p.signif",
+                     y.position = 10.5,
+                     hide.ns = TRUE,
+                     tip.length = 0) +
+  labs(x = NULL,
+       color = "Sexual dimorphism") +
+  facet_wrap(~Condition,
+             labeller = labeller(Condition = cond_labs))
+
+# Attractiveness
+mod_attr <- lmer(Attractiveness ~ Sexual_dimorphism * Condition + (1 | ID), data = eval_desc)
+# anova(mod_attr)
+contr_mod_attr <- as.data.frame(pairs(emmeans(mod_attr,
+                                              ~ Sexual_dimorphism | Condition))) |> 
+  separate(contrast, c("group1", "group2"), " - ") |> 
+  mutate(p.signif = stars.pval(p.value))
+
+p_mancheck_attr <- ggplot(eval_desc, aes(x = Sexual_dimorphism, y = Attractiveness, color = Sexual_dimorphism)) +
+  geom_jitter(alpha = 0.5) +
+  stat_summary(fun.data = "mean_cl_boot",
+               color = "black",
+               size = 0.3) +
+  stat_summary(fun.y = mean, colour = "black", geom = "line", aes(group = 1)) +
+  stat_pvalue_manual(contr_mod_attr, label = "p.signif",
+                     y.position = 10,
+                     hide.ns = TRUE,
+                     tip.length = 0) +
+  labs(x = NULL,
+       color = "Sexual dimorphism") +
+  facet_wrap(~Condition,
+             labeller = labeller(Condition = cond_labs))
+
+# Combined plot
+ggarrange(p_mancheck_masc, p_mancheck_attr,
+          legend = "none",
+          labels = "auto")  |> 
+  annotate_figure(bottom = text_grob("Sexual dimorphism",
+                                  size = 11))
+```
 
 # Session info (for reproducibility) {#session}
 

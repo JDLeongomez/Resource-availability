@@ -147,7 +147,7 @@
 \makeatother
 \subtitle{Code and analyses}
 \author{Milena Vásquez-Amézquita \orcidlink{0000-0001-7317-8430}\textsuperscript{1,3,*} \and Andrés Castellanos-Chacón \orcidlink{0000-0003-1684-9319}\textsuperscript{2} \and Wendy Medina-Sarmiento\textsuperscript{1} \and Valentina Cepeda\textsuperscript{1} \and Marina Begoña Martínez-González \orcidlink{0000-0002-5840-6383}\textsuperscript{3} \and Juan David Leongómez \orcidlink{0000-0002-0092-6298}\textsuperscript{2}}
-\date{18 September, 2024}
+\date{19 September, 2024}
 
 \begin{document}
 \maketitle
@@ -2294,7 +2294,8 @@ Infidelity & \textbf{0.2***} & 0.03 & -0.03 & -0.07 & -0.05 & 0.06 & 0.04 & -0.0
         \AttributeTok{booktabs =} \ConstantTok{TRUE}\NormalTok{,}
         \AttributeTok{align =} \FunctionTok{c}\NormalTok{(}\StringTok{"l"}\NormalTok{, }\FunctionTok{rep}\NormalTok{(}\StringTok{"c"}\NormalTok{, }\DecValTok{10}\NormalTok{)),}
         \AttributeTok{linesep =} \StringTok{""}\NormalTok{,}
-        \AttributeTok{caption =} \StringTok{"Two tables created by knitr::kables()."}\NormalTok{,}
+        \AttributeTok{caption =} \StringTok{"Correlations between partner violence and mean difference scores between }
+\StringTok{        responses to masculinized and feminized stimuli"}\NormalTok{,}
         \AttributeTok{escape =} \ConstantTok{FALSE}\NormalTok{) }\SpecialCharTok{|\textgreater{}}
   \FunctionTok{kable\_styling}\NormalTok{(}\AttributeTok{latex\_options =} \FunctionTok{c}\NormalTok{(}\StringTok{"HOLD\_position"}\NormalTok{, }\StringTok{"scale\_down"}\NormalTok{)) }\SpecialCharTok{|\textgreater{}}
   \FunctionTok{add\_header\_above}\NormalTok{(}\FunctionTok{c}\NormalTok{(}\StringTok{" "}\NormalTok{,}
@@ -2335,7 +2336,8 @@ Infidelity & \textbf{0.2***} & 0.03 & -0.03 & -0.07 & -0.05 & 0.06 & 0.04 & -0.0
 
 \begin{table}[H]
 \centering
-\caption{\label{tab:unnamed-chunk-24}Two tables created by knitr::kables().}
+\caption{\label{tab:unnamed-chunk-24}Correlations between partner violence and mean difference scores between 
+        responses to masculinized and feminized stimuli}
 \centering
 \resizebox{\ifdim\width>\linewidth\linewidth\else\width\fi}{!}{
 \begin{threeparttable}
@@ -2417,6 +2419,147 @@ Infidelity & \textbf{0.2***} & 0.03 & -0.03 & -0.07 & -0.05 & 0.06 & 0.04 & -0.0
 \end{threeparttable}}
 \end{table}
 
+\section{Manipulation check}\label{manipulation-check}
+
+\subsection{Resource availability dimensions by condition}\label{resource-availability-dimensions-by-condition}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{reg\_fin }\SpecialCharTok{|\textgreater{}} 
+  \FunctionTok{select}\NormalTok{(}\FunctionTok{starts\_with}\NormalTok{(}\StringTok{"Condition"}\NormalTok{)) }\SpecialCharTok{|\textgreater{}} 
+  \FunctionTok{pivot\_longer}\NormalTok{(}\AttributeTok{cols =} \FunctionTok{contains}\NormalTok{(}\StringTok{"\_"}\NormalTok{),}
+               \AttributeTok{names\_to =} \StringTok{"Dimension"}\NormalTok{,}
+               \AttributeTok{values\_to =} \StringTok{"Score"}\NormalTok{) }\SpecialCharTok{|\textgreater{}} 
+  \FunctionTok{group\_by}\NormalTok{(Dimension) }\SpecialCharTok{|\textgreater{}} 
+  \FunctionTok{summarise}\NormalTok{(}\StringTok{"Mean (Low)"} \OtherTok{=} \FunctionTok{mean}\NormalTok{(Score[reg\_fin}\SpecialCharTok{$}\NormalTok{Condition }\SpecialCharTok{==} \StringTok{"Low"}\NormalTok{]),}
+            \StringTok{"Mean (High)"} \OtherTok{=} \FunctionTok{mean}\NormalTok{(Score[reg\_fin}\SpecialCharTok{$}\NormalTok{Condition }\SpecialCharTok{==} \StringTok{"High"}\NormalTok{]),}
+            \StringTok{"}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{textit\{t\}"} \OtherTok{=} \FunctionTok{t.test}\NormalTok{(Score }\SpecialCharTok{\textasciitilde{}}\NormalTok{ Condition)}\SpecialCharTok{$}\NormalTok{statistic,}
+            \StringTok{"}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{textit\{p\}"} \OtherTok{=} \FunctionTok{t.test}\NormalTok{(Score }\SpecialCharTok{\textasciitilde{}}\NormalTok{ Condition)}\SpecialCharTok{$}\NormalTok{p.value,}
+            \StringTok{"}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{textit\{g\}"} \OtherTok{=} \FunctionTok{hedges\_g}\NormalTok{(Score }\SpecialCharTok{\textasciitilde{}}\NormalTok{ Condition)}\SpecialCharTok{$}\NormalTok{Hedges\_g) }\SpecialCharTok{|\textgreater{}} 
+  \FunctionTok{ungroup}\NormalTok{() }\SpecialCharTok{|\textgreater{}} 
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{Dimension =} \FunctionTok{str\_replace\_all}\NormalTok{(Dimension, }\StringTok{"\_"}\NormalTok{, }\StringTok{" "}\NormalTok{),}
+         \AttributeTok{Dimension =} \FunctionTok{str\_remove\_all}\NormalTok{(Dimension, }\StringTok{"Condition "}\NormalTok{),}
+         \AttributeTok{Dimension =} \FunctionTok{str\_to\_title}\NormalTok{(Dimension)) }\SpecialCharTok{|\textgreater{}} 
+  \FunctionTok{mutate}\NormalTok{(}\StringTok{"}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{textit\{p\}"} \OtherTok{=} \FunctionTok{pval.lev}\NormalTok{(}\StringTok{"}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{textit\{p\}"}\NormalTok{)) }\SpecialCharTok{|\textgreater{}} 
+  \FunctionTok{kable}\NormalTok{(}\AttributeTok{digits =} \DecValTok{2}\NormalTok{,}
+        \AttributeTok{booktabs =} \ConstantTok{TRUE}\NormalTok{,}
+        \AttributeTok{align =} \FunctionTok{c}\NormalTok{(}\StringTok{"l"}\NormalTok{, }\FunctionTok{rep}\NormalTok{(}\StringTok{"c"}\NormalTok{, }\DecValTok{5}\NormalTok{)),}
+        \AttributeTok{linesep =} \StringTok{""}\NormalTok{,}
+        \AttributeTok{caption =} \StringTok{"Mean scores and comparison of resource availability dimensions by condition"}\NormalTok{,}
+        \AttributeTok{escape =} \ConstantTok{FALSE}\NormalTok{) }\SpecialCharTok{|\textgreater{}}
+  \FunctionTok{kable\_styling}\NormalTok{(}\AttributeTok{latex\_options =} \FunctionTok{c}\NormalTok{(}\StringTok{"HOLD\_position"}\NormalTok{, }\StringTok{"scale\_down"}\NormalTok{)) }\SpecialCharTok{|\textgreater{}}
+  \FunctionTok{add\_header\_above}\NormalTok{(}\FunctionTok{c}\NormalTok{(}\StringTok{" "}\NormalTok{,}
+                     \StringTok{"Condition"} \OtherTok{=} \DecValTok{2}\NormalTok{,}
+                     \StringTok{" "} \OtherTok{=} \DecValTok{3}\NormalTok{),}
+                   \AttributeTok{bold =} \ConstantTok{TRUE}\NormalTok{) }\SpecialCharTok{|\textgreater{}} 
+  \FunctionTok{footnote}\NormalTok{(}\AttributeTok{general =} \StringTok{"Results are from Welch\textquotesingle{}s }\SpecialCharTok{\textbackslash{}\textbackslash{}\textbackslash{}\textbackslash{}}\StringTok{textit\{t\}{-}test. }
+\StringTok{           As effect size, Hedges\textquotesingle{} }\SpecialCharTok{\textbackslash{}\textbackslash{}\textbackslash{}\textbackslash{}}\StringTok{textit\{g\} values are reported."}\NormalTok{,}
+           \AttributeTok{threeparttable =} \ConstantTok{TRUE}\NormalTok{,}
+           \AttributeTok{footnote\_as\_chunk =} \ConstantTok{TRUE}\NormalTok{,}
+           \AttributeTok{escape =} \ConstantTok{FALSE}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{table}[H]
+\centering
+\caption{\label{tab:unnamed-chunk-25}Mean scores and comparison of resource availability dimensions by condition}
+\centering
+\resizebox{\ifdim\width>\linewidth\linewidth\else\width\fi}{!}{
+\begin{threeparttable}
+\begin{tabular}[t]{lccccc}
+\toprule
+\multicolumn{1}{c}{\textbf{ }} & \multicolumn{2}{c}{\textbf{Condition}} & \multicolumn{3}{c}{\textbf{ }} \\
+\cmidrule(l{3pt}r{3pt}){2-3}
+Dimension & Mean (Low) & Mean (High) & \textit{t} & \textit{p} & \textit{g}\\
+\midrule
+Economic Security & 0.76 & 6.62 & 54.04 & \textbf{< 0.0001} & 6.56\\
+Happiness & 1.44 & 6.37 & 39.49 & \textbf{< 0.0001} & 4.84\\
+Healthy & 2.04 & 6.42 & 30.39 & \textbf{< 0.0001} & 3.81\\
+Physical Safety & 1.90 & 6.27 & 27.36 & \textbf{< 0.0001} & 3.42\\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}[para]
+\item \textit{Note: } 
+\item Results are from Welch's \textit{t}-test. 
+           As effect size, Hedges' \textit{g} values are reported.
+\end{tablenotes}
+\end{threeparttable}}
+\end{table}
+
+\subsection{Effect of sexual dimorphisim manipulation on masculinity and attractiveness ratings, by condition}\label{effect-of-sexual-dimorphisim-manipulation-on-masculinity-and-attractiveness-ratings-by-condition}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Clean data fro models}
+\NormalTok{eval\_desc }\OtherTok{\textless{}{-}}\NormalTok{ dat }\SpecialCharTok{|\textgreater{}}
+  \FunctionTok{group\_by}\NormalTok{(ID, Sexual\_dimorphism, Condition) }\SpecialCharTok{|\textgreater{}} 
+  \FunctionTok{summarise}\NormalTok{(}\AttributeTok{Masculinity =} \FunctionTok{mean}\NormalTok{(Masculinity),}
+            \AttributeTok{Attractiveness =} \FunctionTok{mean}\NormalTok{(Attractiveness))}
+
+\CommentTok{\# Masculinity}
+\NormalTok{mod\_masc }\OtherTok{\textless{}{-}} \FunctionTok{lmer}\NormalTok{(Masculinity }\SpecialCharTok{\textasciitilde{}}\NormalTok{ Sexual\_dimorphism }\SpecialCharTok{*}\NormalTok{ Condition }\SpecialCharTok{+}\NormalTok{ (}\DecValTok{1} \SpecialCharTok{|}\NormalTok{ ID), }\AttributeTok{data =}\NormalTok{ eval\_desc)}
+\CommentTok{\# anova(mod\_masc)}
+\NormalTok{contr\_mod\_masc }\OtherTok{\textless{}{-}} \FunctionTok{as.data.frame}\NormalTok{(}\FunctionTok{pairs}\NormalTok{(}\FunctionTok{emmeans}\NormalTok{(mod\_masc,}
+                                              \SpecialCharTok{\textasciitilde{}}\NormalTok{ Sexual\_dimorphism }\SpecialCharTok{|}\NormalTok{ Condition))) }\SpecialCharTok{|\textgreater{}} 
+  \FunctionTok{separate}\NormalTok{(contrast, }\FunctionTok{c}\NormalTok{(}\StringTok{"group1"}\NormalTok{, }\StringTok{"group2"}\NormalTok{), }\StringTok{" {-} "}\NormalTok{) }\SpecialCharTok{|\textgreater{}} 
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{p.signif =} \FunctionTok{stars.pval}\NormalTok{(p.value))}
+
+\NormalTok{p\_mancheck\_masc }\OtherTok{\textless{}{-}} \FunctionTok{ggplot}\NormalTok{(eval\_desc, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ Sexual\_dimorphism, }\AttributeTok{y =}\NormalTok{ Masculinity, }\AttributeTok{color =}\NormalTok{ Sexual\_dimorphism)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_jitter}\NormalTok{(}\AttributeTok{alpha =} \FloatTok{0.5}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{stat\_summary}\NormalTok{(}\AttributeTok{fun.data =} \StringTok{"mean\_cl\_boot"}\NormalTok{,}
+               \AttributeTok{color =} \StringTok{"black"}\NormalTok{, }
+               \AttributeTok{size =} \FloatTok{0.3}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{stat\_summary}\NormalTok{(}\AttributeTok{fun.y =}\NormalTok{ mean, }
+               \AttributeTok{colour =} \StringTok{"black"}\NormalTok{, }
+               \AttributeTok{geom =} \StringTok{"line"}\NormalTok{, }
+               \FunctionTok{aes}\NormalTok{(}\AttributeTok{group =} \DecValTok{1}\NormalTok{)) }\SpecialCharTok{+}
+  \FunctionTok{stat\_pvalue\_manual}\NormalTok{(contr\_mod\_masc, }\AttributeTok{label =} \StringTok{"p.signif"}\NormalTok{,}
+                     \AttributeTok{y.position =} \FloatTok{10.5}\NormalTok{,}
+                     \AttributeTok{hide.ns =} \ConstantTok{TRUE}\NormalTok{,}
+                     \AttributeTok{tip.length =} \DecValTok{0}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{x =} \ConstantTok{NULL}\NormalTok{,}
+       \AttributeTok{color =} \StringTok{"Sexual dimorphism"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{facet\_wrap}\NormalTok{(}\SpecialCharTok{\textasciitilde{}}\NormalTok{Condition,}
+             \AttributeTok{labeller =} \FunctionTok{labeller}\NormalTok{(}\AttributeTok{Condition =}\NormalTok{ cond\_labs))}
+
+\CommentTok{\# Attractiveness}
+\NormalTok{mod\_attr }\OtherTok{\textless{}{-}} \FunctionTok{lmer}\NormalTok{(Attractiveness }\SpecialCharTok{\textasciitilde{}}\NormalTok{ Sexual\_dimorphism }\SpecialCharTok{*}\NormalTok{ Condition }\SpecialCharTok{+}\NormalTok{ (}\DecValTok{1} \SpecialCharTok{|}\NormalTok{ ID), }\AttributeTok{data =}\NormalTok{ eval\_desc)}
+\CommentTok{\# anova(mod\_attr)}
+\NormalTok{contr\_mod\_attr }\OtherTok{\textless{}{-}} \FunctionTok{as.data.frame}\NormalTok{(}\FunctionTok{pairs}\NormalTok{(}\FunctionTok{emmeans}\NormalTok{(mod\_attr,}
+                                              \SpecialCharTok{\textasciitilde{}}\NormalTok{ Sexual\_dimorphism }\SpecialCharTok{|}\NormalTok{ Condition))) }\SpecialCharTok{|\textgreater{}} 
+  \FunctionTok{separate}\NormalTok{(contrast, }\FunctionTok{c}\NormalTok{(}\StringTok{"group1"}\NormalTok{, }\StringTok{"group2"}\NormalTok{), }\StringTok{" {-} "}\NormalTok{) }\SpecialCharTok{|\textgreater{}} 
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{p.signif =} \FunctionTok{stars.pval}\NormalTok{(p.value))}
+
+\NormalTok{p\_mancheck\_attr }\OtherTok{\textless{}{-}} \FunctionTok{ggplot}\NormalTok{(eval\_desc, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ Sexual\_dimorphism, }\AttributeTok{y =}\NormalTok{ Attractiveness, }\AttributeTok{color =}\NormalTok{ Sexual\_dimorphism)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_jitter}\NormalTok{(}\AttributeTok{alpha =} \FloatTok{0.5}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{stat\_summary}\NormalTok{(}\AttributeTok{fun.data =} \StringTok{"mean\_cl\_boot"}\NormalTok{,}
+               \AttributeTok{color =} \StringTok{"black"}\NormalTok{,}
+               \AttributeTok{size =} \FloatTok{0.3}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{stat\_summary}\NormalTok{(}\AttributeTok{fun.y =}\NormalTok{ mean, }\AttributeTok{colour =} \StringTok{"black"}\NormalTok{, }\AttributeTok{geom =} \StringTok{"line"}\NormalTok{, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{group =} \DecValTok{1}\NormalTok{)) }\SpecialCharTok{+}
+  \FunctionTok{stat\_pvalue\_manual}\NormalTok{(contr\_mod\_attr, }\AttributeTok{label =} \StringTok{"p.signif"}\NormalTok{,}
+                     \AttributeTok{y.position =} \DecValTok{10}\NormalTok{,}
+                     \AttributeTok{hide.ns =} \ConstantTok{TRUE}\NormalTok{,}
+                     \AttributeTok{tip.length =} \DecValTok{0}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{x =} \ConstantTok{NULL}\NormalTok{,}
+       \AttributeTok{color =} \StringTok{"Sexual dimorphism"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{facet\_wrap}\NormalTok{(}\SpecialCharTok{\textasciitilde{}}\NormalTok{Condition,}
+             \AttributeTok{labeller =} \FunctionTok{labeller}\NormalTok{(}\AttributeTok{Condition =}\NormalTok{ cond\_labs))}
+
+\CommentTok{\# Combined plot}
+\FunctionTok{ggarrange}\NormalTok{(p\_mancheck\_masc, p\_mancheck\_attr,}
+          \AttributeTok{legend =} \StringTok{"none"}\NormalTok{,}
+          \AttributeTok{labels =} \StringTok{"auto"}\NormalTok{)  }\SpecialCharTok{|\textgreater{}} 
+  \FunctionTok{annotate\_figure}\NormalTok{(}\AttributeTok{bottom =} \FunctionTok{text\_grob}\NormalTok{(}\StringTok{"Sexual dimorphism"}\NormalTok{,}
+                                  \AttributeTok{size =} \DecValTok{11}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}
+\centering
+\includegraphics{Supplementary_material_files/figure-latex/sex-dimor-check-plot-1.pdf}
+\caption{\label{fig:sex-dimor-check-plot}Effect of sexual dimorphisim manipulation on ratings of \textbf{(a)} masculinity and \textbf{(b)} attractiveness, by condition (High, Low). Reported significance are contrasts between sexual dimorphisim levels (feminized, masculinized) from linear mixed models including the fixed effects of condition, sexual dimorphism, and their interaction, as well as random intercepts per participants. In both models the main (within-subject) effect of the sexual dimorphism manipulation was significant, but not the main effect of condition or its interaction with sexual dimorphism. Mean ratings and 95\% CIs are in black. ***\textit{p} \textless{} 0.001.}
+\end{figure}
+
 \section{Session info (for reproducibility)}\label{session}
 
 \begin{Shaded}
@@ -2437,7 +2580,7 @@ Infidelity & \textbf{0.2***} & 0.03 & -0.03 & -0.07 & -0.05 & 0.06 & 0.04 & -0.0
 \emph{pander(v.0.6.5)}, \emph{Hmisc(v.5.1-3)}, \emph{effectsize(v.0.8.9)}, \emph{bbmle(v.1.0.25.1)}, \emph{gtools(v.3.9.5)}, \emph{FactoMineR(v.2.11)}, \emph{factoextra(v.1.0.7)}, \emph{scales(v.1.3.0)}, \emph{GGally(v.2.2.1)}, \emph{performance(v.0.12.2)}, \emph{kableExtra(v.1.4.0)}, \emph{emmeans(v.1.10.3)}, \emph{lmerTest(v.3.1-3)}, \emph{lme4(v.1.1-35.5)}, \emph{Matrix(v.1.7-0)}, \emph{readxl(v.1.4.3)}, \emph{ggpubr(v.0.6.0)}, \emph{lubridate(v.1.9.3)}, \emph{forcats(v.1.0.0)}, \emph{stringr(v.1.5.1)}, \emph{dplyr(v.1.1.4)}, \emph{purrr(v.1.0.2)}, \emph{readr(v.2.1.5)}, \emph{tidyr(v.1.3.1)}, \emph{tibble(v.3.2.1)}, \emph{ggplot2(v.3.5.1)}, \emph{tidyverse(v.2.0.0)}, \emph{ggstats(v.0.6.0)}, \emph{MASS(v.7.3-61)}, \emph{car(v.3.1-2)}, \emph{carData(v.3.0-5)} and \emph{knitr(v.1.48)}
 
 \textbf{loaded via a namespace (and not attached):}
-\emph{gridExtra(v.2.3)}, \emph{sandwich(v.3.1-0)}, \emph{rlang(v.1.1.4)}, \emph{magrittr(v.2.0.3)}, \emph{multcomp(v.1.4-26)}, \emph{compiler(v.4.4.1)}, \emph{systemfonts(v.1.1.0)}, \emph{vctrs(v.0.6.5)}, \emph{pkgconfig(v.2.0.3)}, \emph{fastmap(v.1.2.0)}, \emph{backports(v.1.5.0)}, \emph{labeling(v.0.4.3)}, \emph{utf8(v.1.2.4)}, \emph{rmarkdown(v.2.28)}, \emph{tzdb(v.0.4.0)}, \emph{nloptr(v.2.1.1)}, \emph{xfun(v.0.47)}, \emph{flashClust(v.1.01-2)}, \emph{highr(v.0.11)}, \emph{broom(v.1.0.6)}, \emph{cluster(v.2.1.6)}, \emph{R6(v.2.5.1)}, \emph{stringi(v.1.8.4)}, \emph{RColorBrewer(v.1.1-3)}, \emph{rpart(v.4.1.23)}, \emph{boot(v.1.3-30)}, \emph{cellranger(v.1.1.0)}, \emph{numDeriv(v.2016.8-1.1)}, \emph{estimability(v.1.5.1)}, \emph{Rcpp(v.1.0.13)}, \emph{bookdown(v.0.40)}, \emph{zoo(v.1.8-12)}, \emph{base64enc(v.0.1-3)}, \emph{parameters(v.0.22.0)}, \emph{nnet(v.7.3-19)}, \emph{splines(v.4.4.1)}, \emph{timechange(v.0.3.0)}, \emph{tidyselect(v.1.2.1)}, \emph{rstudioapi(v.0.16.0)}, \emph{abind(v.1.4-5)}, \emph{yaml(v.2.3.10)}, \emph{codetools(v.0.2-20)}, \emph{lattice(v.0.22-5)}, \emph{plyr(v.1.8.9)}, \emph{bayestestR(v.0.13.2)}, \emph{withr(v.3.0.1)}, \emph{coda(v.0.19-4.1)}, \emph{evaluate(v.0.24.0)}, \emph{foreign(v.0.8-86)}, \emph{survival(v.3.7-0)}, \emph{xml2(v.1.3.6)}, \emph{pillar(v.1.9.0)}, \emph{checkmate(v.2.3.2)}, \emph{DT(v.0.33)}, \emph{insight(v.0.20.2)}, \emph{generics(v.0.1.3)}, \emph{hms(v.1.1.3)}, \emph{munsell(v.0.5.1)}, \emph{minqa(v.1.2.7)}, \emph{xtable(v.1.8-4)}, \emph{leaps(v.3.2)}, \emph{glue(v.1.7.0)}, \emph{scatterplot3d(v.0.3-44)}, \emph{tools(v.4.4.1)}, \emph{data.table(v.1.15.4)}, \emph{ggsignif(v.0.6.4)}, \emph{mvtnorm(v.1.2-5)}, \emph{cowplot(v.1.1.3)}, \emph{grid(v.4.4.1)}, \emph{datawizard(v.0.12.2)}, \emph{bdsmatrix(v.1.3-7)}, \emph{colorspace(v.2.1-1)}, \emph{nlme(v.3.1-165)}, \emph{htmlTable(v.2.4.3)}, \emph{Formula(v.1.2-5)}, \emph{cli(v.3.6.3)}, \emph{fansi(v.1.0.6)}, \emph{viridisLite(v.0.4.2)}, \emph{svglite(v.2.1.3)}, \emph{gtable(v.0.3.5)}, \emph{rstatix(v.0.7.2)}, \emph{digest(v.0.6.37)}, \emph{ggrepel(v.0.9.5)}, \emph{TH.data(v.1.1-2)}, \emph{farver(v.2.1.2)}, \emph{htmlwidgets(v.1.6.4)}, \emph{htmltools(v.0.5.8.1)}, \emph{lifecycle(v.1.0.4)} and \emph{multcompView(v.0.1-10)}
+\emph{gridExtra(v.2.3)}, \emph{sandwich(v.3.1-0)}, \emph{rlang(v.1.1.4)}, \emph{magrittr(v.2.0.3)}, \emph{multcomp(v.1.4-26)}, \emph{compiler(v.4.4.1)}, \emph{systemfonts(v.1.1.0)}, \emph{vctrs(v.0.6.5)}, \emph{pkgconfig(v.2.0.3)}, \emph{fastmap(v.1.2.0)}, \emph{backports(v.1.5.0)}, \emph{labeling(v.0.4.3)}, \emph{utf8(v.1.2.4)}, \emph{rmarkdown(v.2.28)}, \emph{tzdb(v.0.4.0)}, \emph{nloptr(v.2.1.1)}, \emph{xfun(v.0.47)}, \emph{flashClust(v.1.01-2)}, \emph{highr(v.0.11)}, \emph{parallel(v.4.4.1)}, \emph{broom(v.1.0.6)}, \emph{cluster(v.2.1.6)}, \emph{R6(v.2.5.1)}, \emph{stringi(v.1.8.4)}, \emph{RColorBrewer(v.1.1-3)}, \emph{rpart(v.4.1.23)}, \emph{boot(v.1.3-30)}, \emph{cellranger(v.1.1.0)}, \emph{numDeriv(v.2016.8-1.1)}, \emph{estimability(v.1.5.1)}, \emph{Rcpp(v.1.0.13)}, \emph{bookdown(v.0.40)}, \emph{zoo(v.1.8-12)}, \emph{base64enc(v.0.1-3)}, \emph{parameters(v.0.22.0)}, \emph{nnet(v.7.3-19)}, \emph{splines(v.4.4.1)}, \emph{timechange(v.0.3.0)}, \emph{tidyselect(v.1.2.1)}, \emph{rstudioapi(v.0.16.0)}, \emph{abind(v.1.4-5)}, \emph{yaml(v.2.3.10)}, \emph{codetools(v.0.2-20)}, \emph{lattice(v.0.22-5)}, \emph{plyr(v.1.8.9)}, \emph{bayestestR(v.0.13.2)}, \emph{withr(v.3.0.1)}, \emph{coda(v.0.19-4.1)}, \emph{evaluate(v.0.24.0)}, \emph{foreign(v.0.8-86)}, \emph{survival(v.3.7-0)}, \emph{xml2(v.1.3.6)}, \emph{pillar(v.1.9.0)}, \emph{checkmate(v.2.3.2)}, \emph{DT(v.0.33)}, \emph{insight(v.0.20.2)}, \emph{generics(v.0.1.3)}, \emph{hms(v.1.1.3)}, \emph{munsell(v.0.5.1)}, \emph{minqa(v.1.2.7)}, \emph{xtable(v.1.8-4)}, \emph{leaps(v.3.2)}, \emph{glue(v.1.7.0)}, \emph{scatterplot3d(v.0.3-44)}, \emph{tools(v.4.4.1)}, \emph{data.table(v.1.15.4)}, \emph{ggsignif(v.0.6.4)}, \emph{mvtnorm(v.1.2-5)}, \emph{cowplot(v.1.1.3)}, \emph{grid(v.4.4.1)}, \emph{datawizard(v.0.12.2)}, \emph{bdsmatrix(v.1.3-7)}, \emph{colorspace(v.2.1-1)}, \emph{nlme(v.3.1-165)}, \emph{htmlTable(v.2.4.3)}, \emph{Formula(v.1.2-5)}, \emph{cli(v.3.6.3)}, \emph{fansi(v.1.0.6)}, \emph{viridisLite(v.0.4.2)}, \emph{svglite(v.2.1.3)}, \emph{gtable(v.0.3.5)}, \emph{rstatix(v.0.7.2)}, \emph{digest(v.0.6.37)}, \emph{pbkrtest(v.0.5.3)}, \emph{ggrepel(v.0.9.5)}, \emph{TH.data(v.1.1-2)}, \emph{farver(v.2.1.2)}, \emph{htmlwidgets(v.1.6.4)}, \emph{htmltools(v.0.5.8.1)}, \emph{lifecycle(v.1.0.4)} and \emph{multcompView(v.0.1-10)}
 
 \section{Supplementary references}\label{refs}
 
