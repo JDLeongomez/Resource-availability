@@ -428,6 +428,53 @@ full.contr <- function(model, emm_contr) {
 }
 ```
 
+### `plot.exp`
+
+This function takes a model, and creates a plot that shows the estimated marginal means.
+
+```{r}
+cond_labs <- c("Condition: High", "Condition: Low")
+cond_labs <- c("Condition: High", "Condition: Low")
+cond_labs <- c("Condition: High", "Condition: Low")
+cond_labs <- c("Condition: High", "Condition: Low")
+cond_labs <- c("Condition: High", "Condition: Low")
+names(cond_labs) <- c("High", "Low")
+
+plot.exp <- function(model, y.pos) {
+  
+  emms_mod <- as.data.frame(emmeans(model,
+                                   ~ Sexual_dimorphism + Condition + Relationship))
+  
+  contr_mod <- as.data.frame(pairs(emmeans(model,
+                                          ~ Sexual_dimorphism | Condition + Relationship))) |>
+    separate(contrast, c("group1", "group2"), " - ") |>
+    mutate(p.signif = stars.pval(p.value))
+  
+  plo <- ggplot(emms_mod, aes(y = emmean, x = Sexual_dimorphism, color = Relationship)) +
+  geom_errorbar(aes(ymin = emmean-SE,
+                    ymax = emmean+SE,
+                    group = Relationship), 
+                color = "black",
+                width=.2,
+                position = position_dodge(0.3)) +
+  geom_point(position = position_dodge(0.3), size = 2) +
+  geom_line(aes(group = Relationship),
+            position = position_dodge(0.3)) + 
+  stat_pvalue_manual(contr_mod, 
+                     label = "p.signif", 
+                     y.position = y.pos,
+                     color = "Relationship", hide.ns = TRUE,
+                     tip.length = 0) +
+  labs(y = "Duration of First Fixation (DFF)",
+       x = NULL) +
+  facet_grid(~ Condition,
+             labeller = labeller(Condition = cond_labs)) 
+  
+    return(plo)
+}
+```
+
+
 ## Independent stimuli evaluation
 
 The sex typicality of all stimuli was manipulated to either enhance or reduce their sex-typical characteristics. Since all the stimuli were male faces, this involved masculinizing them to increase their typical sex characteristics and feminizing them to reduce those characteristics. Masculinized and feminized versions were independently rated for masculinity and estimated age by a panel of raters (not participants).
@@ -1769,9 +1816,6 @@ ggarrange(desc_quest |>
 ### Subjective evaluation of stimuli
 
 ```{r stimuli-eval-desc-plot, message = FALSE, warning = FALSE, results = "hold", fig.cap = "Distribution of values across subjective evaluations of attractiveness and masculinity of the stimuli used in the experiment, split by sexual dimorphism manipulations (feminine, maculine). Panels on the left are for attractiveness scores, and on the right for masculinity scores. Top panels are for participants in the high condition, and on the bottom for the low condition. Colored vertical lines indicate the mean value for participants in each condition.", fig.height = 6}
-cond_labs <- c("Condition: High", "Condition: Low")
-names(cond_labs) <- c("High", "Low")
-
 eval_long |> 
   left_join(reg, by = c("ID")) |> 
   filter(ID %in% unique(dat$ID)) |> 
@@ -2227,13 +2271,21 @@ mod1 <- lmer(DFF ~ Condition * Relationship * Sexual_dimorphism +
              na.action = "na.fail")
 ```
 
-#### ANOVA-type table
+#### Model assumptions
 
-```{r}
+Model assumptions were checked using the check_model function from the performance package [@ludecke2021].
+
+```{r assu-mod1, cache = TRUE, message = FALSE, fig.height = 11, fig.cap = "Model assumptions. Plots represent prediction check, linearity, homogeneity of variance, influential observations, collinearity, and normality of both residuals and random effects (as QQ plots), respectively."}
+check_model(mod1)
+```
+
+### Table of fixed effects
+
+```{r tab-mod1}
 lmer.anova.tab(model = mod1)
 ```
 
-### *Post-hoc* contrasts of significant effects
+### Estimated marginal means and *post-hoc* contrasts of significant effects
 
 #### Main effect: Sexual dimorphism
 
@@ -2241,12 +2293,51 @@ Table of estimated marginal means and contrasts between masculinized and feminiz
 
 ```{r}
 main.eff.contr(model = mod1)
+```
 
+#### Full design
+
+Table of estimated marginal means and contrasts between masculinized and feminized stimuli including the full experimental design. All estimated marginal means and contrasts were calculated using the `emmeans` function from the `emmeans` package [@emmeanscit].
+
+```{r tab-contr-mod1}
+full.contr(model = mod1,
+           emm_contr = emmeans(mod1, pairwise ~ Sexual_dimorphism | Relationship + Condition))
+```
+
+### Figure for the DFF model
+
+This figure summarizes the the DFF model results.
+
+```{r fig-mod1, results = "hold", fig.cap = "Differences in the Duration of First Fixations (DFF) to masculinized and feminized stimuli, by relationship (short term, ling term) and condition (low, high). Dots and bars represent estimated marginal means ± standard errors. For detailed results, see Tables \\@ref(tab:tab-mod1) and \\@ref(tab:tab-contr-mod1)). In all cases, significant effects are represented with lines and stars: \\**p* < 0.05.", warning = FALSE, message = FALSE}
+pm1 <- plot.exp(model = mod1, y.pos = c(266, NA, NA, 268))
+pm1
+```
+
+## Model XXX
+
+```{r}
 inter.contr(model = mod1,
             emm_contr = emmeans(mod1, pairwise ~ Sexual_dimorphism | Relationship))
 
-full.contr(model = mod1,
-           emm_contr = emmeans(mod1, pairwise ~ Sexual_dimorphism | Relationship + Condition))
+```
+
+```{r fig-mod1X, results = "hold", fig.cap = "Differences in the XXXXXX (XXX) to masculinized and feminized stimuli, by relationship (short term, ling term) and condition (low, high). Black dots and bars represent estimated marginal means ± standard errors. For detailed results, see Tables \\@ref(tab:tab-modX) and \\@ref(tab:tab-contr-modX)). In all cases, significant effects are represented with lines and stars: \\**p* < 0.05, \\*\\**p* < 0.01, \\*\\*\\**p* < 0.001, \\*\\*\\*\\**p* < 0.0001.", warning = FALSE, message = FALSE}
+pm2 <- plot.exp(model = mod1, y.pos = c(266, NA, NA, 268))
+pm2
+```
+
+
+```{=latex}
+\closesupplement
+```
+
+# Final figures and tables (included in the main paper)
+
+```{r results = "hold", fig.cap = "Differences in the XXXXXX (XXX) to masculinized and feminized stimuli, by relationship (short term, ling term) and condition (low, high). Black dots and bars represent estimated marginal means ± standard errors. For detailed results, see Tables \\@ref(tab:tab-modX) and \\@ref(tab:tab-contr-modX)). In all cases, significant effects are represented with lines and stars: \\**p* < 0.05, \\*\\**p* < 0.01, \\*\\*\\**p* < 0.001, \\*\\*\\*\\**p* < 0.0001.", warning = FALSE, message = FALSE}
+ggarrange(pm1, pm2,
+          common.legend = TRUE,
+          legend = "bottom",
+          labels = "auto")
 ```
 
 # Session info (for reproducibility) {#session}
