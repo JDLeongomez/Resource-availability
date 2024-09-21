@@ -294,6 +294,140 @@ lmer.anova.tab <- function(model) {
 }
 ```
 
+### `main.eff.contr`
+
+This function takes a model, and creates an table of estimated marginal means and contrast between responses to masculinized and feminized responses, formatted in \LaTeX.
+
+```{r}
+main.eff.contr <- function(model) {
+  merge(data.frame(emmeans(model, pairwise ~ Sexual_dimorphism)$emmeans),
+        data.frame(emmeans(model, pairwise ~ Sexual_dimorphism)$contrast) |> 
+          mutate(p.value = pval.lev(p.value)) |> 
+          add_row(),
+        by = 0) |> 
+    select(-c(Row.names, df.x, df.y, contrast)) |> 
+    kable(digits = 2, 
+          booktabs = TRUE, 
+          align = c("l", rep("c",8)),
+          linesep ="", 
+          caption = paste0("Estimated marginal and constrast between masculinized and feminized 
+                           stimuli for the ", find_response(model), " model"),
+          col.names = c("Sexual dimorphism", 
+                        "EMM", 
+                        "$SE$", 
+                        "$2.5\\%CI$", 
+                        "$97.5\\%CI$", 
+                        "Difference", 
+                        "$SE$", 
+                        "$z$", "
+                        $p$"), 
+          escape = FALSE) |> 
+    kable_styling(latex_options = c("HOLD_position", "scale_down")) |>
+    add_header_above(c(" " = 5,"Contrast (Masculinized - Feminized)" = 4)) |> 
+    footnote(general = "EMM = estimated marginal mean. No degrees of freedom are reported, 
+             as an asymptotic method was used. Because of this, \\\\textit{z} rather than 
+             \\\\textit{t} scores are reported. Significant effects are in bold.",
+             threeparttable = TRUE, 
+             footnote_as_chunk = TRUE, 
+             escape=FALSE)
+}
+```
+
+### `inter.contr`
+
+This function takes a model, and creates an table of estimated marginal means and contrast between responses to masculinized and feminized responses, formatted in \LaTeX.
+
+```{r}
+inter.contr <- function(model, emm_contr) {
+  
+  merge(data.frame(emm_contr$emmeans),
+        data.frame(emm_contr$contrast) |>
+          mutate(p.value = pval.lev(p.value)) |> 
+          add_row(.after = 1) |> add_row(),
+        by = 0) |>
+    rename_with(~ str_remove_all(., ".x")) |> 
+    select(3,2,4,5,7,8,11,12,14,15) |> 
+    kable(digits = 2, 
+          booktabs = TRUE, 
+          align = c(rep("l",2), rep("c",8)),
+          linesep ="", 
+          caption = paste0("Estimated marginal and constrast between masculinized and feminized 
+                           stimuli by ", emm_contr$emmeans@roles$predictors[2], " for the ",
+                           find_response(model), " model"),
+          col.names = c(emm_contr$emmeans@roles$predictors[2],
+                        "Sexual dimorphism",
+                        "EMM", 
+                        "$SE$", 
+                        "$2.5\\%CI$", 
+                        "$97.5\\%CI$", 
+                        "Difference", 
+                        "$SE$", 
+                        "$z$", "
+                        $p$"), 
+          escape = FALSE) |> 
+    kable_styling(latex_options = c("HOLD_position", "scale_down")) |>
+    add_header_above(c(" " = 6,"Contrasts (Masculinized - Feminized)" = 4)) |> 
+    collapse_rows(1,
+                  latex_hline = "major",
+                  row_group_label_position = "first") |> 
+    footnote(general = "EMM = estimated marginal mean. No degrees of freedom are reported, 
+             as an asymptotic method was used. Because of this, \\\\textit{z} rather than 
+             \\\\textit{t} scores are reported. Significant effects are in bold.",
+             threeparttable = TRUE, 
+             footnote_as_chunk = TRUE, 
+             escape = FALSE)
+}
+```
+
+### `full.contr`
+
+This function takes a model, and creates an table of estimated marginal means and contrast between responses to masculinized and feminized responses by another variable, formatted in \LaTeX.
+
+```{r}
+full.contr <- function(model, emm_contr) {
+  
+  merge(data.frame(emm_contr$emmeans),
+        data.frame(emm_contr$contrast) |>
+          mutate(p.value = pval.lev(p.value)) |> 
+          add_row(.after = 1) |> add_row(.after = 3) |>
+          add_row(.after = 5) |> add_row() |> 
+          mutate(contrast = "Masculinized - Feminized"),
+        by = 0) |>
+    rename_with(~ str_remove_all(., ".x")) |> 
+    select(4,3,2,5,6,8,9,13,14,16,17) |> 
+    kable(digits = 2, 
+          booktabs = TRUE, 
+          align = c(rep("l",3), rep("c",8)),
+          linesep ="", 
+          caption = paste0("Estimated marginal and constrast between masculinized and feminized 
+                           stimuli by Relationship and Conditionfor the ",
+                           find_response(model), " model"),
+          col.names = c(emm_contr$emmeans@roles$predictors[3],
+                        emm_contr$emmeans@roles$predictors[2],
+                        "Sexual dimorphism",
+                        "EMM", 
+                        "$SE$", 
+                        "$2.5\\%CI$", 
+                        "$97.5\\%CI$", 
+                        "Difference", 
+                        "$SE$", 
+                        "$z$", "
+                        $p$"), 
+          escape = FALSE) |> 
+    kable_styling(latex_options = c("HOLD_position", "scale_down")) |>
+    add_header_above(c(" " = 7,"Contrasts (Masculinized - Feminized)" = 4)) |> 
+    collapse_rows(c(1:2,8),
+                  latex_hline = "major",
+                  row_group_label_position = "first") |> 
+    footnote(general = "EMM = estimated marginal mean. No degrees of freedom are reported, 
+             as an asymptotic method was used. Because of this, \\\\textit{z} rather than 
+             \\\\textit{t} scores are reported. Significant effects are in bold.",
+             threeparttable = TRUE, 
+             footnote_as_chunk = TRUE, 
+             escape = FALSE)
+}
+```
+
 ## Independent stimuli evaluation
 
 The sex typicality of all stimuli was manipulated to either enhance or reduce their sex-typical characteristics. Since all the stimuli were male faces, this involved masculinizing them to increase their typical sex characteristics and feminizing them to reduce those characteristics. Masculinized and feminized versions were independently rated for masculinity and estimated age by a panel of raters (not participants).
@@ -361,7 +495,7 @@ t_masc[1:10, ] |>
   column_spec(c(3, 6), border_right = TRUE) |>
   # Add a footnote with specific formatting
   footnote(
-    general = "Tests are Welch's \\\\textit{t}-test. Significant results are in bold.",
+    general = "Tests are Welch's \\\\textit{t}-test. Significant effects are in bold.",
     # General footnote text with LaTeX formatting
     threeparttable = TRUE, # Enable three-part table for better layout
     footnote_as_chunk = TRUE, # Render footnote as a chunk
@@ -1074,6 +1208,8 @@ dat <- dat_int |>
   # Remove all occurrences of the letter "M" from the Stimulus column
   # (infomation already in the column Sexual_dimorphism)
   mutate(Stimulus = str_remove_all(Stimulus, "M")) |>
+  # Sort Sexual_dimorphism levels, so that contrasts keep the same structure
+  mutate(Sexual_dimorphism = fct_relevel(Sexual_dimorphism, "Masculinized")) |> 
   # Ensure that the resulting data frame is ungrouped
   ungroup()
 ```
@@ -2095,6 +2231,22 @@ mod1 <- lmer(DFF ~ Condition * Relationship * Sexual_dimorphism +
 
 ```{r}
 lmer.anova.tab(model = mod1)
+```
+
+### *Post-hoc* contrasts of significant effects
+
+#### Main effect: Sexual dimorphism
+
+Table of estimated marginal means and contrasts between masculinized and feminized stimuli. All estimated marginal means and contrasts were calculated using the `emmeans` function from the `emmeans` package [@emmeanscit].
+
+```{r}
+main.eff.contr(model = mod1)
+
+inter.contr(model = mod1,
+            emm_contr = emmeans(mod1, pairwise ~ Sexual_dimorphism | Relationship))
+
+full.contr(model = mod1,
+           emm_contr = emmeans(mod1, pairwise ~ Sexual_dimorphism | Relationship + Condition))
 ```
 
 # Session info (for reproducibility) {#session}

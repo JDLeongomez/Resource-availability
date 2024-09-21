@@ -147,7 +147,7 @@
 \makeatother
 \subtitle{Code and analyses}
 \author{Milena Vásquez-Amézquita \orcidlink{0000-0001-7317-8430}\textsuperscript{1,3,*} \and Andrés Castellanos-Chacón \orcidlink{0000-0003-1684-9319}\textsuperscript{2} \and Wendy Medina-Sarmiento\textsuperscript{1} \and Valentina Cepeda\textsuperscript{1} \and Marina Begoña Martínez-González \orcidlink{0000-0002-5840-6383}\textsuperscript{3} \and Juan David Leongómez \orcidlink{0000-0002-0092-6298}\textsuperscript{2}}
-\date{19 September, 2024}
+\date{20 September, 2024}
 
 \begin{document}
 \maketitle
@@ -350,10 +350,148 @@ This function takes a model, and creates an ANOVA-type table of fixed effects, f
     \FunctionTok{pack\_rows}\NormalTok{(}\StringTok{"Nakagawa\textquotesingle{}s $R\^{}2$"}\NormalTok{,}
               \AttributeTok{start\_row =}\NormalTok{ n\_rows}\DecValTok{{-}1}\NormalTok{, }\AttributeTok{end\_row =}\NormalTok{ n\_rows,}
               \AttributeTok{hline\_after =} \ConstantTok{TRUE}\NormalTok{, }\AttributeTok{hline\_before =} \ConstantTok{TRUE}\NormalTok{,}
-              \AttributeTok{escape =} \ConstantTok{FALSE}\NormalTok{) }\CommentTok{\#|\textgreater{} }
-    \CommentTok{\#row\_spec(n\_rows{-}1, align = "right") |\textgreater{} }
-    \CommentTok{\#row\_spec(row = 8, align = "right")}
+              \AttributeTok{escape =} \ConstantTok{FALSE}\NormalTok{)}
   \FunctionTok{return}\NormalTok{(taa)}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+\subsubsection{\texorpdfstring{\texttt{main.eff.contr}}{main.eff.contr}}\label{main.eff.contr}
+
+This function takes a model, and creates an table of estimated marginal means and contrast between responses to masculinized and feminized responses, formatted in \LaTeX.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{main.eff.contr }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(model) \{}
+  \FunctionTok{merge}\NormalTok{(}\FunctionTok{data.frame}\NormalTok{(}\FunctionTok{emmeans}\NormalTok{(model, pairwise }\SpecialCharTok{\textasciitilde{}}\NormalTok{ Sexual\_dimorphism)}\SpecialCharTok{$}\NormalTok{emmeans),}
+        \FunctionTok{data.frame}\NormalTok{(}\FunctionTok{emmeans}\NormalTok{(model, pairwise }\SpecialCharTok{\textasciitilde{}}\NormalTok{ Sexual\_dimorphism)}\SpecialCharTok{$}\NormalTok{contrast) }\SpecialCharTok{|\textgreater{}} 
+          \FunctionTok{mutate}\NormalTok{(}\AttributeTok{p.value =} \FunctionTok{pval.lev}\NormalTok{(p.value)) }\SpecialCharTok{|\textgreater{}} 
+          \FunctionTok{add\_row}\NormalTok{(),}
+        \AttributeTok{by =} \DecValTok{0}\NormalTok{) }\SpecialCharTok{|\textgreater{}} 
+    \FunctionTok{select}\NormalTok{(}\SpecialCharTok{{-}}\FunctionTok{c}\NormalTok{(Row.names, df.x, df.y, contrast)) }\SpecialCharTok{|\textgreater{}} 
+    \FunctionTok{kable}\NormalTok{(}\AttributeTok{digits =} \DecValTok{2}\NormalTok{, }
+          \AttributeTok{booktabs =} \ConstantTok{TRUE}\NormalTok{, }
+          \AttributeTok{align =} \FunctionTok{c}\NormalTok{(}\StringTok{"l"}\NormalTok{, }\FunctionTok{rep}\NormalTok{(}\StringTok{"c"}\NormalTok{,}\DecValTok{8}\NormalTok{)),}
+          \AttributeTok{linesep =}\StringTok{""}\NormalTok{, }
+          \AttributeTok{caption =} \FunctionTok{paste0}\NormalTok{(}\StringTok{"Estimated marginal and constrast between masculinized and feminized }
+\StringTok{                           stimuli for the "}\NormalTok{, }\FunctionTok{find\_response}\NormalTok{(model), }\StringTok{" model"}\NormalTok{),}
+          \AttributeTok{col.names =} \FunctionTok{c}\NormalTok{(}\StringTok{"Sexual dimorphism"}\NormalTok{, }
+                        \StringTok{"EMM"}\NormalTok{, }
+                        \StringTok{"$SE$"}\NormalTok{, }
+                        \StringTok{"$2.5}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{\%CI$"}\NormalTok{, }
+                        \StringTok{"$97.5}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{\%CI$"}\NormalTok{, }
+                        \StringTok{"Difference"}\NormalTok{, }
+                        \StringTok{"$SE$"}\NormalTok{, }
+                        \StringTok{"$z$"}\NormalTok{, }\StringTok{"}
+\StringTok{                        $p$"}\NormalTok{), }
+          \AttributeTok{escape =} \ConstantTok{FALSE}\NormalTok{) }\SpecialCharTok{|\textgreater{}} 
+    \FunctionTok{kable\_styling}\NormalTok{(}\AttributeTok{latex\_options =} \FunctionTok{c}\NormalTok{(}\StringTok{"HOLD\_position"}\NormalTok{, }\StringTok{"scale\_down"}\NormalTok{)) }\SpecialCharTok{|\textgreater{}}
+    \FunctionTok{add\_header\_above}\NormalTok{(}\FunctionTok{c}\NormalTok{(}\StringTok{" "} \OtherTok{=} \DecValTok{5}\NormalTok{,}\StringTok{"Contrast (Masculinized {-} Feminized)"} \OtherTok{=} \DecValTok{4}\NormalTok{)) }\SpecialCharTok{|\textgreater{}} 
+    \FunctionTok{footnote}\NormalTok{(}\AttributeTok{general =} \StringTok{"EMM = estimated marginal mean. No degrees of freedom are reported, }
+\StringTok{             as an asymptotic method was used. Because of this, }\SpecialCharTok{\textbackslash{}\textbackslash{}\textbackslash{}\textbackslash{}}\StringTok{textit\{z\} rather than }
+\StringTok{             }\SpecialCharTok{\textbackslash{}\textbackslash{}\textbackslash{}\textbackslash{}}\StringTok{textit\{t\} scores are reported. Significant effects are in bold."}\NormalTok{,}
+             \AttributeTok{threeparttable =} \ConstantTok{TRUE}\NormalTok{, }
+             \AttributeTok{footnote\_as\_chunk =} \ConstantTok{TRUE}\NormalTok{, }
+             \AttributeTok{escape=}\ConstantTok{FALSE}\NormalTok{)}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+\subsubsection{\texorpdfstring{\texttt{inter.contr}}{inter.contr}}\label{inter.contr}
+
+This function takes a model, and creates an table of estimated marginal means and contrast between responses to masculinized and feminized responses, formatted in \LaTeX.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{inter.contr }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(model, emm\_contr) \{}
+  
+  \FunctionTok{merge}\NormalTok{(}\FunctionTok{data.frame}\NormalTok{(emm\_contr}\SpecialCharTok{$}\NormalTok{emmeans),}
+        \FunctionTok{data.frame}\NormalTok{(emm\_contr}\SpecialCharTok{$}\NormalTok{contrast) }\SpecialCharTok{|\textgreater{}}
+          \FunctionTok{mutate}\NormalTok{(}\AttributeTok{p.value =} \FunctionTok{pval.lev}\NormalTok{(p.value)) }\SpecialCharTok{|\textgreater{}} 
+          \FunctionTok{add\_row}\NormalTok{(}\AttributeTok{.after =} \DecValTok{1}\NormalTok{) }\SpecialCharTok{|\textgreater{}} \FunctionTok{add\_row}\NormalTok{(),}
+        \AttributeTok{by =} \DecValTok{0}\NormalTok{) }\SpecialCharTok{|\textgreater{}}
+    \FunctionTok{rename\_with}\NormalTok{(}\SpecialCharTok{\textasciitilde{}} \FunctionTok{str\_remove\_all}\NormalTok{(., }\StringTok{".x"}\NormalTok{)) }\SpecialCharTok{|\textgreater{}} 
+    \FunctionTok{select}\NormalTok{(}\DecValTok{3}\NormalTok{,}\DecValTok{2}\NormalTok{,}\DecValTok{4}\NormalTok{,}\DecValTok{5}\NormalTok{,}\DecValTok{7}\NormalTok{,}\DecValTok{8}\NormalTok{,}\DecValTok{11}\NormalTok{,}\DecValTok{12}\NormalTok{,}\DecValTok{14}\NormalTok{,}\DecValTok{15}\NormalTok{) }\SpecialCharTok{|\textgreater{}} 
+    \FunctionTok{kable}\NormalTok{(}\AttributeTok{digits =} \DecValTok{2}\NormalTok{, }
+          \AttributeTok{booktabs =} \ConstantTok{TRUE}\NormalTok{, }
+          \AttributeTok{align =} \FunctionTok{c}\NormalTok{(}\FunctionTok{rep}\NormalTok{(}\StringTok{"l"}\NormalTok{,}\DecValTok{2}\NormalTok{), }\FunctionTok{rep}\NormalTok{(}\StringTok{"c"}\NormalTok{,}\DecValTok{8}\NormalTok{)),}
+          \AttributeTok{linesep =}\StringTok{""}\NormalTok{, }
+          \AttributeTok{caption =} \FunctionTok{paste0}\NormalTok{(}\StringTok{"Estimated marginal and constrast between masculinized and feminized }
+\StringTok{                           stimuli by "}\NormalTok{, emm\_contr}\SpecialCharTok{$}\NormalTok{emmeans}\SpecialCharTok{@}\NormalTok{roles}\SpecialCharTok{$}\NormalTok{predictors[}\DecValTok{2}\NormalTok{], }\StringTok{" for the "}\NormalTok{,}
+                           \FunctionTok{find\_response}\NormalTok{(model), }\StringTok{" model"}\NormalTok{),}
+          \AttributeTok{col.names =} \FunctionTok{c}\NormalTok{(emm\_contr}\SpecialCharTok{$}\NormalTok{emmeans}\SpecialCharTok{@}\NormalTok{roles}\SpecialCharTok{$}\NormalTok{predictors[}\DecValTok{2}\NormalTok{],}
+                        \StringTok{"Sexual dimorphism"}\NormalTok{,}
+                        \StringTok{"EMM"}\NormalTok{, }
+                        \StringTok{"$SE$"}\NormalTok{, }
+                        \StringTok{"$2.5}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{\%CI$"}\NormalTok{, }
+                        \StringTok{"$97.5}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{\%CI$"}\NormalTok{, }
+                        \StringTok{"Difference"}\NormalTok{, }
+                        \StringTok{"$SE$"}\NormalTok{, }
+                        \StringTok{"$z$"}\NormalTok{, }\StringTok{"}
+\StringTok{                        $p$"}\NormalTok{), }
+          \AttributeTok{escape =} \ConstantTok{FALSE}\NormalTok{) }\SpecialCharTok{|\textgreater{}} 
+    \FunctionTok{kable\_styling}\NormalTok{(}\AttributeTok{latex\_options =} \FunctionTok{c}\NormalTok{(}\StringTok{"HOLD\_position"}\NormalTok{, }\StringTok{"scale\_down"}\NormalTok{)) }\SpecialCharTok{|\textgreater{}}
+    \FunctionTok{add\_header\_above}\NormalTok{(}\FunctionTok{c}\NormalTok{(}\StringTok{" "} \OtherTok{=} \DecValTok{6}\NormalTok{,}\StringTok{"Contrasts (Masculinized {-} Feminized)"} \OtherTok{=} \DecValTok{4}\NormalTok{)) }\SpecialCharTok{|\textgreater{}} 
+    \FunctionTok{collapse\_rows}\NormalTok{(}\DecValTok{1}\NormalTok{,}
+                  \AttributeTok{latex\_hline =} \StringTok{"major"}\NormalTok{,}
+                  \AttributeTok{row\_group\_label\_position =} \StringTok{"first"}\NormalTok{) }\SpecialCharTok{|\textgreater{}} 
+    \FunctionTok{footnote}\NormalTok{(}\AttributeTok{general =} \StringTok{"EMM = estimated marginal mean. No degrees of freedom are reported, }
+\StringTok{             as an asymptotic method was used. Because of this, }\SpecialCharTok{\textbackslash{}\textbackslash{}\textbackslash{}\textbackslash{}}\StringTok{textit\{z\} rather than }
+\StringTok{             }\SpecialCharTok{\textbackslash{}\textbackslash{}\textbackslash{}\textbackslash{}}\StringTok{textit\{t\} scores are reported. Significant effects are in bold."}\NormalTok{,}
+             \AttributeTok{threeparttable =} \ConstantTok{TRUE}\NormalTok{, }
+             \AttributeTok{footnote\_as\_chunk =} \ConstantTok{TRUE}\NormalTok{, }
+             \AttributeTok{escape =} \ConstantTok{FALSE}\NormalTok{)}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+\subsubsection{\texorpdfstring{\texttt{full.contr}}{full.contr}}\label{full.contr}
+
+This function takes a model, and creates an table of estimated marginal means and contrast between responses to masculinized and feminized responses by another variable, formatted in \LaTeX.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{full.contr }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(model, emm\_contr) \{}
+  
+  \FunctionTok{merge}\NormalTok{(}\FunctionTok{data.frame}\NormalTok{(emm\_contr}\SpecialCharTok{$}\NormalTok{emmeans),}
+        \FunctionTok{data.frame}\NormalTok{(emm\_contr}\SpecialCharTok{$}\NormalTok{contrast) }\SpecialCharTok{|\textgreater{}}
+          \FunctionTok{mutate}\NormalTok{(}\AttributeTok{p.value =} \FunctionTok{pval.lev}\NormalTok{(p.value)) }\SpecialCharTok{|\textgreater{}} 
+          \FunctionTok{add\_row}\NormalTok{(}\AttributeTok{.after =} \DecValTok{1}\NormalTok{) }\SpecialCharTok{|\textgreater{}} \FunctionTok{add\_row}\NormalTok{(}\AttributeTok{.after =} \DecValTok{3}\NormalTok{) }\SpecialCharTok{|\textgreater{}}
+          \FunctionTok{add\_row}\NormalTok{(}\AttributeTok{.after =} \DecValTok{5}\NormalTok{) }\SpecialCharTok{|\textgreater{}} \FunctionTok{add\_row}\NormalTok{() }\SpecialCharTok{|\textgreater{}} 
+          \FunctionTok{mutate}\NormalTok{(}\AttributeTok{contrast =} \StringTok{"Masculinized {-} Feminized"}\NormalTok{),}
+        \AttributeTok{by =} \DecValTok{0}\NormalTok{) }\SpecialCharTok{|\textgreater{}}
+    \FunctionTok{rename\_with}\NormalTok{(}\SpecialCharTok{\textasciitilde{}} \FunctionTok{str\_remove\_all}\NormalTok{(., }\StringTok{".x"}\NormalTok{)) }\SpecialCharTok{|\textgreater{}} 
+    \FunctionTok{select}\NormalTok{(}\DecValTok{4}\NormalTok{,}\DecValTok{3}\NormalTok{,}\DecValTok{2}\NormalTok{,}\DecValTok{5}\NormalTok{,}\DecValTok{6}\NormalTok{,}\DecValTok{8}\NormalTok{,}\DecValTok{9}\NormalTok{,}\DecValTok{13}\NormalTok{,}\DecValTok{14}\NormalTok{,}\DecValTok{16}\NormalTok{,}\DecValTok{17}\NormalTok{) }\SpecialCharTok{|\textgreater{}} 
+    \FunctionTok{kable}\NormalTok{(}\AttributeTok{digits =} \DecValTok{2}\NormalTok{, }
+          \AttributeTok{booktabs =} \ConstantTok{TRUE}\NormalTok{, }
+          \AttributeTok{align =} \FunctionTok{c}\NormalTok{(}\FunctionTok{rep}\NormalTok{(}\StringTok{"l"}\NormalTok{,}\DecValTok{3}\NormalTok{), }\FunctionTok{rep}\NormalTok{(}\StringTok{"c"}\NormalTok{,}\DecValTok{8}\NormalTok{)),}
+          \AttributeTok{linesep =}\StringTok{""}\NormalTok{, }
+          \AttributeTok{caption =} \FunctionTok{paste0}\NormalTok{(}\StringTok{"Estimated marginal and constrast between masculinized and feminized }
+\StringTok{                           stimuli by Relationship and Conditionfor the "}\NormalTok{,}
+                           \FunctionTok{find\_response}\NormalTok{(model), }\StringTok{" model"}\NormalTok{),}
+          \AttributeTok{col.names =} \FunctionTok{c}\NormalTok{(emm\_contr}\SpecialCharTok{$}\NormalTok{emmeans}\SpecialCharTok{@}\NormalTok{roles}\SpecialCharTok{$}\NormalTok{predictors[}\DecValTok{3}\NormalTok{],}
+\NormalTok{                        emm\_contr}\SpecialCharTok{$}\NormalTok{emmeans}\SpecialCharTok{@}\NormalTok{roles}\SpecialCharTok{$}\NormalTok{predictors[}\DecValTok{2}\NormalTok{],}
+                        \StringTok{"Sexual dimorphism"}\NormalTok{,}
+                        \StringTok{"EMM"}\NormalTok{, }
+                        \StringTok{"$SE$"}\NormalTok{, }
+                        \StringTok{"$2.5}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{\%CI$"}\NormalTok{, }
+                        \StringTok{"$97.5}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{\%CI$"}\NormalTok{, }
+                        \StringTok{"Difference"}\NormalTok{, }
+                        \StringTok{"$SE$"}\NormalTok{, }
+                        \StringTok{"$z$"}\NormalTok{, }\StringTok{"}
+\StringTok{                        $p$"}\NormalTok{), }
+          \AttributeTok{escape =} \ConstantTok{FALSE}\NormalTok{) }\SpecialCharTok{|\textgreater{}} 
+    \FunctionTok{kable\_styling}\NormalTok{(}\AttributeTok{latex\_options =} \FunctionTok{c}\NormalTok{(}\StringTok{"HOLD\_position"}\NormalTok{, }\StringTok{"scale\_down"}\NormalTok{)) }\SpecialCharTok{|\textgreater{}}
+    \FunctionTok{add\_header\_above}\NormalTok{(}\FunctionTok{c}\NormalTok{(}\StringTok{" "} \OtherTok{=} \DecValTok{7}\NormalTok{,}\StringTok{"Contrasts (Masculinized {-} Feminized)"} \OtherTok{=} \DecValTok{4}\NormalTok{)) }\SpecialCharTok{|\textgreater{}} 
+    \FunctionTok{collapse\_rows}\NormalTok{(}\FunctionTok{c}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\DecValTok{2}\NormalTok{,}\DecValTok{8}\NormalTok{),}
+                  \AttributeTok{latex\_hline =} \StringTok{"major"}\NormalTok{,}
+                  \AttributeTok{row\_group\_label\_position =} \StringTok{"first"}\NormalTok{) }\SpecialCharTok{|\textgreater{}} 
+    \FunctionTok{footnote}\NormalTok{(}\AttributeTok{general =} \StringTok{"EMM = estimated marginal mean. No degrees of freedom are reported, }
+\StringTok{             as an asymptotic method was used. Because of this, }\SpecialCharTok{\textbackslash{}\textbackslash{}\textbackslash{}\textbackslash{}}\StringTok{textit\{z\} rather than }
+\StringTok{             }\SpecialCharTok{\textbackslash{}\textbackslash{}\textbackslash{}\textbackslash{}}\StringTok{textit\{t\} scores are reported. Significant effects are in bold."}\NormalTok{,}
+             \AttributeTok{threeparttable =} \ConstantTok{TRUE}\NormalTok{, }
+             \AttributeTok{footnote\_as\_chunk =} \ConstantTok{TRUE}\NormalTok{, }
+             \AttributeTok{escape =} \ConstantTok{FALSE}\NormalTok{)}
 \NormalTok{\}}
 \end{Highlighting}
 \end{Shaded}
@@ -428,7 +566,7 @@ First, masculinity rating given to the masculinized and feminized versions of ea
   \FunctionTok{column\_spec}\NormalTok{(}\FunctionTok{c}\NormalTok{(}\DecValTok{3}\NormalTok{, }\DecValTok{6}\NormalTok{), }\AttributeTok{border\_right =} \ConstantTok{TRUE}\NormalTok{) }\SpecialCharTok{|\textgreater{}}
   \CommentTok{\# Add a footnote with specific formatting}
   \FunctionTok{footnote}\NormalTok{(}
-    \AttributeTok{general =} \StringTok{"Tests are Welch\textquotesingle{}s }\SpecialCharTok{\textbackslash{}\textbackslash{}\textbackslash{}\textbackslash{}}\StringTok{textit\{t\}{-}test. Significant results are in bold."}\NormalTok{,}
+    \AttributeTok{general =} \StringTok{"Tests are Welch\textquotesingle{}s }\SpecialCharTok{\textbackslash{}\textbackslash{}\textbackslash{}\textbackslash{}}\StringTok{textit\{t\}{-}test. Significant effects are in bold."}\NormalTok{,}
     \CommentTok{\# General footnote text with LaTeX formatting}
     \AttributeTok{threeparttable =} \ConstantTok{TRUE}\NormalTok{, }\CommentTok{\# Enable three{-}part table for better layout}
     \AttributeTok{footnote\_as\_chunk =} \ConstantTok{TRUE}\NormalTok{, }\CommentTok{\# Render footnote as a chunk}
@@ -439,7 +577,7 @@ First, masculinity rating given to the masculinized and feminized versions of ea
 
 \begin{table}[H]
 \centering
-\caption{\label{tab:unnamed-chunk-6}Difference in independent masculinity ratings given to each stimulus,
+\caption{\label{tab:unnamed-chunk-9}Difference in independent masculinity ratings given to each stimulus,
                according to its sexual dimorphism manipulation (feminized - masculinized)}
 \centering
 \resizebox{\ifdim\width>\linewidth\linewidth\else\width\fi}{!}{
@@ -462,7 +600,7 @@ A10 & -6.53 & \textbf{< 0.0001} & A20 & -9.72 & \textbf{< 0.0001} & A30 & -11.47
 \end{tabular}
 \begin{tablenotes}[para]
 \item \textit{Note: } 
-\item Tests are Welch's \textit{t}-test. Significant results are in bold.
+\item Tests are Welch's \textit{t}-test. Significant effects are in bold.
 \end{tablenotes}
 \end{threeparttable}}
 \end{table}
@@ -1006,7 +1144,7 @@ Men perceived as dangerous
 
 \begin{table}[H]
 \centering
-\caption{\label{tab:unnamed-chunk-10}Correlation between variables and PCA dimensions}
+\caption{\label{tab:unnamed-chunk-13}Correlation between variables and PCA dimensions}
 \centering
 \resizebox{\ifdim\width>\linewidth\linewidth\else\width\fi}{!}{
 \begin{tabular}[t]{lcc}
@@ -1251,6 +1389,8 @@ Filtered database to exclude participants who did responded the two control ques
   \CommentTok{\# Remove all occurrences of the letter "M" from the Stimulus column}
   \CommentTok{\# (infomation already in the column Sexual\_dimorphism)}
   \FunctionTok{mutate}\NormalTok{(}\AttributeTok{Stimulus =} \FunctionTok{str\_remove\_all}\NormalTok{(Stimulus, }\StringTok{"M"}\NormalTok{)) }\SpecialCharTok{|\textgreater{}}
+  \CommentTok{\# Sort Sexual\_dimorphism levels, so that contrasts keep the same structure}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{Sexual\_dimorphism =} \FunctionTok{fct\_relevel}\NormalTok{(Sexual\_dimorphism, }\StringTok{"Masculinized"}\NormalTok{)) }\SpecialCharTok{|\textgreater{}} 
   \CommentTok{\# Ensure that the resulting data frame is ungrouped}
   \FunctionTok{ungroup}\NormalTok{()}
 \end{Highlighting}
@@ -1358,7 +1498,7 @@ To test bias in fixation patterns according to the sexual dimorphism manipulatio
 
 \begin{table}[H]
 \centering
-\caption{\label{tab:unnamed-chunk-20}Number and age of participants in each condition}
+\caption{\label{tab:unnamed-chunk-23}Number and age of participants in each condition}
 \centering
 \resizebox{\ifdim\width>\linewidth\linewidth\else\width\fi}{!}{
 \begin{tabular}[t]{cccccc}
@@ -1984,7 +2124,7 @@ Low & 128 & 21.50 & 2.25 & 18 & 25\\
 
 \begin{table}[H]
 \centering
-\caption{\label{tab:unnamed-chunk-22}Correlations between partner perceptions}
+\caption{\label{tab:unnamed-chunk-25}Correlations between partner perceptions}
 \centering
 \begin{threeparttable}
 \begin{tabular}[t]{lccccc}
@@ -2070,7 +2210,7 @@ Attractiveness & -0.06 & 0.07 & 0.06 & \textbf{0.78***} & \textbf{0.6***}\\
 
 \begin{landscape}\begin{table}[H]
 \centering
-\caption{\label{tab:unnamed-chunk-23}Correlations between XXXXXX}
+\caption{\label{tab:unnamed-chunk-26}Correlations between XXXXXX}
 \centering
 \fontsize{3.9}{5.9}\selectfont
 \begin{threeparttable}
@@ -2209,7 +2349,7 @@ Infidelity & \textbf{0.2***} & 0.03 & -0.03 & -0.07 & -0.05 & 0.06 & 0.04 & -0.0
 
 \begin{landscape}\begin{table}[H]
 \centering
-\caption{\label{tab:unnamed-chunk-24}Correlations between fixations, subjective evaluations of stimuli, 
+\caption{\label{tab:unnamed-chunk-27}Correlations between fixations, subjective evaluations of stimuli, 
         partner perceptions, and violence by Condition}
 \centering
 \fontsize{4.2}{6.2}\selectfont
@@ -2387,7 +2527,7 @@ Infidelity & \textbf{0.2***} & 0.03 & -0.03 & -0.07 & -0.05 & 0.06 & 0.04 & -0.0
 
 \begin{table}[H]
 \centering
-\caption{\label{tab:unnamed-chunk-25}Correlations between partner violence and mean difference scores between 
+\caption{\label{tab:unnamed-chunk-28}Correlations between partner violence and mean difference scores between 
         responses to masculinized and feminized stimuli}
 \centering
 \resizebox{\ifdim\width>\linewidth\linewidth\else\width\fi}{!}{
@@ -2513,7 +2653,7 @@ Infidelity & \textbf{0.2***} & 0.03 & -0.03 & -0.07 & -0.05 & 0.06 & 0.04 & -0.0
 
 \begin{table}[H]
 \centering
-\caption{\label{tab:unnamed-chunk-26}Mean scores and comparison of resource availability dimensions by condition}
+\caption{\label{tab:unnamed-chunk-29}Mean scores and comparison of resource availability dimensions by condition}
 \centering
 \resizebox{\ifdim\width>\linewidth\linewidth\else\width\fi}{!}{
 \begin{threeparttable}
@@ -2651,7 +2791,7 @@ Physical Safety & 1.90 & 6.27 & 27.36 & \textbf{< 0.0001} & 3.42\\
 
 \begin{table}[H]
 \centering
-\caption{\label{tab:unnamed-chunk-29}ANOVA-type table of fixed effects for the DFF model}
+\caption{\label{tab:unnamed-chunk-32}ANOVA-type table of fixed effects for the DFF model}
 \centering
 \resizebox{\ifdim\width>\linewidth\linewidth\else\width\fi}{!}{
 \begin{tabular}[t]{lccc}
@@ -2675,6 +2815,131 @@ Condition × Relationship × Sexual dimorphism & 1.24 & 1, 33639.52 & 0.26\\
 \end{tabular}}
 \end{table}
 
+\subsubsection{\texorpdfstring{\emph{Post-hoc} contrasts of significant effects}{Post-hoc contrasts of significant effects}}\label{post-hoc-contrasts-of-significant-effects}
+
+\paragraph{Main effect: Sexual dimorphism}\label{main-effect-sexual-dimorphism}
+
+Table of estimated marginal means and contrasts between masculinized and feminized stimuli. All estimated marginal means and contrasts were calculated using the \texttt{emmeans} function from the \texttt{emmeans} package \autocite{emmeanscit}.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{main.eff.contr}\NormalTok{(}\AttributeTok{model =}\NormalTok{ mod1)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{table}[H]
+\centering
+\caption{\label{tab:unnamed-chunk-33}Estimated marginal and constrast between masculinized and feminized 
+                           stimuli for the DFF model}
+\centering
+\resizebox{\ifdim\width>\linewidth\linewidth\else\width\fi}{!}{
+\begin{threeparttable}
+\begin{tabular}[t]{lcccccccc}
+\toprule
+\multicolumn{5}{c}{ } & \multicolumn{4}{c}{Contrast (Masculinized - Feminized)} \\
+\cmidrule(l{3pt}r{3pt}){6-9}
+Sexual dimorphism & EMM & $SE$ & $2.5\%CI$ & $97.5\%CI$ & Difference & $SE$ & $z$ & 
+                        $p$\\
+\midrule
+Masculinized & 260.65 & 3.06 & 254.65 & 266.66 & 4.09 & 1.19 & 3.44 & \textbf{< 0.001}\\
+Feminized & 256.57 & 3.06 & 250.56 & 262.57 &  &  &  & \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}[para]
+\item \textit{Note: } 
+\item EMM = estimated marginal mean. No degrees of freedom are reported, 
+             as an asymptotic method was used. Because of this, \textit{z} rather than 
+             \textit{t} scores are reported. Significant effects are in bold.
+\end{tablenotes}
+\end{threeparttable}}
+\end{table}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{inter.contr}\NormalTok{(}\AttributeTok{model =}\NormalTok{ mod1,}
+            \AttributeTok{emm\_contr =} \FunctionTok{emmeans}\NormalTok{(mod1, pairwise }\SpecialCharTok{\textasciitilde{}}\NormalTok{ Sexual\_dimorphism }\SpecialCharTok{|}\NormalTok{ Relationship))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{table}[H]
+\centering
+\caption{\label{tab:unnamed-chunk-33}Estimated marginal and constrast between masculinized and feminized 
+                           stimuli by Relationship for the DFF model}
+\centering
+\resizebox{\ifdim\width>\linewidth\linewidth\else\width\fi}{!}{
+\begin{threeparttable}
+\begin{tabular}[t]{llcccccccc}
+\toprule
+\multicolumn{6}{c}{ } & \multicolumn{4}{c}{Contrasts (Masculinized - Feminized)} \\
+\cmidrule(l{3pt}r{3pt}){7-10}
+Relationship & Sexual dimorphism & EMM & $SE$ & $2.5\%CI$ & $97.5\%CI$ & Difference & $SE$ & $z$ & 
+                        $p$\\
+\midrule
+Short term & Masculinized & 260.42 & 3.18 & 254.20 & 266.65 & 3.28 & 1.68 & 1.95 & 0.05\\
+
+ & Feminized & 257.14 & 3.18 & 250.91 & 263.37 &  &  &  & \\
+\cmidrule{1-10}
+Long term & Masculinized & 260.89 & 3.18 & 254.66 & 267.11 & 4.90 & 1.68 & 2.91 & \textbf{0.0036}\\
+
+ & Feminized & 255.99 & 3.18 & 249.76 & 262.22 &  &  &  & \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}[para]
+\item \textit{Note: } 
+\item EMM = estimated marginal mean. No degrees of freedom are reported, 
+             as an asymptotic method was used. Because of this, \textit{z} rather than 
+             \textit{t} scores are reported. Significant effects are in bold.
+\end{tablenotes}
+\end{threeparttable}}
+\end{table}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{full.contr}\NormalTok{(}\AttributeTok{model =}\NormalTok{ mod1,}
+           \AttributeTok{emm\_contr =} \FunctionTok{emmeans}\NormalTok{(mod1, pairwise }\SpecialCharTok{\textasciitilde{}}\NormalTok{ Sexual\_dimorphism }\SpecialCharTok{|}\NormalTok{ Relationship }\SpecialCharTok{+}\NormalTok{ Condition))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{table}[H]
+\centering
+\caption{\label{tab:unnamed-chunk-33}Estimated marginal and constrast between masculinized and feminized 
+                           stimuli by Relationship and Conditionfor the DFF model}
+\centering
+\resizebox{\ifdim\width>\linewidth\linewidth\else\width\fi}{!}{
+\begin{threeparttable}
+\begin{tabular}[t]{lllcccccccc}
+\toprule
+\multicolumn{7}{c}{ } & \multicolumn{4}{c}{Contrasts (Masculinized - Feminized)} \\
+\cmidrule(l{3pt}r{3pt}){8-11}
+Condition & Relationship & Sexual dimorphism & EMM & $SE$ & $2.5\%CI$ & $97.5\%CI$ & Difference & $SE$ & $z$ & 
+                        $p$\\
+\midrule
+High & Short term & Masculinized & 260.64 & 4.14 & 252.52 & 268.77 & 4.72 & 2.22 & 2.13 & \textbf{0.0335}\\
+
+ &  & Feminized & 255.93 & 4.15 & 247.80 & 264.05 &  &  &  & \\
+
+ & Long term & Masculinized & 259.33 & 4.15 & 251.20 & 267.46 & 3.68 & 2.23 & 1.65 & 0.1\\
+
+ &  & Feminized & 255.65 & 4.15 & 247.52 & 263.78 &  &  &  & \\
+\cmidrule{1-11}
+Low & Short term & Masculinized & 260.20 & 4.69 & 251.01 & 269.40 & 1.84 & 2.53 & 0.73 & 0.47\\
+
+ &  & Feminized & 258.36 & 4.69 & 249.16 & 267.56 &  &  &  & \\
+
+ & Long term & Masculinized & 262.44 & 4.69 & 253.25 & 271.63 & 6.11 & 2.53 & 2.42 & \textbf{0.0156}\\
+
+ &  & Feminized & 256.33 & 4.69 & 247.13 & 265.52 &  &  &  & \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}[para]
+\item \textit{Note: } 
+\item EMM = estimated marginal mean. No degrees of freedom are reported, 
+             as an asymptotic method was used. Because of this, \textit{z} rather than 
+             \textit{t} scores are reported. Significant effects are in bold.
+\end{tablenotes}
+\end{threeparttable}}
+\end{table}
+
 \section{Session info (for reproducibility)}\label{session}
 
 \begin{Shaded}
@@ -2695,7 +2960,7 @@ Condition × Relationship × Sexual dimorphism & 1.24 & 1, 33639.52 & 0.26\\
 \emph{pander(v.0.6.5)}, \emph{Hmisc(v.5.1-3)}, \emph{insight(v.0.20.2)}, \emph{effectsize(v.0.8.9)}, \emph{bbmle(v.1.0.25.1)}, \emph{gtools(v.3.9.5)}, \emph{FactoMineR(v.2.11)}, \emph{factoextra(v.1.0.7)}, \emph{scales(v.1.3.0)}, \emph{GGally(v.2.2.1)}, \emph{performance(v.0.12.2)}, \emph{kableExtra(v.1.4.0)}, \emph{emmeans(v.1.10.3)}, \emph{lmerTest(v.3.1-3)}, \emph{lme4(v.1.1-35.5)}, \emph{Matrix(v.1.7-0)}, \emph{readxl(v.1.4.3)}, \emph{ggpubr(v.0.6.0)}, \emph{lubridate(v.1.9.3)}, \emph{forcats(v.1.0.0)}, \emph{stringr(v.1.5.1)}, \emph{dplyr(v.1.1.4)}, \emph{purrr(v.1.0.2)}, \emph{readr(v.2.1.5)}, \emph{tidyr(v.1.3.1)}, \emph{tibble(v.3.2.1)}, \emph{ggplot2(v.3.5.1)}, \emph{tidyverse(v.2.0.0)}, \emph{ggstats(v.0.6.0)}, \emph{MASS(v.7.3-61)}, \emph{car(v.3.1-2)}, \emph{carData(v.3.0-5)} and \emph{knitr(v.1.48)}
 
 \textbf{loaded via a namespace (and not attached):}
-\emph{gridExtra(v.2.3)}, \emph{rlang(v.1.1.4)}, \emph{magrittr(v.2.0.3)}, \emph{compiler(v.4.4.1)}, \emph{systemfonts(v.1.1.0)}, \emph{vctrs(v.0.6.5)}, \emph{pkgconfig(v.2.0.3)}, \emph{fastmap(v.1.2.0)}, \emph{backports(v.1.5.0)}, \emph{labeling(v.0.4.3)}, \emph{utf8(v.1.2.4)}, \emph{rmarkdown(v.2.28)}, \emph{tzdb(v.0.4.0)}, \emph{nloptr(v.2.1.1)}, \emph{xfun(v.0.47)}, \emph{flashClust(v.1.01-2)}, \emph{highr(v.0.11)}, \emph{parallel(v.4.4.1)}, \emph{broom(v.1.0.6)}, \emph{cluster(v.2.1.6)}, \emph{R6(v.2.5.1)}, \emph{stringi(v.1.8.4)}, \emph{RColorBrewer(v.1.1-3)}, \emph{rpart(v.4.1.23)}, \emph{boot(v.1.3-30)}, \emph{cellranger(v.1.1.0)}, \emph{numDeriv(v.2016.8-1.1)}, \emph{estimability(v.1.5.1)}, \emph{Rcpp(v.1.0.13)}, \emph{bookdown(v.0.40)}, \emph{base64enc(v.0.1-3)}, \emph{parameters(v.0.22.1)}, \emph{nnet(v.7.3-19)}, \emph{splines(v.4.4.1)}, \emph{timechange(v.0.3.0)}, \emph{tidyselect(v.1.2.1)}, \emph{rstudioapi(v.0.16.0)}, \emph{abind(v.1.4-5)}, \emph{yaml(v.2.3.10)}, \emph{lattice(v.0.22-5)}, \emph{plyr(v.1.8.9)}, \emph{withr(v.3.0.1)}, \emph{bayestestR(v.0.14.0)}, \emph{coda(v.0.19-4.1)}, \emph{evaluate(v.0.24.0)}, \emph{foreign(v.0.8-86)}, \emph{xml2(v.1.3.6)}, \emph{pillar(v.1.9.0)}, \emph{checkmate(v.2.3.2)}, \emph{DT(v.0.33)}, \emph{generics(v.0.1.3)}, \emph{hms(v.1.1.3)}, \emph{munsell(v.0.5.1)}, \emph{minqa(v.1.2.7)}, \emph{xtable(v.1.8-4)}, \emph{leaps(v.3.2)}, \emph{glue(v.1.7.0)}, \emph{scatterplot3d(v.0.3-44)}, \emph{tools(v.4.4.1)}, \emph{data.table(v.1.15.4)}, \emph{ggsignif(v.0.6.4)}, \emph{mvtnorm(v.1.2-5)}, \emph{cowplot(v.1.1.3)}, \emph{grid(v.4.4.1)}, \emph{bdsmatrix(v.1.3-7)}, \emph{datawizard(v.0.12.2)}, \emph{colorspace(v.2.1-1)}, \emph{nlme(v.3.1-165)}, \emph{htmlTable(v.2.4.3)}, \emph{Formula(v.1.2-5)}, \emph{cli(v.3.6.3)}, \emph{fansi(v.1.0.6)}, \emph{viridisLite(v.0.4.2)}, \emph{svglite(v.2.1.3)}, \emph{gtable(v.0.3.5)}, \emph{rstatix(v.0.7.2)}, \emph{digest(v.0.6.37)}, \emph{pbkrtest(v.0.5.3)}, \emph{ggrepel(v.0.9.5)}, \emph{htmlwidgets(v.1.6.4)}, \emph{farver(v.2.1.2)}, \emph{htmltools(v.0.5.8.1)}, \emph{lifecycle(v.1.0.4)} and \emph{multcompView(v.0.1-10)}
+\emph{gridExtra(v.2.3)}, \emph{sandwich(v.3.1-0)}, \emph{rlang(v.1.1.4)}, \emph{magrittr(v.2.0.3)}, \emph{multcomp(v.1.4-26)}, \emph{compiler(v.4.4.1)}, \emph{systemfonts(v.1.1.0)}, \emph{vctrs(v.0.6.5)}, \emph{pkgconfig(v.2.0.3)}, \emph{fastmap(v.1.2.0)}, \emph{backports(v.1.5.0)}, \emph{labeling(v.0.4.3)}, \emph{utf8(v.1.2.4)}, \emph{rmarkdown(v.2.28)}, \emph{tzdb(v.0.4.0)}, \emph{nloptr(v.2.1.1)}, \emph{xfun(v.0.47)}, \emph{flashClust(v.1.01-2)}, \emph{highr(v.0.11)}, \emph{parallel(v.4.4.1)}, \emph{broom(v.1.0.6)}, \emph{cluster(v.2.1.6)}, \emph{R6(v.2.5.1)}, \emph{stringi(v.1.8.4)}, \emph{RColorBrewer(v.1.1-3)}, \emph{rpart(v.4.1.23)}, \emph{boot(v.1.3-30)}, \emph{cellranger(v.1.1.0)}, \emph{numDeriv(v.2016.8-1.1)}, \emph{estimability(v.1.5.1)}, \emph{Rcpp(v.1.0.13)}, \emph{bookdown(v.0.40)}, \emph{zoo(v.1.8-12)}, \emph{base64enc(v.0.1-3)}, \emph{parameters(v.0.22.0)}, \emph{nnet(v.7.3-19)}, \emph{splines(v.4.4.1)}, \emph{timechange(v.0.3.0)}, \emph{tidyselect(v.1.2.1)}, \emph{rstudioapi(v.0.16.0)}, \emph{abind(v.1.4-5)}, \emph{yaml(v.2.3.10)}, \emph{codetools(v.0.2-20)}, \emph{lattice(v.0.22-5)}, \emph{plyr(v.1.8.9)}, \emph{bayestestR(v.0.13.2)}, \emph{withr(v.3.0.1)}, \emph{coda(v.0.19-4.1)}, \emph{evaluate(v.0.24.0)}, \emph{foreign(v.0.8-86)}, \emph{survival(v.3.7-0)}, \emph{xml2(v.1.3.6)}, \emph{pillar(v.1.9.0)}, \emph{checkmate(v.2.3.2)}, \emph{DT(v.0.33)}, \emph{generics(v.0.1.3)}, \emph{hms(v.1.1.3)}, \emph{munsell(v.0.5.1)}, \emph{minqa(v.1.2.7)}, \emph{xtable(v.1.8-4)}, \emph{leaps(v.3.2)}, \emph{glue(v.1.7.0)}, \emph{scatterplot3d(v.0.3-44)}, \emph{tools(v.4.4.1)}, \emph{data.table(v.1.15.4)}, \emph{ggsignif(v.0.6.4)}, \emph{mvtnorm(v.1.2-5)}, \emph{cowplot(v.1.1.3)}, \emph{grid(v.4.4.1)}, \emph{datawizard(v.0.12.2)}, \emph{bdsmatrix(v.1.3-7)}, \emph{colorspace(v.2.1-1)}, \emph{nlme(v.3.1-165)}, \emph{htmlTable(v.2.4.3)}, \emph{Formula(v.1.2-5)}, \emph{cli(v.3.6.3)}, \emph{fansi(v.1.0.6)}, \emph{viridisLite(v.0.4.2)}, \emph{svglite(v.2.1.3)}, \emph{gtable(v.0.3.5)}, \emph{rstatix(v.0.7.2)}, \emph{digest(v.0.6.37)}, \emph{pbkrtest(v.0.5.3)}, \emph{ggrepel(v.0.9.5)}, \emph{TH.data(v.1.1-2)}, \emph{farver(v.2.1.2)}, \emph{htmlwidgets(v.1.6.4)}, \emph{htmltools(v.0.5.8.1)}, \emph{lifecycle(v.1.0.4)} and \emph{multcompView(v.0.1-10)}
 
 \section{Supplementary references}\label{refs}
 
