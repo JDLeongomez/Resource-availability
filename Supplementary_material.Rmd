@@ -434,10 +434,6 @@ This function takes a model, and creates a plot that shows the estimated margina
 
 ```{r}
 cond_labs <- c("Condition: High", "Condition: Low")
-cond_labs <- c("Condition: High", "Condition: Low")
-cond_labs <- c("Condition: High", "Condition: Low")
-cond_labs <- c("Condition: High", "Condition: Low")
-cond_labs <- c("Condition: High", "Condition: Low")
 names(cond_labs) <- c("High", "Low")
 
 plot.exp <- function(model, y.pos) {
@@ -464,6 +460,7 @@ plot.exp <- function(model, y.pos) {
                      label = "p.signif", 
                      y.position = y.pos,
                      color = "Relationship", hide.ns = TRUE,
+                     position = position_dodge(),
                      tip.length = 0) +
   labs(y = "Duration of First Fixation (DFF)",
        x = NULL) +
@@ -2196,7 +2193,9 @@ contr_mod_masc <- as.data.frame(pairs(emmeans(mod_masc,
   separate(contrast, c("group1", "group2"), " - ") |> 
   mutate(p.signif = stars.pval(p.value))
 
-p_mancheck_masc <- ggplot(eval_desc, aes(x = Sexual_dimorphism, y = Masculinity, color = Sexual_dimorphism)) +
+p_mancheck_masc <- ggplot(eval_desc, aes(x = Sexual_dimorphism, 
+                                         y = Masculinity, 
+                                         color = Sexual_dimorphism)) +
   geom_jitter(alpha = 0.5) +
   stat_summary(fun.data = "mean_cl_boot",
                color = "black", 
@@ -2222,7 +2221,9 @@ contr_mod_attr <- as.data.frame(pairs(emmeans(mod_attr,
   separate(contrast, c("group1", "group2"), " - ") |> 
   mutate(p.signif = stars.pval(p.value))
 
-p_mancheck_attr <- ggplot(eval_desc, aes(x = Sexual_dimorphism, y = Attractiveness, color = Sexual_dimorphism)) +
+p_mancheck_attr <- ggplot(eval_desc, aes(x = Sexual_dimorphism, 
+                                         y = Attractiveness, 
+                                         color = Sexual_dimorphism)) +
   geom_jitter(alpha = 0.5) +
   stat_summary(fun.data = "mean_cl_boot",
                color = "black",
@@ -2266,9 +2267,8 @@ dat_m1 <- dat |>
 
 ```{r}
 mod1 <- lmer(DFF ~ Condition * Relationship * Sexual_dimorphism +
-               (1 | ID) + (1 | Stimulus), 
-             data = dat_m1,
-             na.action = "na.fail")
+               (1 + Sexual_dimorphism | ID) + (1 | Stimulus), 
+             data = dat_m1)
 ```
 
 #### Model assumptions

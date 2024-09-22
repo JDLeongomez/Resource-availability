@@ -1169,9 +1169,8 @@ dat_m1 <- dat |>
 
 ## Model 1: DFF---- 
 mod1 <- lmer(DFF ~ Condition * Relationship * Sexual_dimorphism +
-               (1 | ID) + (1 | Stimulus), 
-             data = dat_m1,
-             na.action = "na.fail")
+               (1 + Sexual_dimorphism| ID) + (1 | Stimulus), 
+             data = dat_m1)
 anova(mod1)
 
 ### Contrastes post-hoc----
@@ -1232,9 +1231,9 @@ dat_m2 <- dat |>
 
 ## Model 2: TFD----
 mod2 <- lmer(TFD ~ Condition * Relationship * Sexual_dimorphism +
-               (1 | ID) + (1 | Stimulus), 
+               (1 + Sexual_dimorphism | ID) + (1 | Stimulus), 
              data = dat_m2,
-             na.action = "na.fail")
+             control = lmerControl(check.conv.singular = .makeCC(action = "ignore",  tol = 1e-4)))
 anova(mod2)
 
 ### Contrastes post-hoc----
@@ -1243,7 +1242,7 @@ anova(mod2)
 emmeans(mod2, pairwise ~ Sexual_dimorphism)
 
 #### Interacción: Condition:Sexual_dimorphism----
-emmeans(mod2, pairwise ~ Sexual_dimorphism | Condition)
+#emmeans(mod2, pairwise ~ Sexual_dimorphism | Condition)
 
 #### Interacción: Relationship:Sexual_dimorphism---- 
 emmeans(mod2, pairwise ~ Sexual_dimorphism | Relationship)
@@ -1298,9 +1297,8 @@ dat_m3 <- dat |>
 
 ## Model 3: NF----
 mod3 <- lmer(NF ~ Condition * Relationship * Sexual_dimorphism +
-                (1 | ID) + (1 | Stimulus), 
-              data = dat_m3,
-             na.action = "na.fail")
+                (1 + Sexual_dimorphism | ID) + (1 | Stimulus), 
+              data = dat_m3)
 
 anova(mod3)
 
@@ -1309,14 +1307,11 @@ anova(mod3)
 #### Efecto principal: Sexual_dimorphism----
 emmeans(mod3, pairwise ~ Sexual_dimorphism)
 
-#### Interacción: Condition:Sexual_dimorphism----
-emmeans(mod3, pairwise ~ Sexual_dimorphism | Condition)
+#### Interacción: Condition:Relationship---- 
+emmeans(mod3, pairwise ~ Relationship | Condition)
 
 #### Interacción: Relationship:Sexual_dimorphism---- 
 emmeans(mod3, pairwise ~ Sexual_dimorphism | Relationship)
-
-#### Interacción: Condition:Relationship---- 
-emmeans(mod3, pairwise ~ Relationship | Condition)
 
 #### Diseño completo----
 emmeans(mod3, pairwise ~ Sexual_dimorphism | Relationship + Condition)
@@ -1342,7 +1337,7 @@ pm3 <- ggplot(emms_m3, aes(y = emmean, x = Sexual_dimorphism, color = Relationsh
             position = position_dodge(0.9)) + 
   stat_pvalue_manual(contr_m3, 
                      label = "p.signif", 
-                     y.position = c(3.7, 3.72, 3.75, 3.77),
+                     y.position = c(3.75, 3.75, 3.77, 3.77),
                      color = "Relationship", hide.ns = TRUE,
                      position = position_dodge(),
                      tip.length = 0) +
@@ -1375,8 +1370,7 @@ dat_m4  <- dat |>
 
 ## Model 4: Choice----
 mod4 <- lm(Choice_prop ~ Condition * Relationship * Sexual_dimorphism,
-            data = dat_m4,
-            na.action = "na.fail")
+            data = dat_m4)
 
 anova(mod4)
 
@@ -1438,33 +1432,28 @@ ggarrange(pm1, pm2, pm3, pm4,
 ### Models----
 mod1a <- lmer(DFF ~
                 Condition * Relationship * Sexual_dimorphism * Men_perceived_as_dangerous +
-                (1 | ID) + (1 | Stimulus), 
-              data = dat_m1,
-              na.action = "na.fail")
+                (1 + Sexual_dimorphism | ID) + (1 | Stimulus), 
+              data = dat_m1)
 
 mod1b <- lmer(DFF ~
                 Condition * Relationship * Sexual_dimorphism * Freq_partner_physical_violence +
-                (1 | ID) + (1 | Stimulus), 
-              data = dat_m1,
-              na.action = "na.fail")
+                (1 + Sexual_dimorphism | ID) + (1 | Stimulus), 
+              data = dat_m1)
 
 mod1c <- lmer(DFF ~
                 Condition * Relationship * Sexual_dimorphism * Freq_partner_sexual_violence +
-                (1 | ID) + (1 | Stimulus), 
-              data = dat_m1,
-              na.action = "na.fail")
+                (1 + Sexual_dimorphism | ID) + (1 | Stimulus), 
+              data = dat_m1)
 
 mod1d <- lmer(DFF ~
                 Condition * Relationship * Sexual_dimorphism * Freq_partner_infidelity +
-                (1 | ID) + (1 | Stimulus), 
-              data = dat_m1,
-              na.action = "na.fail")
+                (1 + Sexual_dimorphism | ID) + (1 | Stimulus), 
+              data = dat_m1)
 
 mod1e <- lmer(DFF ~
                 Condition * Relationship * Sexual_dimorphism * Perceived_home_safety +
-                (1 | ID) + (1 | Stimulus), 
-              data = dat_m1,
-              na.action = "na.fail")
+                (1 + Sexual_dimorphism | ID) + (1 | Stimulus), 
+              data = dat_m1)
 
 ### Best model----
 
@@ -1514,8 +1503,9 @@ pm1f <- ggplot(emms_best_m1, aes(y = emmean, x = Sexual_dimorphism, color = Rela
   geom_point(position = position_dodge(0.9), size = 1) +
   geom_line(aes(group = Relationship),
             position = position_dodge(0.9)) + 
-  stat_pvalue_manual(contr_best_m1, label = "p.signif", y.position = c(300, NA, 280, 300,
-                                                                       NA, NA, 320, NA),
+  stat_pvalue_manual(contr_best_m1, label = "p.signif", 
+                     y.position = c(300, NA, 280, 300,
+                                    NA, NA, 320, NA),
                      color = "Relationship", hide.ns = TRUE,
                      position = position_dodge(),
                      tip.length = 0) +
@@ -1532,33 +1522,28 @@ pm1f <- ggplot(emms_best_m1, aes(y = emmean, x = Sexual_dimorphism, color = Rela
 ### Models----
 mod2a <- lmer(TFD ~
                 Condition * Relationship * Sexual_dimorphism * Men_perceived_as_dangerous +
-                (1 | ID) + (1 | Stimulus), 
-              data = dat_m2,
-              na.action = "na.fail")
+                (1 + Sexual_dimorphism | ID) + (1 | Stimulus), 
+              data = dat_m2)
 
 mod2b <- lmer(TFD ~
                 Condition * Relationship * Sexual_dimorphism * Freq_partner_physical_violence +
-                (1 | ID) + (1 | Stimulus), 
-              data = dat_m2,
-              na.action = "na.fail")
+                (1 + Sexual_dimorphism | ID) + (1 | Stimulus), 
+              data = dat_m2)
 
 mod2c <- lmer(TFD ~
                 Condition * Relationship * Sexual_dimorphism * Freq_partner_sexual_violence +
-                (1 | ID) + (1 | Stimulus), 
-              data = dat_m2,
-              na.action = "na.fail")
+                (1 + Sexual_dimorphism | ID) + (1 | Stimulus), 
+              data = dat_m2)
 
 mod2d <- lmer(TFD ~
                 Condition * Relationship * Sexual_dimorphism * Freq_partner_infidelity +
-                (1 | ID) + (1 | Stimulus), 
-              data = dat_m2,
-              na.action = "na.fail")
+                (1 + Sexual_dimorphism | ID) + (1 | Stimulus), 
+              data = dat_m2)
 
 mod2e <- lmer(TFD ~
                 Condition * Relationship * Sexual_dimorphism * Perceived_home_safety +
-                (1 | ID) + (1 | Stimulus), 
-              data = dat_m2,
-              na.action = "na.fail")
+                (1 + Sexual_dimorphism | ID) + (1 | Stimulus), 
+              data = dat_m2)
 
 ### Best model----
 
@@ -1624,27 +1609,27 @@ pm2f <- ggplot(emms_best_m2, aes(y = emmean, x = Sexual_dimorphism, color = Rela
 ### Models----
 mod3a <- lmer(NF ~
                 Condition * Relationship * Sexual_dimorphism * Men_perceived_as_dangerous +
-                (1 | ID) + (1 | Stimulus), 
+                (1 + Sexual_dimorphism | ID) + (1 | Stimulus), 
               data = dat_m3)
 
 mod3b <- lmer(NF ~
                 Condition * Relationship * Sexual_dimorphism * Freq_partner_physical_violence +
-                (1 | ID) + (1 | Stimulus), 
+                (1 + Sexual_dimorphism | ID) + (1 | Stimulus), 
               data = dat_m3)
 
 mod3c <- lmer(NF ~
                 Condition * Relationship * Sexual_dimorphism * Freq_partner_sexual_violence +
-                (1 | ID) + (1 | Stimulus), 
+                (1 + Sexual_dimorphism | ID) + (1 | Stimulus), 
               data = dat_m3)
 
 mod3d <- lmer(NF ~
                 Condition * Relationship * Sexual_dimorphism * Freq_partner_infidelity +
-                (1 | ID) + (1 | Stimulus), 
+                (1 + Sexual_dimorphism | ID) + (1 | Stimulus), 
               data = dat_m3)
 
 mod3e <- lmer(NF ~
                 Condition * Relationship * Sexual_dimorphism * Perceived_home_safety +
-                (1 | ID) + (1 | Stimulus), 
+                (1 + Sexual_dimorphism | ID) + (1 | Stimulus), 
               data = dat_m3)
 
 ### Best model----
