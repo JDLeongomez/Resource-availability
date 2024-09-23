@@ -4,17 +4,17 @@ subtitle: Code and analyses
 author:
   - name: Milena Vásquez-Amézquita \orcidlink{0000-0001-7317-8430}
     correspondence: true
-    institute: [ueb, costa]
+    institute: [costa, ueb]
     email: mvasquezam@unbosque.edu.co
-  - name: Andrés Castellanos-Chacón \orcidlink{0000-0003-1684-9319}
-    correspondence: false
-    institute: evoco
   - name: Wendy Medina-Sarmiento
     correspondence: false
     institute: ueb
   - name: Valentina Cepeda
     correspondence: false
     institute: ueb
+  - name: Andrés Castellanos-Chacón \orcidlink{0000-0003-1684-9319}
+    correspondence: false
+    institute: evoco
   - name: Marina Begoña Martínez-González \orcidlink{0000-0002-5840-6383}
     correspondence: false
     institute: costa
@@ -248,11 +248,12 @@ corr.stars <- function(x) {
 }
 ```
 
-### `lmer.anova.tab`
+### `lmer.anova.tab` and `lm.anova.tab`
 
-This function takes a model, and creates an ANOVA-type table of fixed effects, formatted in \LaTeX.
+These functions take a model, and creates an ANOVA-type table of fixed effects, formatted in \LaTeX.
 
 ```{r}
+# lmer.anova.tab for linear mixed-effects models
 lmer.anova.tab <- function(model) {
   
   r2 <- r2_nakagawa(model)
@@ -269,10 +270,10 @@ lmer.anova.tab <- function(model) {
     select(Effect, F, df, p) |> 
     add_row(Effect = paste0("Conditional = ", round(r2$R2_conditional, 2))) |> 
     add_row(Effect = paste0("Marginal = ",signif(r2$R2_marginal, 2))) |> 
-    rename("FIxed effect" = "Effect",
-           "\\textit{df}" = "df",
-           "\\textit{F}" = "F",
-           "\\textit{p}" = "p")
+    rename("Fixed effect" = "Effect",
+           "$F$" = "F",
+           "$df$" = "df",
+           "$p$" = "p")
   
   caption <- paste0("ANOVA-type table of fixed effects for the ", find_response(model), " model")
   
@@ -290,7 +291,57 @@ lmer.anova.tab <- function(model) {
               start_row = n_rows-1, end_row = n_rows,
               hline_after = TRUE, hline_before = TRUE,
               escape = FALSE)
-  return(taa)
+  return(list(tab = tab, kab = taa))
+}
+
+# lm.anova.tab for linear models
+lm.anova.tab <- function(model) {
+  
+  r2 <- r2(model)
+  
+  DenDF <- last(Anova(model, type = 3)$Df)
+  
+  omega <- data.frame(omega_squared(model)) |> 
+                rename(Effect = Parameter)
+  
+  tab <- anova(model) |>
+    rownames_to_column(var = "Effect") |> 
+    filter(Effect != "(Intercept)") |> 
+    mutate(Effect = str_replace_all(Effect, "_", " "),
+           Effect = str_replace_all(Effect, ":", " × "),
+           df = paste0(Df, ", ", round(DenDF, 2))) |> 
+    filter(Effect != "Residuals") |>
+    rename("F" = "F value",
+           "p" = "Pr(>F)") |>
+    mutate(F = round(F, 2),
+           p = pval.lev(p)) |> 
+    select(Effect, F, df, p) |> 
+    mutate(omega = omega$Omega2_partial) |> 
+    add_row(Effect = paste0("Unadjusted = ", signif(r2$R2, 2))) |> 
+    add_row(Effect = paste0("Adjusted = ",signif(r2$R2_adjusted, 2))) |> 
+    rename("Fixed effect" = "Effect",
+           "$F$" = "F",
+           "$df$" = "df",
+           "$p$" = "p",
+           "$\\omega^2_p$" = "omega")
+
+    caption <- paste0("ANOVA-type table of fixed effects for the ", find_response(model), " model")
+  
+  n_rows <- dim(tab)[1]
+  
+  taa <- kable(tab,
+               digits = 2,
+               booktabs = TRUE,
+               align = c("l", rep("c", 3)),
+               linesep = "",
+               caption = caption,
+               escape = FALSE) |>
+    kable_styling(latex_options = c("HOLD_position", "scale_down")) |>
+    pack_rows("$R^2$",
+              start_row = n_rows-1, end_row = n_rows,
+              hline_after = TRUE, hline_before = TRUE,
+              escape = FALSE)
+  return(list(tab = tab, kab = taa))
 }
 ```
 
@@ -319,8 +370,8 @@ main.eff.contr <- function(model) {
                         "$97.5\\%CI$", 
                         "Difference", 
                         "$SE$", 
-                        "$z$", "
-                        $p$"), 
+                        "$z$", 
+                        "$p$"), 
           escape = FALSE) |> 
     kable_styling(latex_options = c("HOLD_position", "scale_down")) |>
     add_header_above(c(" " = 5,"Contrast (Masculinized - Feminized)" = 4)) |> 
@@ -351,11 +402,14 @@ inter.contr <- function(model, emm_contr) {
           booktabs = TRUE, 
           align = c(rep("l",2), rep("c",8)),
           linesep ="", 
-          caption = paste0("Estimated marginal and constrast between masculinized and feminized 
-                           stimuli by ", emm_contr$emmeans@roles$predictors[2], " for the ",
+          caption = paste0("Estimated marginal and constrast between ",
+                           str_replace_all(emm_contr$emmeans@roles$predictors[1], "_", " "), 
+                           " levels by ", 
+                           emm_contr$emmeans@roles$predictors[2], 
+                           " for the ",
                            find_response(model), " model"),
           col.names = c(emm_contr$emmeans@roles$predictors[2],
-                        "Sexual dimorphism",
+                        str_replace_all(emm_contr$emmeans@roles$predictors[1], "_", " "),
                         "EMM", 
                         "$SE$", 
                         "$2.5\\%CI$", 
@@ -436,7 +490,7 @@ This function takes a model, and creates a plot that shows the estimated margina
 cond_labs <- c("Condition: High", "Condition: Low")
 names(cond_labs) <- c("High", "Low")
 
-plot.exp <- function(model, y.pos) {
+plot.exp <- function(model, y.pos, y.lab) {
   
   emms_mod <- as.data.frame(emmeans(model,
                                    ~ Sexual_dimorphism + Condition + Relationship))
@@ -462,7 +516,7 @@ plot.exp <- function(model, y.pos) {
                      color = "Relationship", hide.ns = TRUE,
                      position = position_dodge(),
                      tip.length = 0) +
-  labs(y = "Duration of First Fixation (DFF)",
+  labs(y = y.lab,
        x = NULL) +
   facet_grid(~ Condition,
              labeller = labeller(Condition = cond_labs)) 
@@ -470,7 +524,6 @@ plot.exp <- function(model, y.pos) {
     return(plo)
 }
 ```
-
 
 ## Independent stimuli evaluation
 
@@ -529,7 +582,7 @@ t_masc[1:10, ] |>
                according to its sexual dimorphism manipulation (feminized - masculinized)",
     # Caption for the table
     escape = FALSE, # Allow LaTeX commands in the table (e.g., italic or bold)
-    col.names = rep(c("Stimulus", "\\textit{t}", "\\textit{p}"), times = 3) # Column names
+    col.names = rep(c("Stimulus", "$t$", "$p$"), times = 3) # Column names
   ) |>
   # Apply additional LaTeX styling to the table using 'kable_styling'
   kable_styling(
@@ -652,8 +705,8 @@ dat_et <- read_excel("Data/BD-ET-CUC-UB.xlsx",
         Stimulus
       )
     ),
-    # Create a new column 'Choice' to indicate whether there was a mouse click
-    Choice = ifelse(NMC == 0, "No", "Yes")
+    # Create a new column 'CF' to indicate whether there was a mouse click
+    CF = ifelse(NMC == 0, "No", "Yes")
   )
 ```
 
@@ -1277,36 +1330,6 @@ quests_fin <- quests_clean |>
   filter(ID %in% unique(dat$ID))
 ```
 
-#### Differences in fixations to masculinized and feminized stimuli
-
-To test bias in fixation patterns according to the sexual dimorphism manipulation, difference scores (masculinized - feminized) were calculated
-
-```{r}
-dat_dif <- dat |> 
-  group_by(ID, 
-           Stimulus, 
-           Condition, 
-           Relationship,
-           Sexual_orientation,
-           Freq_partner_physical_violence,
-           Freq_partner_sexual_violence,
-           Freq_partner_infidelity,
-           Relationship_current,
-           Men_perceived_as_dangerous) |> 
-  summarise(DFF_dif = DFF[Sexual_dimorphism == "Masculinized"] - 
-              DFF[Sexual_dimorphism == "Feminized"],
-            TFD_dif = TFD[Sexual_dimorphism == "Masculinized"] - 
-              TFD[Sexual_dimorphism == "Feminized"],
-            NF_dif = NF[Sexual_dimorphism == "Masculinized"] - 
-              NF[Sexual_dimorphism == "Feminized"],
-            Attr_dif = Attractiveness[Sexual_dimorphism == "Masculinized"] - 
-              Attractiveness[Sexual_dimorphism == "Feminized"],
-            Masc_dif = Masculinity[Sexual_dimorphism == "Masculinized"] - 
-              Masculinity[Sexual_dimorphism == "Feminized"]) |> 
-  ungroup() |> 
-  mutate(across(where(is.character), as.factor))
-```
-
 # Descriptives
 
 ## Number and age of participants in each condition
@@ -1836,299 +1859,148 @@ eval_long |>
 
 ## Correlations
 
-### Correlations between partner perceptions
+### Correlations between partner violence and responses to masculinized and feminized stimuli
 
 ```{r}
-quests_fin |>
-  select(
-    Freq_partner_physical_violence,
-    Freq_partner_sexual_violence,
-    Freq_partner_infidelity,
-    Partner_masculinity,
-    Partner_dominance,
-    Partner_attractiveness) |>
-  rename(
-    "Physical violence" = "Freq_partner_physical_violence",
-    "Sexual violence" = "Freq_partner_sexual_violence",
-    "Infidelity" = "Freq_partner_infidelity",
-    "Masculinity" = "Partner_masculinity",
-    "Dominance" = "Partner_dominance",
-    "Attractiveness" = "Partner_attractiveness") |> 
-  corr.stars() |>
-  rownames_to_column(var = " ") |> 
-  dplyr::slice(-1) |> 
-  kable(digits = 2,
-        booktabs = TRUE,
-        align = c("l", rep("c", 5)),
-        linesep = "",
-        caption = "Correlations between partner perceptions",
-        escape = FALSE) |>
-  kable_styling(latex_options = c("HOLD_position")) |>
-  footnote(general = paste0("Values represent Pearson correlation coefficients ($r$). ",
-                            "Physical violence, sexual violence, and infidelity are frequencies. ",
-                            "For significance, $^{\\\\dagger}p$ < 0.1, *$p$ < 0.05, ",
-                            "**$p$ < 0.01, ***$p$ < 0.001. ",
-                            "Significant correlations are in bold."),
-           threeparttable = TRUE,
-           footnote_as_chunk = TRUE,
-           escape = FALSE)
-```
-
-### Correlations between XXXXXX
-
-```{r}
-desc_quest |> 
-  left_join(reg_fin |> 
-              select(ID, Body_temperature), 
-            by = c("ID")) |>
-  select(Age,
-         Freq_illness,
-         starts_with("SP_"),
-         Partner_masculinity, Partner_dominance, Partner_attractiveness,
-         ends_with("_safety"), Freq_robery,
-         Freq_partner_physical_violence, 
-         Freq_partner_sexual_violence, 
-         Freq_partner_infidelity) |> 
-  rename_with(~str_replace_all(., "_", " ")) |> 
-  rename_with(~str_replace_all(., "Freq", "Frequency of")) |>
-  rename_with(~str_replace_all(., "Frequency of partner", "Partner")) |>
-  rename_with(~str_replace_all(., "Perceived", "")) |>
-  rename_with(~str_replace_all(., "asculinity", "asc.")) |>
-  rename_with(~str_replace_all(., "ttractiveness", "ttr.")) |>
-  rename_with(~str_replace_all(., "ominance", "om.")) |>
-  rename_with(~str_replace_all(., " neighborhood", "Neighbor.")) |>
-  rename_with(~str_replace_all(., "Partner ", "")) |>
-  rename_with(~str_to_sentence(.)) |>
-  rename_with(~str_replace_all(., "Sp", "S.P.")) |>
-  rename_with(~str_trim(.)) |>
-  corr.stars() |>
-  rownames_to_column(var = " ") |> 
-  dplyr::slice(-1) |> 
-  kable(digits = 2,
-        booktabs = TRUE,
-        align = c("l", rep("c", 20)),
-        linesep = "",
-        caption = "Correlations between XXXXXX",
-        escape = FALSE) |>
-  kable_styling(latex_options = c("HOLD_position"),
-                font_size = 3.9) |>
-  column_spec(1, width = "1cm") |>
-  column_spec(2:21, width = "0.76cm") |>
-  add_header_above(c(" ", 
-                     "Age" = 1, 
-                     "Health" = 1,
-                     "Self-perceived conditions" = 7,
-                     "Current/last partner\nperception" = 3,
-                     "Perceived context\nviolence" = 6,
-                     "Frequency of\npartner violence" = 2),
-                   bold = TRUE) |> 
-  footnote(general = paste0("Values represent Pearson correlation coefficients ($r$). ",
-                            "S.P. = self-perceived; masc. = masculinity; 
-                            dom. = dominance; attr. = attractiveness;  
-                            neighbor. = neighborhood. ",
-                            "For significance, $^{\\\\dagger}p$ < 0.1, *$p$ < 0.05, ",
-                            "**$p$ < 0.01, ***$p$ < 0.001. ",
-                            "Significant correlations are in bold."),
-           threeparttable = TRUE,
-           footnote_as_chunk = TRUE,
-           escape = FALSE) |>
-  landscape()
-```
-
-### Correlations between fixations, subjective evaluations of stimuli, partner perceptions, and violence
-
-```{r}
-dat_main_corr <- dat |> 
-  select(ID, Condition, Relationship,
-         TFD, DFF, NF,
-         Masculinity, Attractiveness,
-         Partner_attractiveness:Partner_masculinity,
-         ends_with("_safety"), Freq_robery,
-         starts_with("Freq_partner_")) |> 
-  group_by(ID, Condition, Relationship) |> 
-  summarise_all(mean)
-
-dat_main_corr_high <- dat_main_corr |> 
-  filter(Condition == "High") |> 
-  ungroup() |> 
-  select(TFD:Freq_partner_infidelity) |> 
-  rename_with(~str_replace_all(., "_", " ")) |> 
-  rename_with(~str_replace_all(., "Freq", "Frequency of")) |>
-  rename_with(~str_replace_all(., "Frequency of partner", "Partner")) |>
-  rename_with(~str_replace_all(., "Perceived", "")) |>
-  rename_with(~str_replace_all(., "asculinity", "asc.")) |>
-  rename_with(~str_replace_all(., "ttractiveness", "ttr.")) |>
-  rename_with(~str_replace_all(., "ominance", "om.")) |>
-  rename_with(~str_replace_all(., " neighborhood", "Neighbor.")) |>
-  rename_with(~str_to_sentence(.)) |>
-    rename("TFD" = "Tfd", 
-         "DFF" = "Dff", 
-         "NF" = "Nf") |> 
-  rename_with(~str_trim(.)) |>
-  corr.stars() |>
-  rownames_to_column(var = " ") |> 
-  dplyr::slice(-1)
-  
-dat_main_corr_low <- dat_main_corr |> 
-  filter(Condition == "High") |> 
-  ungroup() |> 
-  select(TFD:Freq_partner_infidelity) |> 
-  rename_with(~str_replace_all(., "_", " ")) |> 
-  rename_with(~str_replace_all(., "Freq", "Frequency of")) |>
-  rename_with(~str_replace_all(., "Frequency of partner", "Partner")) |>
-  rename_with(~str_replace_all(., "Perceived", "")) |>
-  rename_with(~str_replace_all(., "asculinity", "asc.")) |>
-  rename_with(~str_replace_all(., "ttractiveness", "ttr.")) |>
-  rename_with(~str_replace_all(., "ominance", "om.")) |>
-  rename_with(~str_replace_all(., " neighborhood", "Neighbor.")) |>
-  rename_with(~str_to_sentence(.)) |>
-    rename("TFD" = "Tfd", 
-         "DFF" = "Dff", 
-         "NF" = "Nf") |> 
-  rename_with(~str_trim(.)) |>
-  corr.stars() |>
-  rownames_to_column(var = " ") |> 
-  dplyr::slice(-1)  
-  
-dat_main_corr_high |> 
-  bind_rows(dat_main_corr_low) |> 
-  kable(digits = 2,
-        booktabs = TRUE,
-        align = c("l", rep("c", 20)),
-        linesep = "",
-        caption = "Correlations between fixations, subjective evaluations of stimuli, 
-        partner perceptions, and violence by Condition",
-        escape = FALSE) |>
-  kable_styling(latex_options = c("HOLD_position"),
-                font_size = 4.2) |>
-  column_spec(1, width = "2.5cm") |>
-  column_spec(2:21, width = "0.84cm") |>
-  add_header_above(c(" ", 
-                     "Fixations" = 3, 
-                     "Stimulus ratings" = 2,
-                     "Current/last partner\nperception" = 3,
-                     "Perceived context\nviolence" = 7,
-                     "Frequency of\npartner violence" = 2),
-                   bold = TRUE) |> 
-  pack_rows("Condition: High", 1, 17,
-            hline_after = TRUE) |> 
-  pack_rows("Condition: Low", 18, 34,
-            hline_after = TRUE, hline_before = TRUE) |> 
-  footnote(general = paste0("Values represent Pearson correlation coefficients ($r$). ",
-                            "TDF = Total Fixation Duration; DFF = Duration of First Fixation;
-                            NF = Number of Fixations; masc. = masculinity;
-                            dom. = dominance; attr. = attractiveness;  
-                            neighbor. = neighborhood. ",
-                            "For significance, $^{\\\\dagger}p$ < 0.1, *$p$ < 0.05, ",
-                            "**$p$ < 0.01, ***$p$ < 0.001. ",
-                            "Significant correlations are in bold."),
-           threeparttable = TRUE,
-           footnote_as_chunk = TRUE,
-           escape = FALSE) |>
-  landscape()
-```
-
-### Correlations between partner violence and mean difference scores between responses to masculinized and feminized stimuli
-
-```{r}
-dat_choice_dif <- dat |> 
-  mutate(Choice = as.numeric(recode(Choice,
-                                    "Yes" =  "1",
-                                    "No" = "0"))) |> 
+dat_PCF <- dat |> 
+  mutate(CF = as.numeric(recode(CF,
+                                 "Yes" =  "1",
+                                 "No" = "0"))) |> 
   group_by(ID, Sexual_dimorphism, Relationship, Condition) |> 
-  summarise(Choice = sum(Choice)) |> 
+  summarise(CF = sum(CF)) |> 
   group_by(ID, Sexual_dimorphism, Relationship, Condition) |> 
-  summarise(Choice_count = sum(Choice)) |> 
-  ungroup() |> 
-  group_by(ID, Relationship, Condition) |> 
-  summarise(Choice_dif = Choice_count[Sexual_dimorphism == "Masculinized"] - 
-              Choice_count[Sexual_dimorphism == "Feminized"])
+  summarise(PCF = sum(CF)/30) |> 
+  ungroup()
 
-dat_dif_short <- dat_dif |> 
-  group_by(ID, Relationship, Condition) |> 
+dat_short <- dat |> 
+  group_by(ID, Relationship, Condition, Sexual_dimorphism) |> 
   summarise(Freq_partner_physical_violence = mean(Freq_partner_physical_violence),
             Freq_partner_sexual_violence = mean(Freq_partner_sexual_violence), 
             Freq_partner_infidelity = mean(Freq_partner_infidelity),
             Men_perceived_as_dangerous = mean(Men_perceived_as_dangerous),
-            DFF_dif = mean(DFF_dif),
-            TFD_dif = mean(TFD_dif),
-            NF_dif = mean(NF_dif),
-            Attr_dif = mean(Attr_dif),
-            Masc_dif = mean(Masc_dif)) |> 
-  left_join(dat_choice_dif |> 
-              select(ID, Relationship, Condition, Choice_dif), 
-            by = c("ID", "Relationship", "Condition")) |> 
+            Perceived_home_safety = mean(Perceived_home_safety),
+            DFF = mean(DFF),
+            TFD = mean(TFD),
+            NF = mean(NF),
+            Attr = mean(Attractiveness),
+            Masc = mean(Masculinity)) |> 
+  left_join(dat_PCF |> 
+              select(ID, Sexual_dimorphism, Relationship, Condition, PCF), 
+            by = c("ID", "Sexual_dimorphism", "Relationship", "Condition")) |> 
   rename("PPV" = "Freq_partner_physical_violence",
          "PSV" = "Freq_partner_sexual_violence",      
          "PI" =  "Freq_partner_infidelity",
          "MPD" = "Men_perceived_as_dangerous",
-         "DFF" = "DFF_dif",
-         "TFD" = "TFD_dif",
-         "NF" =  "NF_dif",
-         "Attr." = "Attr_dif",
-         "Masc." = "Masc_dif",
-         "Choice" = "Choice_dif") |> 
+         "PHS" = "Perceived_home_safety") |> 
   ungroup()
-  
-dat_dif_short |> 
-  filter(Relationship == "Short term" & Condition == "Low") |> 
-  select(where(is.numeric)) |> 
-  corr.stars() |>
-  rownames_to_column(var = " ") |> 
-  dplyr::slice(-1) |> 
-  bind_rows(dat_dif_short |>
-              filter(Relationship == "Long term" & Condition == "Low") |>
-              select(where(is.numeric)) |> 
-              corr.stars() |>
-              rownames_to_column(var = " ") |> 
-              dplyr::slice(-1)) |> 
-  bind_rows(dat_dif_short |> 
-              filter(Relationship == "Short term" & Condition == "High") |> 
-              select(where(is.numeric)) |> 
-              corr.stars() |>
-              rownames_to_column(var = " ") |> 
-              dplyr::slice(-1)) |> 
-  bind_rows(dat_dif_short |>
-              filter(Relationship == "Long term" & Condition == "High") |>
-              select(where(is.numeric)) |> 
-              corr.stars() |>
-              rownames_to_column(var = " ") |> 
-              dplyr::slice(-1)) |> 
+ 
+left_join(
+  dat_short |>
+    filter(Relationship == "Short term" &
+             Condition == "Low" & 
+             Sexual_dimorphism == "Masculinized") |>
+    select(where(is.numeric)) |> 
+    corr.stars() |>
+    rownames_to_column(var = "Effect") |> 
+    dplyr::slice(-1),
+  dat_short |>
+    filter(Relationship == "Short term" &
+             Condition == "Low" & 
+             Sexual_dimorphism == "Feminized") |>
+    select(where(is.numeric)) |> 
+    corr.stars() |>
+    rownames_to_column(var = "Effect") |> 
+    dplyr::slice(-1),
+  by = "Effect") |> 
+  bind_rows(left_join(
+    dat_short |>
+      filter(Relationship == "Long term" &
+               Condition == "Low" & 
+               Sexual_dimorphism == "Masculinized") |>
+      select(where(is.numeric)) |> 
+      corr.stars() |>
+      rownames_to_column(var = "Effect") |> 
+      dplyr::slice(-1),
+    dat_short |>
+      filter(Relationship == "Long term" &
+               Condition == "Low" & 
+               Sexual_dimorphism == "Feminized") |>
+      select(where(is.numeric)) |> 
+      corr.stars() |>
+      rownames_to_column(var = "Effect") |> 
+      dplyr::slice(-1),
+    by = "Effect")) |> 
+  bind_rows(left_join(
+    dat_short |>
+      filter(Relationship == "Short term" &
+               Condition == "High" & 
+               Sexual_dimorphism == "Masculinized") |>
+      select(where(is.numeric)) |> 
+      corr.stars() |>
+      rownames_to_column(var = "Effect") |> 
+      dplyr::slice(-1),
+    dat_short |>
+      filter(Relationship == "Short term" &
+               Condition == "High" & 
+               Sexual_dimorphism == "Feminized") |>
+      select(where(is.numeric)) |> 
+      corr.stars() |>
+      rownames_to_column(var = "Effect") |> 
+      dplyr::slice(-1),
+    by = "Effect")) |>
+  bind_rows(left_join(
+    dat_short |>
+      filter(Relationship == "Long term" &
+               Condition == "High" & 
+               Sexual_dimorphism == "Masculinized") |>
+      select(where(is.numeric)) |> 
+      corr.stars() |>
+      rownames_to_column(var = "Effect") |> 
+      dplyr::slice(-1),
+    dat_short |>
+      filter(Relationship == "Long term" &
+               Condition == "High" & 
+               Sexual_dimorphism == "Feminized") |>
+      select(where(is.numeric)) |> 
+      corr.stars() |>
+      rownames_to_column(var = "Effect") |> 
+      dplyr::slice(-1),
+    by = "Effect")) |> 
   kable(digits = 2,
         booktabs = TRUE,
-        align = c("l", rep("c", 10)),
+        align = c("l", rep("c", 20)),
         linesep = "",
-        caption = "Correlations between partner violence and mean difference scores between 
-        responses to masculinized and feminized stimuli",
+        col.names = c("Effect",
+                      rep(c("PPV", "PSV", "PI", "MPD", "PHS", "DFF", 
+                          "TFD", "NF", "Attr.", "Masc."), times = 2)),
+        caption = "Correlations between partner violence and responses to masculinized and 
+        feminized stimuli",
         escape = FALSE) |>
-  kable_styling(latex_options = c("HOLD_position", "scale_down")) |>
+  kable_styling(latex_options = c("HOLD_position", "scale_down")) |> 
   add_header_above(c(" ",
-                     " " = 4, 
-                     "Difference scores\n(masculinized - feminized)" = 5),
-                   bold = TRUE) |>
-  pack_rows("Low condition, short-term relationship", 1, 9,
+                     "Masculinized" = 10, 
+                     "Feminized" = 10),
+                   bold = TRUE) |> 
+  pack_rows("Low condition, short-term relationship", 1, 10,
             hline_after = TRUE) |> 
-  pack_rows("Low condition, long-term relationship", 10, 18,
+  pack_rows("Low condition, long-term relationship", 11, 20,
             hline_after = TRUE, hline_before = TRUE) |>
-  pack_rows("High condition, short-term relationship", 19, 27,
+  pack_rows("High condition, short-term relationship", 21, 30,
             hline_after = TRUE, hline_before = TRUE) |> 
-  pack_rows("High condition, long-term relationship", 28, 36,
+  pack_rows("High condition, long-term relationship", 31, 40,
             hline_after = TRUE, hline_before = TRUE) |> 
   footnote(general = paste0("Values represent Pearson correlation coefficients ($r$). ",
                             "PPV = Frequency of partner physical violence; 
                             PSV = Frequency of partner sexual violence;
                             PI =  Frequency of partner infidelity; 
                             MPD = Men perceived as dangerous;
+                            PHS = Perceived home safety;
                             DFF = Duration of First Fixation; 
                             TDF = Total Fixation Duration; 
                             NF = Number of Fixations; 
-                            attr. = attractiveness; 
-                            masc. = masculinity. ", 
-                            "For variables that were evaluated in response to each stimulus 
-                            (DFF, TFD, NF, Attr., Masc. and Choice), correlations are
-                            with the difference between responses to masculinized minus 
-                            feminized stimuli, so that higher (and possitive values) indicate 
-                            a stronger preference for masculinized stimuli. ",
+                            Attr. = attractiveness; 
+                            Masc. = masculinity;
+                            PCF = proportion of Chosen Faces. ", 
                             "For significance, $^{\\\\dagger}p$ < 0.1, *$p$ < 0.05, ",
                             "**$p$ < 0.01, ***$p$ < 0.001. ",
                             "Significant correlations are in bold."),
@@ -2150,14 +2022,14 @@ reg_fin |>
   group_by(Dimension) |> 
   summarise("Mean (Low)" = mean(Score[reg_fin$Condition == "Low"]),
             "Mean (High)" = mean(Score[reg_fin$Condition == "High"]),
-            "\\textit{t}" = t.test(Score ~ Condition)$statistic,
-            "\\textit{p}" = t.test(Score ~ Condition)$p.value,
-            "\\textit{g}" = hedges_g(Score ~ Condition)$Hedges_g) |> 
+            "$t$" = t.test(Score ~ Condition)$statistic,
+            "$p$" = t.test(Score ~ Condition)$p.value,
+            "$g$" = hedges_g(Score ~ Condition)$Hedges_g) |> 
   ungroup() |> 
   mutate(Dimension = str_replace_all(Dimension, "_", " "),
          Dimension = str_remove_all(Dimension, "Condition "),
          Dimension = str_to_title(Dimension)) |> 
-  mutate("\\textit{p}" = pval.lev("\\textit{p}")) |> 
+  mutate("$p$" = pval.lev("$p$")) |> 
   kable(digits = 2,
         booktabs = TRUE,
         align = c("l", rep("c", 5)),
@@ -2248,7 +2120,7 @@ ggarrange(p_mancheck_masc, p_mancheck_attr,
 
 # Models of the experimental design
 
-## Model 1: DFF
+## Model 1: Duration of First Fixations (DFF)
 
 ### Data
 
@@ -2275,21 +2147,22 @@ mod1 <- lmer(DFF ~ Condition * Relationship * Sexual_dimorphism +
 
 Model assumptions were checked using the check_model function from the performance package [@ludecke2021].
 
-```{r assu-mod1, cache = TRUE, message = FALSE, fig.height = 11, fig.cap = "Model assumptions. Plots represent prediction check, linearity, homogeneity of variance, influential observations, collinearity, and normality of both residuals and random effects (as QQ plots), respectively."}
+```{r assu-mod1, cache = TRUE, message = FALSE, fig.height = 11, fig.cap = "Model assumptions. Plots represent prediction check, linearity, homogeneity of variance, influential observations, collinearity, and normality of both residuals and random effects, respectively."}
 check_model(mod1)
 ```
 
 ### Table of fixed effects
 
 ```{r tab-mod1}
-lmer.anova.tab(model = mod1)
+tab_m1 <- lmer.anova.tab(model = mod1)
+tab_m1$kab
 ```
 
 ### Estimated marginal means and *post-hoc* contrasts of significant effects
 
 #### Main effect: Sexual dimorphism
 
-Table of estimated marginal means and contrasts between masculinized and feminized stimuli. All estimated marginal means and contrasts were calculated using the `emmeans` function from the `emmeans` package [@emmeanscit].
+Table of estimated marginal means and contrasts between masculinized and feminized stimuli. 
 
 ```{r}
 main.eff.contr(model = mod1)
@@ -2297,7 +2170,7 @@ main.eff.contr(model = mod1)
 
 #### Full design
 
-Table of estimated marginal means and contrasts between masculinized and feminized stimuli including the full experimental design. All estimated marginal means and contrasts were calculated using the `emmeans` function from the `emmeans` package [@emmeanscit].
+Table of estimated marginal means and contrasts between masculinized and feminized stimuli including the full experimental design. 
 
 ```{r tab-contr-mod1}
 full.contr(model = mod1,
@@ -2308,24 +2181,268 @@ full.contr(model = mod1,
 
 This figure summarizes the the DFF model results.
 
-```{r fig-mod1, results = "hold", fig.cap = "Differences in the Duration of First Fixations (DFF) to masculinized and feminized stimuli, by relationship (short term, ling term) and condition (low, high). Dots and bars represent estimated marginal means ± standard errors. For detailed results, see Tables \\@ref(tab:tab-mod1) and \\@ref(tab:tab-contr-mod1)). In all cases, significant effects are represented with lines and stars: \\**p* < 0.05.", warning = FALSE, message = FALSE}
-pm1 <- plot.exp(model = mod1, y.pos = c(266, NA, NA, 268))
+```{r fig-mod1, results = "hold", fig.cap = "Differences in the Duration of First Fixations (DFF) to masculinized and feminized stimuli, by relationship (short term, ling term) and condition (low, high). Dots and bars represent estimated marginal means ± standard errors. For detailed results, see Tables \\@ref(tab:tab-mod1) and \\@ref(tab:tab-contr-mod1)). In all cases, significant effects are represented with lines and stars: \\**p* < 0.05.", warning = FALSE, message = FALSE, fig.height = 5}
+pm1 <- plot.exp(model = mod1, 
+                y.pos = c(266, NA, NA, 268),
+                y.lab = "Duration of First Fixation (DFF)")
 pm1
 ```
 
-## Model XXX
+## Model 2: Total Fixation Duration (TFD)
+
+### Data
 
 ```{r}
-inter.contr(model = mod1,
-            emm_contr = emmeans(mod1, pairwise ~ Sexual_dimorphism | Relationship))
-
+dat_m2 <- dat |> 
+  select(TFD, Condition, Relationship, Sexual_dimorphism,
+         ID, Stimulus,
+         Freq_partner_physical_violence, Freq_partner_sexual_violence,
+         Freq_partner_infidelity, Men_perceived_as_dangerous,
+         Perceived_home_safety) |> 
+  filter(TFD >= 100 & TFD <= 1000) |> 
+  drop_na()
 ```
 
-```{r fig-mod1X, results = "hold", fig.cap = "Differences in the XXXXXX (XXX) to masculinized and feminized stimuli, by relationship (short term, ling term) and condition (low, high). Black dots and bars represent estimated marginal means ± standard errors. For detailed results, see Tables \\@ref(tab:tab-modX) and \\@ref(tab:tab-contr-modX)). In all cases, significant effects are represented with lines and stars: \\**p* < 0.05, \\*\\**p* < 0.01, \\*\\*\\**p* < 0.001, \\*\\*\\*\\**p* < 0.0001.", warning = FALSE, message = FALSE}
-pm2 <- plot.exp(model = mod1, y.pos = c(266, NA, NA, 268))
+### Fit linear mixed model
+
+```{r}
+mod2 <- lmer(TFD ~ Condition * Relationship * Sexual_dimorphism +
+               (1 + Sexual_dimorphism | ID) + (1 | Stimulus), 
+             data = dat_m2,
+             control = lmerControl(check.conv.singular = .makeCC(action = "ignore",  tol = 1e-4),
+                                   optimizer="bobyqa"))
+```
+
+#### Model assumptions
+
+Model assumptions were checked using the check_model function from the performance package [@ludecke2021].
+
+```{r assu-mod2, cache = TRUE, message = FALSE, fig.height = 11, fig.cap = "Model assumptions. Plots represent prediction check, linearity, homogeneity of variance, influential observations, collinearity, and normality of both residuals and random effects, respectively."}
+check_model(mod2)
+```
+
+### Table of fixed effects
+
+```{r tab-mod2}
+tab_m2 <- lmer.anova.tab(model = mod2)
+tab_m2$kab
+```
+
+### Estimated marginal means and *post-hoc* contrasts of significant effects
+
+#### Main effect: Sexual dimorphism
+
+Table of estimated marginal means and contrasts between masculinized and feminized stimuli. 
+
+```{r}
+main.eff.contr(model = mod2)
+```
+
+#### Interaction: Relationship × Sexual dimorphism
+
+Table of estimated marginal means and contrasts between masculinized and feminized stimuli by relationship. 
+
+```{r}
+inter.contr(model = mod2,
+            emm_contr = emmeans(mod2, pairwise ~ Sexual_dimorphism | Relationship))
+```
+
+#### Full design
+
+Table of estimated marginal means and contrasts between masculinized and feminized stimuli including the full experimental design. 
+
+```{r tab-contr-mod2}
+full.contr(model = mod2,
+           emm_contr = emmeans(mod2, pairwise ~ Sexual_dimorphism | Relationship + Condition))
+```
+
+### Figure for the TFD model
+
+This figure summarizes the the TFD model results.
+
+```{r fig-mod2, results = "hold", fig.cap = "Differences in the Total Fixation Duration (TFD) to masculinized and feminized stimuli, by relationship (short term, ling term) and condition (low, high). Dots and bars represent estimated marginal means ± standard errors. For detailed results, see Tables \\@ref(tab:tab-mod2) and \\@ref(tab:tab-contr-mod2)). In all cases, significant effects are represented with lines and stars: \\*\\**p* < 0.01, \\*\\*\\**p* < 0.001", warning = FALSE, message = FALSE, fig.height = 5}
+pm2 <- plot.exp(model = mod2, 
+                y.pos = c(700, 700, 705, 705),
+                y.lab = "Total Fixation Duration (TFD)")
 pm2
 ```
 
+## Model 3: Number of Fixations (NF)
+
+### Data
+
+```{r}
+dat_m3 <- dat |> 
+  select(NF, Condition, Relationship, Sexual_dimorphism,
+         ID, Stimulus, 
+         Freq_partner_physical_violence, Freq_partner_sexual_violence,
+         Freq_partner_infidelity, Men_perceived_as_dangerous,
+         Perceived_home_safety) |> 
+  group_by(ID, Stimulus, Relationship) |> 
+  filter(!(sum(NF[Sexual_dimorphism == "Masculinized"] == 0) > 0 & 
+             sum(NF[Sexual_dimorphism == "Feminized"] == 0) > 0)) |>
+  ungroup() |> 
+  drop_na()
+```
+
+### Fit linear mixed model
+
+```{r}
+mod3 <- lmer(NF ~ Condition * Relationship * Sexual_dimorphism +
+               (1 + Sexual_dimorphism | ID) + (1 | Stimulus), 
+             data = dat_m3)
+```
+
+#### Model assumptions
+
+Model assumptions were checked using the check_model function from the performance package [@ludecke2021].
+
+```{r assu-mod3, cache = TRUE, message = FALSE, fig.height = 11, fig.cap = "Model assumptions. Plots represent prediction check, linearity, homogeneity of variance, influential observations, collinearity, and normality of both residuals and random effects, respectively."}
+check_model(mod3)
+```
+
+### Table of fixed effects
+
+```{r tab-mod3}
+tab_m3 <- lmer.anova.tab(model = mod3)
+tab_m3$kab
+```
+
+### Estimated marginal means and *post-hoc* contrasts of significant effects
+
+#### Main effect: Sexual dimorphism
+
+Table of estimated marginal means and contrasts between masculinized and feminized stimuli. 
+
+```{r}
+main.eff.contr(model = mod3)
+```
+
+#### Interaction: Condition × Relationship
+
+Table of estimated marginal means and contrasts between short and long term relationship by condition. 
+
+```{r}
+inter.contr(model = mod3,
+            emm_contr = emmeans(mod3, pairwise ~ Relationship | Condition))
+```
+
+#### Interaction: Relationship × Sexual dimorphism
+
+Table of estimated marginal means and contrasts between masculinized and feminized stimuli by relationship. 
+
+```{r}
+inter.contr(model = mod3,
+            emm_contr = emmeans(mod3, pairwise ~ Sexual_dimorphism | Relationship))
+```
+
+
+#### Full design
+
+Table of estimated marginal means and contrasts between masculinized and feminized stimuli including the full experimental design. 
+
+```{r tab-contr-mod3}
+full.contr(model = mod3,
+           emm_contr = emmeans(mod3, pairwise ~ Sexual_dimorphism | Relationship + Condition))
+```
+
+### Figure for the NF model
+
+This figure summarizes the the NF model results.
+
+```{r fig-mod3, results = "hold", fig.cap = "Differences in the Number of Fixations (NF) to masculinized and feminized stimuli, by relationship (short term, ling term) and condition (low, high). Dots and bars represent estimated marginal means ± standard errors. For detailed results, see Tables \\@ref(tab:tab-mod3) and \\@ref(tab:tab-contr-mod3)). In all cases, significant effects are represented with lines and stars: \\**p* < 0.05, \\*\\**p* < 0.01, \\*\\*\\**p* < 0.001.", warning = FALSE, message = FALSE, fig.height = 5}
+pm3 <- plot.exp(model = mod3, 
+                y.pos = c(3.75, 3.75, 3.78, 3.78),
+                y.lab = "Number of Fixations (NF)")
+pm3
+```
+
+## Model 4: Proportion of Chosen Faces (PCF)
+
+### Data
+
+```{r}
+dat_m4  <- dat |> 
+  mutate(CF = as.numeric(recode(CF,
+                                "Yes" =  "1",
+                                "No" = "0"))) |> 
+  group_by(ID, Stimulus, Relationship) |> 
+  filter(!(sum(CF[Sexual_dimorphism == "Masculinized"] == 0) > 0 & 
+             sum(CF[Sexual_dimorphism == "Feminized"] == 0) > 0)) |>
+  ungroup() |> 
+  group_by(ID, Sexual_dimorphism, Relationship, Condition,
+           Freq_partner_physical_violence,
+           Freq_partner_sexual_violence,
+           Freq_partner_infidelity,
+           Men_perceived_as_dangerous,
+           Perceived_home_safety) |> 
+  summarise(CF = sum(CF)) |> 
+  ungroup() |> 
+  mutate(PCF = CF/30) |> 
+  drop_na()
+```
+
+### Fit linear mixed model
+
+```{r}
+mod4 <- lm(PCF ~ Condition * Relationship * Sexual_dimorphism,
+            data = dat_m4)
+```
+
+#### Model assumptions
+
+Model assumptions were checked using the check_model function from the performance package [@ludecke2021].
+
+```{r assu-mod4, cache = TRUE, message = FALSE, fig.height = 11, fig.cap = "Model assumptions. Plots represent prediction check, linearity, homogeneity of variance, influential observations, collinearity, and normality of residuals, respectively."}
+check_model(mod4)
+```
+
+### Table of fixed effects
+
+```{r tab-mod4}
+tab_m4 <- lm.anova.tab(model = mod4)
+tab_m4$kab
+```
+
+### Estimated marginal means and *post-hoc* contrasts of significant effects
+
+#### Main effect: Sexual dimorphism
+
+Table of estimated marginal means and contrasts between masculinized and feminized stimuli. All estimated marginal means and contrasts were calculated using the `emmeans` function from the `emmeans` package [@emmeanscit].
+
+```{r}
+main.eff.contr(model = mod4)
+```
+
+#### Interaction: Relationship × Sexual dimorphism
+
+Table of estimated marginal means and contrasts between masculinized and feminized stimuli by relationship. All estimated marginal means and contrasts were calculated using the `emmeans` function from the `emmeans` package [@emmeanscit].
+
+```{r}
+inter.contr(model = mod4,
+            emm_contr = emmeans(mod4, pairwise ~ Sexual_dimorphism | Relationship))
+```
+
+
+#### Full design
+
+Table of estimated marginal means and contrasts between masculinized and feminized stimuli including the full experimental design. All estimated marginal means and contrasts were calculated using the `emmeans` function from the `emmeans` package [@emmeanscit].
+
+```{r tab-contr-mod4}
+full.contr(model = mod4,
+           emm_contr = emmeans(mod4, pairwise ~ Sexual_dimorphism | Relationship + Condition))
+```
+
+### Figure for the NF model
+
+This figure summarizes the the NF model results.
+
+```{r fig-mod4, results = "hold", fig.cap = "Differences in the proportion of masculinized and feminized chosen faces (PCF), by relationship (short term, ling term) and condition (low, high). Dots and bars represent estimated marginal means ± standard errors. For detailed results, see Tables \\@ref(tab:tab-mod4) and \\@ref(tab:tab-contr-mod4)). In all cases, significant effects are represented with lines and stars: \\*\\*\\**p* < 0.001.", warning = FALSE, message = FALSE, fig.height = 5}
+pm4 <- plot.exp(model = mod4, 
+                y.pos = c(0.75, 0.77, 0.78, 0.8),
+                y.lab = "Proportion of Chosen Faces (PCF)")
+pm4
+```
 
 ```{=latex}
 \closesupplement
@@ -2333,8 +2450,50 @@ pm2
 
 # Final figures and tables (included in the main paper)
 
-```{r results = "hold", fig.cap = "Differences in the XXXXXX (XXX) to masculinized and feminized stimuli, by relationship (short term, ling term) and condition (low, high). Black dots and bars represent estimated marginal means ± standard errors. For detailed results, see Tables \\@ref(tab:tab-modX) and \\@ref(tab:tab-contr-modX)). In all cases, significant effects are represented with lines and stars: \\**p* < 0.05, \\*\\**p* < 0.01, \\*\\*\\**p* < 0.001, \\*\\*\\*\\**p* < 0.0001.", warning = FALSE, message = FALSE}
-ggarrange(pm1, pm2,
+## Table of fixed effects for experimental design models
+
+```{r}
+bind_cols(tab_m1$tab,
+          select(tab_m2$tab, -"Fixed effect"),
+          select(tab_m3$tab, -"Fixed effect"),
+          select(tab_m4$tab, -"Fixed effect")) |> 
+  slice_head(n = 7) |> 
+  kable(digits = 2,
+        booktabs = TRUE,
+        align = c("l", rep("c", 13)),
+        col.names = c("Fixed effect",
+                     rep(c("$F$",
+                           "$df$",
+                           "$p$"),
+                         times = 4),
+                     "$\\omega^2_p$"),
+        linesep = "",
+        caption = "Pattern of gaze and choice of face by resource availability condition, 
+        relationship context and sexual dimorphism ",
+        escape = FALSE) |>
+  kable_styling(latex_options = c("HOLD_position", "scale_down")) |>
+  add_header_above(c(" " = 1,
+                     "Duration of First Fixations (DFF)" = 3,
+                     "Total Fixation Duration (TFD)" = 3,
+                     "Number of Fixations (NF)" = 3,
+                     "Proportion of Chosen Faces (PCF)" = 4)) |> 
+  footnote(general = "For models predicting fixation measurements (DFF, TFD, and NF) results 
+  are from linear mixed models; for PCF, however, results are from a linear model without 
+  random effects, so $\\\\omega^2_p$ effect sizes are reported for each term. For further 
+  details, including full model effect sizes (Nakagawa's conditional and marginal $R^2$ for 
+  linear mixed models, and unadjusted and adjuster $R^2$ for the PCF linear model), see tables
+  \\@ref(tab:tab-mod1), \\@ref(tab:tab-mod2), \\@ref(tab:tab-mod3) and \\@ref(tab:tab-mod4) in 
+  the Supplementary Material. Significant effects are in bold.",
+           threeparttable = TRUE, 
+           footnote_as_chunk = TRUE, 
+           escape = FALSE)
+```
+
+
+## Figure of experimental design models
+
+```{r results = "hold", fig.cap = "Differences in responses to masculinized and feminized stimuli, by relationship (short term, ling term) and condition (low, high). \\textbf{a.} Duration of First Fixations (DFF). \\textbf{b.} Total Fixation Duration (TFD). \\textbf{c.} Number of Fixations (NF). \\textbf{d.} Proportion of Chosen Faces (PCF). Black dots and bars represent estimated marginal means ± standard errors. For detailed results, see Tables \\@ref(tab:tab-mod1) to \\@ref(tab:tab-contr-mod2) in t6he Supplementary Material. In all cases, significant effects are represented with lines and stars: \\**p* < 0.05, \\*\\**p* < 0.01, \\*\\*\\**p* < 0.001.", warning = FALSE, message = FALSE}
+ggarrange(pm1, pm2,pm3, pm4,
           common.legend = TRUE,
           legend = "bottom",
           labels = "auto")
