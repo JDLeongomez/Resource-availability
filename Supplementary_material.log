@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.9.20)  23 SEP 2024 14:49
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.9.20)  24 SEP 2024 21:03
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1260,18 +1260,18 @@ File: t1lmtt.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 [1
 
 {/home/jdl/.TinyTeX/texmf-var/fonts/map/pdftex/updmap/pdftex.map}{/home/jdl/.TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc}]
-LaTeX Font Info:    Trying to load font information for TS1+lmr on input line 68.
+LaTeX Font Info:    Trying to load font information for TS1+lmr on input line 70.
 (/home/jdl/.TinyTeX/texmf-dist/tex/latex/lm/ts1lmr.fd
 File: ts1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
 
-[2{/home/jdl/.TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-ts1.enc}])
+[2])
 \tf@toc=\write6
 \openout6 = `Supplementary_material.toc'.
 
 
 
-[3]
+[3{/home/jdl/.TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-ts1.enc}]
 LaTeX Font Info:    Font shape `T1/lmtt/bx/n' in size <10> not available
 (Font)              Font shape `T1/lmtt/b/n' tried instead on input line 231.
 LaTeX Font Info:    Trying to load font information for TS1+lmtt on input line 237.
@@ -1280,13 +1280,13 @@ File: ts1lmtt.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
 
 [4]
-
-[5]
-Underfull \vbox (badness 10000) detected at line 408
+Overfull \vbox (0.59381pt too high) detected at line 332
  []
 
 
-Underfull \vbox (badness 10000) detected at line 408
+
+[5]
+Overfull \vbox (0.59381pt too high) detected at line 432
  []
 
 
@@ -1294,376 +1294,401 @@ Underfull \vbox (badness 10000) detected at line 408
 [6]
 
 [7]
-Overfull \vbox (1.54782pt too high) detected at line 551
- []
-
-
 
 [8]
-Overfull \vbox (0.59882pt too high) detected at line 596
+Overfull \vbox (1.54782pt too high) detected at line 575
  []
 
 
 
 [9]
+Overfull \vbox (1.54782pt too high) detected at line 641
+ []
 
-[10]
 
-[11{/home/jdl/.TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-mathit.enc}]
-<Supplementary_material_files/figure-latex/estimated-age-hist-1.pdf, id=291, 361.35pt x 216.81pt>
+
+[10{/home/jdl/.TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-mathit.enc}]
+
+[11]
+Underfull \vbox (badness 10000) detected at line 758
+ []
+
+
+
+[12]
+
+[13]
+
+[14]
+<Supplementary_material_files/figure-latex/estimated-age-hist-1.pdf, id=322, 361.35pt x 216.81pt>
 File: Supplementary_material_files/figure-latex/estimated-age-hist-1.pdf Graphic file (type pdf)
 <use Supplementary_material_files/figure-latex/estimated-age-hist-1.pdf>
-Package pdftex.def Info: Supplementary_material_files/figure-latex/estimated-age-hist-1.pdf  used on input line 760.
+Package pdftex.def Info: Supplementary_material_files/figure-latex/estimated-age-hist-1.pdf  used on input line 922.
 (pdftex.def)             Requested size: 361.34912pt x 216.80946pt.
 
 
-[12 <./Supplementary_material_files/figure-latex/estimated-age-hist-1.pdf>]
-Underfull \vbox (badness 10000) detected at line 827
- []
-
-
-
-[13]
-Overfull \vbox (1.08958pt too high) detected at line 1097
- []
-
-
-
-[14]
-Underfull \vbox (badness 10000) detected at line 1097
- []
-
-
-Underfull \vbox (badness 10000) detected at line 1097
- []
-
-
-
-[15]
-Underfull \vbox (badness 10000) detected at line 1097
- []
-
-
-Underfull \vbox (badness 10000) detected at line 1097
- []
-
-
+[15 <./Supplementary_material_files/figure-latex/estimated-age-hist-1.pdf>]
 
 [16]
-Underfull \vbox (badness 10000) detected at line 1097
- []
-
-
-Underfull \vbox (badness 10000) detected at line 1097
- []
-
-
 
 [17]
+Underfull \vbox (badness 10000) detected at line 1259
+ []
+
+
+Underfull \vbox (badness 10000) detected at line 1259
+ []
+
+
 
 [18]
+Underfull \vbox (badness 10000) detected at line 1259
+ []
+
+
+Underfull \vbox (badness 10000) detected at line 1259
+ []
+
+
 
 [19]
-<Supplementary_material_files/figure-latex/pca-sef-plot-1.pdf, id=338, 867.24pt x 578.16pt>
-File: Supplementary_material_files/figure-latex/pca-sef-plot-1.pdf Graphic file (type pdf)
-<use Supplementary_material_files/figure-latex/pca-sef-plot-1.pdf>
-Package pdftex.def Info: Supplementary_material_files/figure-latex/pca-sef-plot-1.pdf  used on input line 1194.
-(pdftex.def)             Requested size: 500.48529pt x 333.65685pt.
-
-LaTeX Warning: Reference `tab:pca-sef-plot' on page 20 undefined on input line 1198.
+Underfull \vbox (badness 10000) detected at line 1259
+ []
 
 
+Underfull \vbox (badness 10000) detected at line 1259
+ []
 
-[20 <./Supplementary_material_files/figure-latex/pca-sef-plot-1.pdf>]
-<Supplementary_material_files/figure-latex/pca-mpd-plot-1.pdf, id=351, 867.24pt x 578.16pt>
-File: Supplementary_material_files/figure-latex/pca-mpd-plot-1.pdf Graphic file (type pdf)
-<use Supplementary_material_files/figure-latex/pca-mpd-plot-1.pdf>
-Package pdftex.def Info: Supplementary_material_files/figure-latex/pca-mpd-plot-1.pdf  used on input line 1289.
-(pdftex.def)             Requested size: 500.48529pt x 333.65685pt.
+
+
+[20]
+Overfull \vbox (0.33055pt too high) detected at line 1307
+ []
+
 
 
 [21]
 
-[22 <./Supplementary_material_files/figure-latex/pca-mpd-plot-1.pdf>]
+[22]
+<Supplementary_material_files/figure-latex/pca-sef-plot-1.pdf, id=368, 867.24pt x 578.16pt>
+File: Supplementary_material_files/figure-latex/pca-sef-plot-1.pdf Graphic file (type pdf)
+<use Supplementary_material_files/figure-latex/pca-sef-plot-1.pdf>
+Package pdftex.def Info: Supplementary_material_files/figure-latex/pca-sef-plot-1.pdf  used on input line 1356.
+(pdftex.def)             Requested size: 500.48529pt x 333.65685pt.
 
-[23]
+LaTeX Warning: Reference `tab:pca-sef-plot' on page 23 undefined on input line 1360.
+
+
+
+[23 <./Supplementary_material_files/figure-latex/pca-sef-plot-1.pdf>]
+<Supplementary_material_files/figure-latex/pca-mpd-plot-1.pdf, id=381, 867.24pt x 578.16pt>
+File: Supplementary_material_files/figure-latex/pca-mpd-plot-1.pdf Graphic file (type pdf)
+<use Supplementary_material_files/figure-latex/pca-mpd-plot-1.pdf>
+Package pdftex.def Info: Supplementary_material_files/figure-latex/pca-mpd-plot-1.pdf  used on input line 1451.
+(pdftex.def)             Requested size: 500.48529pt x 333.65685pt.
+
 
 [24]
 
-[25]
+[25 <./Supplementary_material_files/figure-latex/pca-mpd-plot-1.pdf>]
 
 [26]
-Underfull \vbox (badness 10000) detected at line 1641
- []
-
-
 
 [27]
 
 [28]
-<Supplementary_material_files/figure-latex/sociodemographic-desc-plot-1.pdf, id=394, 867.24pt x 433.62pt>
+
+[29]
+Underfull \vbox (badness 10000) detected at line 1803
+ []
+
+
+
+[30]
+
+[31]
+<Supplementary_material_files/figure-latex/sociodemographic-desc-plot-1.pdf, id=425, 867.24pt x 433.62pt>
 File: Supplementary_material_files/figure-latex/sociodemographic-desc-plot-1.pdf Graphic file (type pdf)
 <use Supplementary_material_files/figure-latex/sociodemographic-desc-plot-1.pdf>
-Package pdftex.def Info: Supplementary_material_files/figure-latex/sociodemographic-desc-plot-1.pdf  used on input line 1705.
+Package pdftex.def Info: Supplementary_material_files/figure-latex/sociodemographic-desc-plot-1.pdf  used on input line 1867.
 (pdftex.def)             Requested size: 500.48529pt x 250.24265pt.
 
 
-[29 <./Supplementary_material_files/figure-latex/sociodemographic-desc-plot-1.pdf>]
-<Supplementary_material_files/figure-latex/resource-desc-plot-1.pdf, id=409, 867.24pt x 433.62pt>
+[32 <./Supplementary_material_files/figure-latex/sociodemographic-desc-plot-1.pdf>]
+<Supplementary_material_files/figure-latex/resource-desc-plot-1.pdf, id=440, 867.24pt x 433.62pt>
 File: Supplementary_material_files/figure-latex/resource-desc-plot-1.pdf Graphic file (type pdf)
 <use Supplementary_material_files/figure-latex/resource-desc-plot-1.pdf>
-Package pdftex.def Info: Supplementary_material_files/figure-latex/resource-desc-plot-1.pdf  used on input line 1752.
+Package pdftex.def Info: Supplementary_material_files/figure-latex/resource-desc-plot-1.pdf  used on input line 1914.
 (pdftex.def)             Requested size: 500.48529pt x 250.24265pt.
 
 
-[30 <./Supplementary_material_files/figure-latex/resource-desc-plot-1.pdf>]
-<Supplementary_material_files/figure-latex/health-desc-plot-1.pdf, id=423, 867.24pt x 433.62pt>
+[33 <./Supplementary_material_files/figure-latex/resource-desc-plot-1.pdf>]
+<Supplementary_material_files/figure-latex/health-desc-plot-1.pdf, id=455, 867.24pt x 433.62pt>
 File: Supplementary_material_files/figure-latex/health-desc-plot-1.pdf Graphic file (type pdf)
 <use Supplementary_material_files/figure-latex/health-desc-plot-1.pdf>
-Package pdftex.def Info: Supplementary_material_files/figure-latex/health-desc-plot-1.pdf  used on input line 1795.
+Package pdftex.def Info: Supplementary_material_files/figure-latex/health-desc-plot-1.pdf  used on input line 1957.
 (pdftex.def)             Requested size: 500.48529pt x 250.24265pt.
 
 
-[31 <./Supplementary_material_files/figure-latex/health-desc-plot-1.pdf>]
-<Supplementary_material_files/figure-latex/foodsec-desc-plot-1.pdf, id=439, 867.24pt x 433.62pt>
+[34 <./Supplementary_material_files/figure-latex/health-desc-plot-1.pdf>]
+<Supplementary_material_files/figure-latex/foodsec-desc-plot-1.pdf, id=469, 867.24pt x 433.62pt>
 File: Supplementary_material_files/figure-latex/foodsec-desc-plot-1.pdf Graphic file (type pdf)
 <use Supplementary_material_files/figure-latex/foodsec-desc-plot-1.pdf>
-Package pdftex.def Info: Supplementary_material_files/figure-latex/foodsec-desc-plot-1.pdf  used on input line 1867.
+Package pdftex.def Info: Supplementary_material_files/figure-latex/foodsec-desc-plot-1.pdf  used on input line 2029.
 (pdftex.def)             Requested size: 500.48529pt x 250.24265pt.
 
 
-[32]
-Overfull \vbox (2.10863pt too high) detected at line 1912
+[35]
+Overfull \vbox (2.10863pt too high) detected at line 2074
  []
 
 
 
-[33 <./Supplementary_material_files/figure-latex/foodsec-desc-plot-1.pdf>]
-<Supplementary_material_files/figure-latex/hormone-desc-plot-1.pdf, id=458, 867.24pt x 289.08pt>
+[36 <./Supplementary_material_files/figure-latex/foodsec-desc-plot-1.pdf>]
+<Supplementary_material_files/figure-latex/hormone-desc-plot-1.pdf, id=488, 867.24pt x 289.08pt>
 File: Supplementary_material_files/figure-latex/hormone-desc-plot-1.pdf Graphic file (type pdf)
 <use Supplementary_material_files/figure-latex/hormone-desc-plot-1.pdf>
-Package pdftex.def Info: Supplementary_material_files/figure-latex/hormone-desc-plot-1.pdf  used on input line 1916.
+Package pdftex.def Info: Supplementary_material_files/figure-latex/hormone-desc-plot-1.pdf  used on input line 2078.
 (pdftex.def)             Requested size: 500.48529pt x 166.82841pt.
-<Supplementary_material_files/figure-latex/psych-desc-plot-1.pdf, id=459, 867.24pt x 433.62pt>
+<Supplementary_material_files/figure-latex/psych-desc-plot-1.pdf, id=489, 867.24pt x 433.62pt>
 File: Supplementary_material_files/figure-latex/psych-desc-plot-1.pdf Graphic file (type pdf)
 <use Supplementary_material_files/figure-latex/psych-desc-plot-1.pdf>
-Package pdftex.def Info: Supplementary_material_files/figure-latex/psych-desc-plot-1.pdf  used on input line 1945.
+Package pdftex.def Info: Supplementary_material_files/figure-latex/psych-desc-plot-1.pdf  used on input line 2107.
 (pdftex.def)             Requested size: 500.48529pt x 250.24265pt.
 
 
-[34 <./Supplementary_material_files/figure-latex/hormone-desc-plot-1.pdf>]
-<Supplementary_material_files/figure-latex/partner-desc-plot-1.pdf, id=474, 867.24pt x 289.08pt>
+[37 <./Supplementary_material_files/figure-latex/hormone-desc-plot-1.pdf>]
+<Supplementary_material_files/figure-latex/partner-desc-plot-1.pdf, id=505, 867.24pt x 289.08pt>
 File: Supplementary_material_files/figure-latex/partner-desc-plot-1.pdf Graphic file (type pdf)
 <use Supplementary_material_files/figure-latex/partner-desc-plot-1.pdf>
-Package pdftex.def Info: Supplementary_material_files/figure-latex/partner-desc-plot-1.pdf  used on input line 1973.
+Package pdftex.def Info: Supplementary_material_files/figure-latex/partner-desc-plot-1.pdf  used on input line 2135.
 (pdftex.def)             Requested size: 500.48529pt x 166.82841pt.
 
 
-[35 <./Supplementary_material_files/figure-latex/psych-desc-plot-1.pdf>]
+[38 <./Supplementary_material_files/figure-latex/psych-desc-plot-1.pdf>]
 
-[36 <./Supplementary_material_files/figure-latex/partner-desc-plot-1.pdf>]
-<Supplementary_material_files/figure-latex/context-violence-desc-plot-1.pdf, id=501, 867.24pt x 433.62pt>
+[39 <./Supplementary_material_files/figure-latex/partner-desc-plot-1.pdf>]
+<Supplementary_material_files/figure-latex/context-violence-desc-plot-1.pdf, id=532, 867.24pt x 433.62pt>
 File: Supplementary_material_files/figure-latex/context-violence-desc-plot-1.pdf Graphic file (type pdf)
 <use Supplementary_material_files/figure-latex/context-violence-desc-plot-1.pdf>
-Package pdftex.def Info: Supplementary_material_files/figure-latex/context-violence-desc-plot-1.pdf  used on input line 2049.
+Package pdftex.def Info: Supplementary_material_files/figure-latex/context-violence-desc-plot-1.pdf  used on input line 2211.
 (pdftex.def)             Requested size: 500.48529pt x 250.24265pt.
 
 
-[37 <./Supplementary_material_files/figure-latex/context-violence-desc-plot-1.pdf>]
-<Supplementary_material_files/figure-latex/gender-violence-desc-plot-1.pdf, id=517, 867.24pt x 433.62pt>
+[40 <./Supplementary_material_files/figure-latex/context-violence-desc-plot-1.pdf>]
+<Supplementary_material_files/figure-latex/gender-violence-desc-plot-1.pdf, id=547, 867.24pt x 433.62pt>
 File: Supplementary_material_files/figure-latex/gender-violence-desc-plot-1.pdf Graphic file (type pdf)
 <use Supplementary_material_files/figure-latex/gender-violence-desc-plot-1.pdf>
-Package pdftex.def Info: Supplementary_material_files/figure-latex/gender-violence-desc-plot-1.pdf  used on input line 2111.
+Package pdftex.def Info: Supplementary_material_files/figure-latex/gender-violence-desc-plot-1.pdf  used on input line 2273.
 (pdftex.def)             Requested size: 500.48529pt x 250.24265pt.
-
-
-[38]
-<Supplementary_material_files/figure-latex/stimuli-eval-desc-plot-1.pdf, id=522, 867.24pt x 433.62pt>
-File: Supplementary_material_files/figure-latex/stimuli-eval-desc-plot-1.pdf Graphic file (type pdf)
-<use Supplementary_material_files/figure-latex/stimuli-eval-desc-plot-1.pdf>
-Package pdftex.def Info: Supplementary_material_files/figure-latex/stimuli-eval-desc-plot-1.pdf  used on input line 2143.
-(pdftex.def)             Requested size: 500.48529pt x 250.24265pt.
-
-
-[39 <./Supplementary_material_files/figure-latex/gender-violence-desc-plot-1.pdf>]
-
-[40 <./Supplementary_material_files/figure-latex/stimuli-eval-desc-plot-1.pdf>]
-Underfull \vbox (badness 10000) detected at line 2299
- []
-
-
-Underfull \vbox (badness 10000) detected at line 2299
- []
-
 
 
 [41]
-Underfull \vbox (badness 10000) detected at line 2299
+<Supplementary_material_files/figure-latex/stimuli-eval-desc-plot-1.pdf, id=552, 867.24pt x 433.62pt>
+File: Supplementary_material_files/figure-latex/stimuli-eval-desc-plot-1.pdf Graphic file (type pdf)
+<use Supplementary_material_files/figure-latex/stimuli-eval-desc-plot-1.pdf>
+Package pdftex.def Info: Supplementary_material_files/figure-latex/stimuli-eval-desc-plot-1.pdf  used on input line 2305.
+(pdftex.def)             Requested size: 500.48529pt x 250.24265pt.
+
+
+[42 <./Supplementary_material_files/figure-latex/gender-violence-desc-plot-1.pdf>]
+
+[43 <./Supplementary_material_files/figure-latex/stimuli-eval-desc-plot-1.pdf>]
+Underfull \vbox (badness 10000) detected at line 2461
  []
 
 
-Underfull \vbox (badness 10000) detected at line 2299
+Underfull \vbox (badness 10000) detected at line 2461
  []
 
 
-
-[42]
-
-[43{/home/jdl/.TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc}]
 
 [44]
-<Supplementary_material_files/figure-latex/sex-dimor-check-plot-1.pdf, id=573, 867.24pt x 289.08pt>
-File: Supplementary_material_files/figure-latex/sex-dimor-check-plot-1.pdf Graphic file (type pdf)
-<use Supplementary_material_files/figure-latex/sex-dimor-check-plot-1.pdf>
-Package pdftex.def Info: Supplementary_material_files/figure-latex/sex-dimor-check-plot-1.pdf  used on input line 2529.
-(pdftex.def)             Requested size: 500.48529pt x 166.82841pt.
+Underfull \vbox (badness 10000) detected at line 2461
+ []
+
+
+Underfull \vbox (badness 10000) detected at line 2461
+ []
+
 
 
 [45]
-<Supplementary_material_files/figure-latex/assu-mod1-1.pdf, id=579, 867.24pt x 794.97pt>
+
+[46{/home/jdl/.TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc}]
+
+[47]
+<Supplementary_material_files/figure-latex/sex-dimor-check-plot-1.pdf, id=603, 867.24pt x 289.08pt>
+File: Supplementary_material_files/figure-latex/sex-dimor-check-plot-1.pdf Graphic file (type pdf)
+<use Supplementary_material_files/figure-latex/sex-dimor-check-plot-1.pdf>
+Package pdftex.def Info: Supplementary_material_files/figure-latex/sex-dimor-check-plot-1.pdf  used on input line 2691.
+(pdftex.def)             Requested size: 500.48529pt x 166.82841pt.
+
+
+[48]
+
+[49{/home/jdl/.TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-rm.enc} <./Supplementary_material_files/figure-latex/sex-dimor-check-plot-1.pdf>]
+<Supplementary_material_files/figure-latex/assu-mod1-1.pdf, id=633, 867.24pt x 794.97pt>
 File: Supplementary_material_files/figure-latex/assu-mod1-1.pdf Graphic file (type pdf)
 <use Supplementary_material_files/figure-latex/assu-mod1-1.pdf>
-Package pdftex.def Info: Supplementary_material_files/figure-latex/assu-mod1-1.pdf  used on input line 2574.
+Package pdftex.def Info: Supplementary_material_files/figure-latex/assu-mod1-1.pdf  used on input line 2744.
 (pdftex.def)             Requested size: 500.48529pt x 458.77818pt.
 
-
-[46 <./Supplementary_material_files/figure-latex/sex-dimor-check-plot-1.pdf>]
-
-[47 <./Supplementary_material_files/figure-latex/assu-mod1-1.pdf>]
-
-[48{/home/jdl/.TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-rm.enc}]
-<Supplementary_material_files/figure-latex/fig-mod1-1.pdf, id=625, 867.24pt x 361.35pt>
-File: Supplementary_material_files/figure-latex/fig-mod1-1.pdf Graphic file (type pdf)
-<use Supplementary_material_files/figure-latex/fig-mod1-1.pdf>
-Package pdftex.def Info: Supplementary_material_files/figure-latex/fig-mod1-1.pdf  used on input line 2717.
-(pdftex.def)             Requested size: 500.48529pt x 208.53554pt.
-<Supplementary_material_files/figure-latex/assu-mod2-1.pdf, id=629, 867.24pt x 794.97pt>
-File: Supplementary_material_files/figure-latex/assu-mod2-1.pdf Graphic file (type pdf)
-<use Supplementary_material_files/figure-latex/assu-mod2-1.pdf>
-Package pdftex.def Info: Supplementary_material_files/figure-latex/assu-mod2-1.pdf  used on input line 2762.
-(pdftex.def)             Requested size: 500.48529pt x 458.77818pt.
+Underfull \vbox (badness 1168) detected at line 2755
+ []
 
 
-[49 <./Supplementary_material_files/figure-latex/fig-mod1-1.pdf>]
 
-[50 <./Supplementary_material_files/figure-latex/assu-mod2-1.pdf>]
+[50 <./Supplementary_material_files/figure-latex/assu-mod1-1.pdf>]
 
 [51]
-<Supplementary_material_files/figure-latex/fig-mod2-1.pdf, id=670, 867.24pt x 361.35pt>
-File: Supplementary_material_files/figure-latex/fig-mod2-1.pdf Graphic file (type pdf)
-<use Supplementary_material_files/figure-latex/fig-mod2-1.pdf>
-Package pdftex.def Info: Supplementary_material_files/figure-latex/fig-mod2-1.pdf  used on input line 2947.
+<Supplementary_material_files/figure-latex/fig-mod1-1.pdf, id=661, 867.24pt x 361.35pt>
+File: Supplementary_material_files/figure-latex/fig-mod1-1.pdf Graphic file (type pdf)
+<use Supplementary_material_files/figure-latex/fig-mod1-1.pdf>
+Package pdftex.def Info: Supplementary_material_files/figure-latex/fig-mod1-1.pdf  used on input line 2887.
 (pdftex.def)             Requested size: 500.48529pt x 208.53554pt.
 
 
-[52 <./Supplementary_material_files/figure-latex/fig-mod2-1.pdf>]
-<Supplementary_material_files/figure-latex/assu-mod3-1.pdf, id=686, 867.24pt x 794.97pt>
-File: Supplementary_material_files/figure-latex/assu-mod3-1.pdf Graphic file (type pdf)
-<use Supplementary_material_files/figure-latex/assu-mod3-1.pdf>
-Package pdftex.def Info: Supplementary_material_files/figure-latex/assu-mod3-1.pdf  used on input line 2993.
+[52 <./Supplementary_material_files/figure-latex/fig-mod1-1.pdf>]
+<Supplementary_material_files/figure-latex/assu-mod2-1.pdf, id=678, 867.24pt x 794.97pt>
+File: Supplementary_material_files/figure-latex/assu-mod2-1.pdf Graphic file (type pdf)
+<use Supplementary_material_files/figure-latex/assu-mod2-1.pdf>
+Package pdftex.def Info: Supplementary_material_files/figure-latex/assu-mod2-1.pdf  used on input line 2931.
 (pdftex.def)             Requested size: 500.48529pt x 458.77818pt.
 
 
 [53]
 
-[54 <./Supplementary_material_files/figure-latex/assu-mod3-1.pdf>]
+[54 <./Supplementary_material_files/figure-latex/assu-mod2-1.pdf>]
 
 [55]
-<Supplementary_material_files/figure-latex/fig-mod3-1.pdf, id=719, 867.24pt x 361.35pt>
-File: Supplementary_material_files/figure-latex/fig-mod3-1.pdf Graphic file (type pdf)
-<use Supplementary_material_files/figure-latex/fig-mod3-1.pdf>
-Package pdftex.def Info: Supplementary_material_files/figure-latex/fig-mod3-1.pdf  used on input line 3220.
+<Supplementary_material_files/figure-latex/fig-mod2-1.pdf, id=712, 867.24pt x 361.35pt>
+File: Supplementary_material_files/figure-latex/fig-mod2-1.pdf Graphic file (type pdf)
+<use Supplementary_material_files/figure-latex/fig-mod2-1.pdf>
+Package pdftex.def Info: Supplementary_material_files/figure-latex/fig-mod2-1.pdf  used on input line 3116.
 (pdftex.def)             Requested size: 500.48529pt x 208.53554pt.
 
 
-[56]
-<Supplementary_material_files/figure-latex/assu-mod4-1.pdf, id=731, 867.24pt x 794.97pt>
-File: Supplementary_material_files/figure-latex/assu-mod4-1.pdf Graphic file (type pdf)
-<use Supplementary_material_files/figure-latex/assu-mod4-1.pdf>
-Package pdftex.def Info: Supplementary_material_files/figure-latex/assu-mod4-1.pdf  used on input line 3272.
+[56 <./Supplementary_material_files/figure-latex/fig-mod2-1.pdf>]
+<Supplementary_material_files/figure-latex/assu-mod3-1.pdf, id=728, 867.24pt x 794.97pt>
+File: Supplementary_material_files/figure-latex/assu-mod3-1.pdf Graphic file (type pdf)
+<use Supplementary_material_files/figure-latex/assu-mod3-1.pdf>
+Package pdftex.def Info: Supplementary_material_files/figure-latex/assu-mod3-1.pdf  used on input line 3162.
 (pdftex.def)             Requested size: 500.48529pt x 458.77818pt.
 
 
-[57 <./Supplementary_material_files/figure-latex/fig-mod3-1.pdf>]
+[57]
 
-[58 <./Supplementary_material_files/figure-latex/assu-mod4-1.pdf>]
+[58 <./Supplementary_material_files/figure-latex/assu-mod3-1.pdf>]
 
 [59]
-<Supplementary_material_files/figure-latex/fig-mod4-1.pdf, id=772, 867.24pt x 361.35pt>
-File: Supplementary_material_files/figure-latex/fig-mod4-1.pdf Graphic file (type pdf)
-<use Supplementary_material_files/figure-latex/fig-mod4-1.pdf>
-Package pdftex.def Info: Supplementary_material_files/figure-latex/fig-mod4-1.pdf  used on input line 3457.
+<Supplementary_material_files/figure-latex/fig-mod3-1.pdf, id=760, 867.24pt x 361.35pt>
+File: Supplementary_material_files/figure-latex/fig-mod3-1.pdf Graphic file (type pdf)
+<use Supplementary_material_files/figure-latex/fig-mod3-1.pdf>
+Package pdftex.def Info: Supplementary_material_files/figure-latex/fig-mod3-1.pdf  used on input line 3389.
 (pdftex.def)             Requested size: 500.48529pt x 208.53554pt.
 
 
-[60 <./Supplementary_material_files/figure-latex/fig-mod4-1.pdf>]
+[60]
+<Supplementary_material_files/figure-latex/assu-mod4-1.pdf, id=772, 867.24pt x 794.97pt>
+File: Supplementary_material_files/figure-latex/assu-mod4-1.pdf Graphic file (type pdf)
+<use Supplementary_material_files/figure-latex/assu-mod4-1.pdf>
+Package pdftex.def Info: Supplementary_material_files/figure-latex/assu-mod4-1.pdf  used on input line 3441.
+(pdftex.def)             Requested size: 500.48529pt x 458.77818pt.
 
-[61]
-<Supplementary_material_files/figure-latex/unnamed-chunk-44-1.pdf, id=798, 867.24pt x 578.16pt>
-File: Supplementary_material_files/figure-latex/unnamed-chunk-44-1.pdf Graphic file (type pdf)
-<use Supplementary_material_files/figure-latex/unnamed-chunk-44-1.pdf>
-Package pdftex.def Info: Supplementary_material_files/figure-latex/unnamed-chunk-44-1.pdf  used on input line 3554.
+
+[61 <./Supplementary_material_files/figure-latex/fig-mod3-1.pdf>]
+
+[62 <./Supplementary_material_files/figure-latex/assu-mod4-1.pdf>]
+
+[63]
+<Supplementary_material_files/figure-latex/fig-mod4-1.pdf, id=813, 867.24pt x 361.35pt>
+File: Supplementary_material_files/figure-latex/fig-mod4-1.pdf Graphic file (type pdf)
+<use Supplementary_material_files/figure-latex/fig-mod4-1.pdf>
+Package pdftex.def Info: Supplementary_material_files/figure-latex/fig-mod4-1.pdf  used on input line 3626.
+(pdftex.def)             Requested size: 500.48529pt x 208.53554pt.
+
+
+[64 <./Supplementary_material_files/figure-latex/fig-mod4-1.pdf>]
+
+[65]
+<Supplementary_material_files/figure-latex/fig-mod1-cov-1.pdf, id=842, 867.24pt x 578.16pt>
+File: Supplementary_material_files/figure-latex/fig-mod1-cov-1.pdf Graphic file (type pdf)
+<use Supplementary_material_files/figure-latex/fig-mod1-cov-1.pdf>
+Package pdftex.def Info: Supplementary_material_files/figure-latex/fig-mod1-cov-1.pdf  used on input line 3782.
 (pdftex.def)             Requested size: 500.48529pt x 333.65685pt.
 
-Overfull \hbox (3.0389pt too wide) in paragraph at lines 3574--3576
+
+[66]
+
+[67 <./Supplementary_material_files/figure-latex/fig-mod1-cov-1.pdf>]
+<Supplementary_material_files/figure-latex/unnamed-chunk-47-1.pdf, id=867, 867.24pt x 578.16pt>
+File: Supplementary_material_files/figure-latex/unnamed-chunk-47-1.pdf Graphic file (type pdf)
+<use Supplementary_material_files/figure-latex/unnamed-chunk-47-1.pdf>
+Package pdftex.def Info: Supplementary_material_files/figure-latex/unnamed-chunk-47-1.pdf  used on input line 3879.
+(pdftex.def)             Requested size: 500.48529pt x 333.65685pt.
+
+
+[68]
+Overfull \hbox (3.0389pt too wide) in paragraph at lines 3899--3901
 []\T1/lmr/bx/n/10 other at-tached pack-ages: \T1/lmr/m/it/10 pan-der(v.0.6.5)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 Hmisc(v.5.1-3)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 in-sight(v.0.20.4)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 ef-fect-size(v.0.8.9)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 bbmle(v.1.0.25.1)\T1/lmr/m/n/10 ,
  []
 
 
-Underfull \hbox (badness 1466) in paragraph at lines 3574--3576
+Underfull \hbox (badness 1466) in paragraph at lines 3899--3901
 \T1/lmr/m/it/10 kable-Ex-tra(v.1.4.0)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 em-means(v.1.10.3)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 lmerTest(v.3.1-3)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 lme4(v.1.1-35.5)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 Matrix(v.1.7-0)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 readxl(v.1.4.3)\T1/lmr/m/n/10 ,
  []
 
 
-Underfull \hbox (badness 2409) in paragraph at lines 3577--3579
+Underfull \hbox (badness 2409) in paragraph at lines 3902--3904
 []\T1/lmr/bx/n/10 loaded via a names-pace (and not at-tached): \T1/lmr/m/it/10 gridEx-tra(v.2.3)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 sandwich(v.3.1-1)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 rlang(v.1.1.4)\T1/lmr/m/n/10 ,
  []
 
 
-Overfull \hbox (6.40103pt too wide) in paragraph at lines 3577--3579
+Overfull \hbox (6.40103pt too wide) in paragraph at lines 3902--3904
 \T1/lmr/m/it/10 fastmap(v.1.2.0)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 back-ports(v.1.5.0)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 la-bel-ing(v.0.4.3)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 utf8(v.1.2.4)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 rmark-down(v.2.28)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 tzdb(v.0.4.0)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 nloptr(v.2.1.1)\T1/lmr/m/n/10 ,
  []
 
 
-Underfull \hbox (badness 5563) in paragraph at lines 3577--3579
+Underfull \hbox (badness 5563) in paragraph at lines 3902--3904
 \T1/lmr/m/it/10 1.1)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 es-tima-bil-ity(v.1.5.1)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 Rcpp(v.1.0.13)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 book-down(v.0.40)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 zoo(v.1.8-12)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 base64enc(v.0.1-3)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 pa-ram-e-
  []
 
 
-Underfull \hbox (badness 2875) in paragraph at lines 3577--3579
+Underfull \hbox (badness 2875) in paragraph at lines 3902--3904
 \T1/lmr/m/it/10 ters(v.0.22.2)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 nnet(v.7.3-19)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 splines(v.4.4.1)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 timechange(v.0.3.0)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 tidys-e-lect(v.1.2.1)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 rstu-dioapi(v.0.16.0)\T1/lmr/m/n/10 ,
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 3577--3579
+Underfull \hbox (badness 10000) in paragraph at lines 3902--3904
 \T1/lmr/m/it/10 abind(v.1.4-5)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 yaml(v.2.3.10)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 codetools(v.0.2-20)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 lattice(v.0.22-5)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 plyr(v.1.8.9)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 bayestestR(v.0.13.2)\T1/lmr/m/n/10 ,
  []
 
 
-Underfull \hbox (badness 3323) in paragraph at lines 3577--3579
+Underfull \hbox (badness 3323) in paragraph at lines 3902--3904
 \T1/lmr/m/it/10 withr(v.3.0.1)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 coda(v.0.19-4.1)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 eval-u-ate(v.0.24.0)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 foreign(v.0.8-86)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 survival(v.3.7-0)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 xml2(v.1.3.6)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 pil-
  []
 
 
-Underfull \hbox (badness 1803) in paragraph at lines 3577--3579
+Underfull \hbox (badness 1803) in paragraph at lines 3902--3904
 \T1/lmr/m/it/10 xtable(v.1.8-4)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 leaps(v.3.2)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 glue(v.1.7.0)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 scatterplot3d(v.0.3-44)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 tools(v.4.4.1)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 data.table(v.1.15.4)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 ggsig-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 3577--3579
+Underfull \hbox (badness 10000) in paragraph at lines 3902--3904
 \T1/lmr/m/it/10 nif(v.0.6.4)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 mvtnorm(v.1.2-5)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 cow-plot(v.1.1.3)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 grid(v.4.4.1)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 datawiz-ard(v.0.12.3)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 bdsmatrix(v.1.3-7)\T1/lmr/m/n/10 ,
  []
 
 
-Overfull \hbox (13.66133pt too wide) in paragraph at lines 3577--3579
+Overfull \hbox (13.66133pt too wide) in paragraph at lines 3902--3904
 \T1/lmr/m/it/10 TH.data(v.1.1-2)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 farver(v.2.1.2)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 html-wid-gets(v.1.6.4)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 html-tools(v.0.5.8.1)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 life-cy-cle(v.1.0.4) \T1/lmr/m/n/10 and \T1/lmr/m/it/10 multcompView(v.0.1-
  []
 
 
 
-[62 <./Supplementary_material_files/figure-latex/unnamed-chunk-44-1.pdf>]
+[69 <./Supplementary_material_files/figure-latex/unnamed-chunk-47-1.pdf>]
 
-[63] (./Supplementary_material.aux)
+[70] (./Supplementary_material.aux)
  ***********
 LaTeX2e <2024-06-01> patch level 2
 L3 programming layer <2024-08-30>
@@ -1676,18 +1701,18 @@ Package logreq Info: Writing requests to 'Supplementary_material.run.xml'.
 
  ) 
 Here is how much of TeX's memory you used:
- 36946 strings out of 475480
- 705195 string characters out of 5775841
- 1832729 words of memory out of 5000000
- 58734 multiletter control sequences out of 15000+600000
- 624686 words of font info for 86 fonts, out of 8000000 for 9000
+ 37055 strings out of 475480
+ 708915 string characters out of 5775841
+ 1834976 words of memory out of 5000000
+ 58815 multiletter control sequences out of 15000+600000
+ 627674 words of font info for 87 fonts, out of 8000000 for 9000
  36 hyphenation exceptions out of 8191
- 84i,14n,87p,2330b,5237s stack positions out of 10000i,1000n,20000p,200000b,200000s
-</home/jdl/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx10.pfb></home/jdl/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx12.pfb></home/jdl/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmbxi10.pfb></home/jdl/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmmi10.pfb></home/jdl/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmmi7.pfb></home/jdl/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmr10.pfb></home/jdl/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmr12.pfb></home/jdl/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmr17.pfb></home/jdl/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmr7.pfb></home/jdl/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmr8.pfb></home/jdl/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmri10.pfb></home/jdl/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmri8.pfb></home/jdl/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmsy7.pfb></home/jdl/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmtk10.pfb></home/jdl/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmtt10.pfb>
-Output written on Supplementary_material.pdf (63 pages, 17787368 bytes).
+ 84i,14n,92p,2330b,5237s stack positions out of 10000i,1000n,20000p,200000b,200000s
+</home/jdl/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx10.pfb></home/jdl/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx12.pfb></home/jdl/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmbxi10.pfb></home/jdl/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmmi10.pfb></home/jdl/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmmi7.pfb></home/jdl/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmr10.pfb></home/jdl/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmr12.pfb></home/jdl/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmr17.pfb></home/jdl/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmr6.pfb></home/jdl/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmr7.pfb></home/jdl/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmr8.pfb></home/jdl/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmri10.pfb></home/jdl/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmri8.pfb></home/jdl/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmsy7.pfb></home/jdl/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmtk10.pfb></home/jdl/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmtt10.pfb>
+Output written on Supplementary_material.pdf (70 pages, 17833716 bytes).
 PDF statistics:
- 1257 PDF objects out of 1440 (max. 8388607)
- 1100 compressed objects within 11 object streams
- 233 named destinations out of 1000 (max. 500000)
- 888 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 1383 PDF objects out of 1440 (max. 8388607)
+ 1213 compressed objects within 13 object streams
+ 260 named destinations out of 1000 (max. 500000)
+ 965 words of extra memory for PDF output out of 10000 (max. 10000000)
 

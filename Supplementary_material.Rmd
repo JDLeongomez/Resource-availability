@@ -172,9 +172,9 @@ library(insight)
 
 ## Custom functions
 
-### `pval.lev`
+### `pval.lev`and `small.lev`
 
-This function takes p-values and formats them in \LaTeX, highlighting significant results in bold.
+This functions take small numbers and format them in \LaTeX. For *p* values, significant results are highlighted in bold.
 
 ```{r}
 # Define a function 'pval.lev' to format p-values based on specific thresholds.
@@ -191,6 +191,29 @@ pval.lev <- function(pvals) {
         paste0("\\textbf{", round(pvals, 4), "}"),
         # Otherwise, round the p-value to 2 decimal places.
         round(pvals, 2)
+      )
+    )
+  )
+}
+
+
+small.lev <- function(vals) {
+  # If the p-value is less than 0.00001, return the string '\textbf{< 0.0001}'.
+  ifelse(vals < 0.00001,
+  "< 0.00001",
+    # If the p-value is less than 0.0001, return the string '\textbf{< 0.0001}'.
+    ifelse(vals < 0.0001,
+      "< 0.0001",
+      # If the p-value is less than 0.001, return the string '\textbf{< 0.001}'.
+      ifelse(vals < 0.001,
+        "< 0.001",
+        # If the p-value is less than 0.05, format it with bold text and round to 4
+        # decimal places.
+        ifelse(vals < 0.05,
+          paste0("", round(vals, 4), ""),
+          # Otherwise, round the p-value to 2 decimal places.
+          round(vals, 2)
+        )
       )
     )
   )
@@ -262,6 +285,7 @@ lmer.anova.tab <- function(model) {
     rownames_to_column(var = "Effect") |> 
     mutate(Effect = str_replace_all(Effect, "_", " "),
            Effect = str_replace_all(Effect, ":", " × "),
+           Effect = str_replace_all(Effect, "Freq partner physical", "Physical"),
            df = paste0(NumDF, ", ", round(DenDF, 2))) |> 
     rename("F" = "F value",
            "p" = "Pr(>F)") |>
@@ -482,6 +506,71 @@ full.contr <- function(model, emm_contr) {
 }
 ```
 
+### `mods.comp`
+
+This function takes a group of comparable models, and creates an table $AICc$ values, including deltas and Akaike weights, formatted in \LaTeX.
+
+```{r}
+
+mods.comp <- function(base.model) {
+  
+  model.names <- c(base.model, paste0(base.model, letters[1:5]))
+  
+  model.list <- lapply(model.names, get)
+  
+  comp <- AICctab(model.list,
+                  base = TRUE, 
+                  weights = TRUE,
+                  mnames = model.names)
+  
+  tab <- data.frame(AICctab(model.list,
+                    base = TRUE,
+                    weights = TRUE,
+                    mnames = c("(No covariate)",
+                               "Men perceived as dangerous",
+                               "Physical violence",
+                               "Sexual violence",
+                               "Infidelity",
+                               "Perceived home safety"))) |> 
+    rownames_to_column(var = "Model (by covariate)") |> 
+    mutate("$Prob.$" = paste0("1 / ", number(max(weight)/weight, big.mark = ",")),
+           AICc = number(AICc, big.mark = ","),
+           weight = small.lev(weight)) |> 
+    rename("$AICc$" = "AICc",
+           "$\\Delta(AICc)$" = "dAICc",
+           "$w(AICc)$" = "weight") |> 
+    select(-c(df))
+  
+  caption <- paste0("AICc comparison of ", 
+                  find_response(model.list[[1]]), 
+                  " models with different covariates")
+  
+  taa <- kable(tab,
+               digits = 2,
+               booktabs = TRUE,
+               align = c("l", rep("c", 3), "r"),
+               linesep = "",
+               caption = caption,
+               escape = FALSE) |>
+    kable_styling(latex_options = c("HOLD_position")) |> 
+    footnote(general = "Models are sorted according tho their $AICc$ values, increasingly, 
+             so that the best model (lowest $AICc$) is always at the top. 
+             $\\Delta(AICc)$ is the $AICc$ difference from each model to the best (top) model. 
+             $w(AICc)$, are Akaike weights, which represent the 'weight of evidence'
+             (\\\\cite{portetPrimerModelSelection2020}) of each model for being the best model 
+             of the collection, given the data. 
+             Similarly, \\\\textit{Prob.} refers to the probability of each model of being the 
+             best model, in relation the the best-supported (top) model, expressed as a 
+             fraction. For the model with no covariates, \\\\textit{df} = 13; for all models 
+             with covariates, \\\\textit{df} = 21.",
+           threeparttable = TRUE, 
+           footnote_as_chunk = TRUE, 
+           escape = FALSE)
+    
+    return(list(tab = tab, kab = taa, comp = comp))
+}
+```
+
 ### `plot.exp`
 
 This function takes a model, and creates a plot that shows the estimated marginal means.
@@ -524,6 +613,77 @@ plot.exp <- function(model, y.pos, y.lab) {
     return(plo)
 }
 ```
+
+### `plot.best.mod`
+
+This function takes a model with a covariate, and creates a plot that shows the estimated marginal means by levels of the covariate.
+
+```{r}
+plot.best.mod <- function(best_model, y.pos) {
+  
+  covar_best_mod <- best_model@frame |> 
+    select(where(is.numeric)) |> 
+    select(-1)
+  
+  covar_name <- colnames(covar_best_mod) |>
+    str_replace_all("_", " ") |> 
+    str_remove_all("Freq partner") |> 
+    str_to_sentence() |> 
+    str_trim()
+  
+  covar_best_mod_levels <- c(min(covar_best_mod[,1]),
+                             max(covar_best_mod[,1]))
+  
+  covar_labs <- paste0(covar_name,
+                       c("\nMin = ", "\nMax = "),
+                       round(covar_best_mod_levels, 3))
+  
+  names(covar_labs) <- covar_best_mod_levels
+  
+  cond_labs <- c("Condition: High", "Condition: Low")
+  names(cond_labs) <- c("High", "Low")
+  
+  emms_best_mod <- as.data.frame(
+    emmeans(
+      best_model,
+      ~ Sexual_dimorphism + Condition + Relationship + Freq_partner_physical_violence,
+      at = list(Freq_partner_physical_violence = covar_best_mod_levels))) |> 
+    mutate(Freq_partner_physical_violence = round(Freq_partner_physical_violence, 3))
+  
+  contr_best_mod <- as.data.frame(
+    pairs(
+      emmeans(
+        best_model,
+        ~ Sexual_dimorphism | Condition + Relationship + Freq_partner_physical_violence,
+        at = list(Freq_partner_physical_violence = covar_best_mod_levels)))) |>
+    separate(contrast, c("group1", "group2"), " - ") |> 
+    mutate(p.signif = stars.pval(p.value))
+  
+  best_mod_plot <- ggplot(emms_best_mod, 
+                          aes(y = emmean, x = Sexual_dimorphism, color = Relationship)) +
+    geom_errorbar(aes(ymin = emmean-SE,
+                      ymax = emmean+SE,
+                      group = Relationship), 
+                  color = "black",
+                  width=.1,
+                  position = position_dodge(0.9)) +
+    geom_point(position = position_dodge(0.9), size = 1) +
+    geom_line(aes(group = Relationship),
+              position = position_dodge(0.9)) + 
+    stat_pvalue_manual(contr_best_mod, label = "p.signif", 
+                       y.position = y.pos,
+                       color = "Relationship", hide.ns = TRUE,
+                       position = position_dodge(),
+                       tip.length = 0) +
+    labs(y = "Duration of First Fixation (DFF)",
+         x = NULL) +
+    facet_grid(Condition ~ Freq_partner_physical_violence,
+               labeller = labeller(Condition = cond_labs,
+                                   Freq_partner_physical_violence = covar_labs))
+  return(best_mod_plot)
+}
+```
+
 
 ## Independent stimuli evaluation
 
@@ -2118,9 +2278,17 @@ ggarrange(p_mancheck_masc, p_mancheck_attr,
                                   size = 11))
 ```
 
-# Models of the experimental design
+# Models of the experimental design {#experiment-models}
 
-## Model 1: Duration of First Fixations (DFF)
+We modeled the experimental design, by fitting linear models with the main effects and all possible interactions between Sexual dimorphism (masculinized, feminized), Relationship (short term, long term), and Condition (low, high). Separate models were fitted for each dependent variable: Duration of First Fixations (DFF), Total Fixation Duration (TFD), Number of Fixations (NF), and Proportion of Chosen Faces (PCF). 
+
+For models of fixations (DFF, TFD, and NF) we included random intercepts and random slopes for each participant between sexual dimorphism levels, as well as random intercepts for each stimulus (i.e. these were linear mixed models), in line with recommendations [@barrRandomEffectsStructure2013]. However, to test the Proportion of Chosen Faces (PCF), we used a linear model without random effects, as there was only one value per participant (a proportion) for each combination of factors.
+
+As effect sizes, for linear mixed models we report Nakagawa's conditional and marginal $R^2$ values [@nakagawaGeneralSimpleMethod2013], but we do not report standardized effect sizes for individual terms, as there is no accepted method to do so. 
+
+For the linear model of Proportion of Chosen Faces (PCF), we report both unadjusted and adjusted $R^2$ as full model effect sizes, but also include $\omega^2_p$ scores as standardized effect sizes for each term. As frequently reported, $\omega^2$ is a more reliable measure of effect size than the more commonly used $\eta^2$ [e.g., @kroesDemystifyingOmegaSquared2023].
+
+## Duration of First Fixations (DFF)
 
 ### Data
 
@@ -2145,7 +2313,7 @@ mod1 <- lmer(DFF ~ Condition * Relationship * Sexual_dimorphism +
 
 #### Model assumptions
 
-Model assumptions were checked using the check_model function from the performance package [@ludecke2021].
+Model assumptions were checked using the `check_model` function from the `performance` package [@ludecke2021].
 
 ```{r assu-mod1, cache = TRUE, message = FALSE, fig.height = 11, fig.cap = "Model assumptions. Plots represent prediction check, linearity, homogeneity of variance, influential observations, collinearity, and normality of both residuals and random effects, respectively."}
 check_model(mod1)
@@ -2168,7 +2336,7 @@ Table of estimated marginal means and contrasts between masculinized and feminiz
 main.eff.contr(model = mod1)
 ```
 
-#### Full design
+### Full design contrasts
 
 Table of estimated marginal means and contrasts between masculinized and feminized stimuli including the full experimental design. 
 
@@ -2188,7 +2356,7 @@ pm1 <- plot.exp(model = mod1,
 pm1
 ```
 
-## Model 2: Total Fixation Duration (TFD)
+## Total Fixation Duration (TFD)
 
 ### Data
 
@@ -2209,13 +2377,12 @@ dat_m2 <- dat |>
 mod2 <- lmer(TFD ~ Condition * Relationship * Sexual_dimorphism +
                (1 + Sexual_dimorphism | ID) + (1 | Stimulus), 
              data = dat_m2,
-             control = lmerControl(check.conv.singular = .makeCC(action = "ignore",  tol = 1e-4),
-                                   optimizer="bobyqa"))
+             control = lmerControl(optimizer="bobyqa"))
 ```
 
 #### Model assumptions
 
-Model assumptions were checked using the check_model function from the performance package [@ludecke2021].
+Model assumptions were checked using the `check_model` function from the `performance` package [@ludecke2021].
 
 ```{r assu-mod2, cache = TRUE, message = FALSE, fig.height = 11, fig.cap = "Model assumptions. Plots represent prediction check, linearity, homogeneity of variance, influential observations, collinearity, and normality of both residuals and random effects, respectively."}
 check_model(mod2)
@@ -2247,7 +2414,7 @@ inter.contr(model = mod2,
             emm_contr = emmeans(mod2, pairwise ~ Sexual_dimorphism | Relationship))
 ```
 
-#### Full design
+### Full design contrasts
 
 Table of estimated marginal means and contrasts between masculinized and feminized stimuli including the full experimental design. 
 
@@ -2267,7 +2434,7 @@ pm2 <- plot.exp(model = mod2,
 pm2
 ```
 
-## Model 3: Number of Fixations (NF)
+## Number of Fixations (NF)
 
 ### Data
 
@@ -2295,7 +2462,7 @@ mod3 <- lmer(NF ~ Condition * Relationship * Sexual_dimorphism +
 
 #### Model assumptions
 
-Model assumptions were checked using the check_model function from the performance package [@ludecke2021].
+Model assumptions were checked using the `check_model` function from the `performance` package [@ludecke2021].
 
 ```{r assu-mod3, cache = TRUE, message = FALSE, fig.height = 11, fig.cap = "Model assumptions. Plots represent prediction check, linearity, homogeneity of variance, influential observations, collinearity, and normality of both residuals and random effects, respectively."}
 check_model(mod3)
@@ -2337,7 +2504,7 @@ inter.contr(model = mod3,
 ```
 
 
-#### Full design
+### Full design contrasts
 
 Table of estimated marginal means and contrasts between masculinized and feminized stimuli including the full experimental design. 
 
@@ -2357,7 +2524,7 @@ pm3 <- plot.exp(model = mod3,
 pm3
 ```
 
-## Model 4: Proportion of Chosen Faces (PCF)
+## Proportion of Chosen Faces (PCF)
 
 ### Data
 
@@ -2391,7 +2558,7 @@ mod4 <- lm(PCF ~ Condition * Relationship * Sexual_dimorphism,
 
 #### Model assumptions
 
-Model assumptions were checked using the check_model function from the performance package [@ludecke2021].
+Model assumptions were checked using the `check_model` function from the `performance` package [@ludecke2021].
 
 ```{r assu-mod4, cache = TRUE, message = FALSE, fig.height = 11, fig.cap = "Model assumptions. Plots represent prediction check, linearity, homogeneity of variance, influential observations, collinearity, and normality of residuals, respectively."}
 check_model(mod4)
@@ -2424,7 +2591,7 @@ inter.contr(model = mod4,
 ```
 
 
-#### Full design
+### Full design contrasts
 
 Table of estimated marginal means and contrasts between masculinized and feminized stimuli including the full experimental design. All estimated marginal means and contrasts were calculated using the `emmeans` function from the `emmeans` package [@emmeanscit].
 
@@ -2443,6 +2610,74 @@ pm4 <- plot.exp(model = mod4,
                 y.lab = "Proportion of Chosen Faces (PCF)")
 pm4
 ```
+
+# Exploring interactions with covariates
+
+In each case (i.e. for each dependent variable), we fitted five competing models, each one interacting with a different numeric variable related to the frequency of the current/last partner violent behaviors of perceived safety:
+
+* Perception of men as dangerous
+* Sexual violence 
+* Physical violence
+* Infidelity
+* Perceived home safety
+
+Then, the model without covariates (fitted in section \@ref(experiment-models)) and these five models with a covariate were compared using AIC scores [@akaikeInformationTheoryExtension1998; @akaikeNewLookStatistical1974], and Akaike weights [see e.g., @wagenmakersAICModelSelection2004; @portetPrimerModelSelection2020] to measure the relative probability of each compared model of being the *best* model within that set of compared models, for the collected data.
+
+## Duration of First Fixations (DFF)
+
+### Fit linear models with interactions partner violence variables
+
+```{r}
+mod1a <- lmer(DFF ~
+                Condition * Relationship * Sexual_dimorphism * Men_perceived_as_dangerous +
+                (1 + Sexual_dimorphism | ID) + (1 | Stimulus), 
+              data = dat_m1)
+
+mod1b <- lmer(DFF ~
+                Condition * Relationship * Sexual_dimorphism * Freq_partner_physical_violence +
+                (1 + Sexual_dimorphism | ID) + (1 | Stimulus), 
+              data = dat_m1)
+
+mod1c <- lmer(DFF ~
+                Condition * Relationship * Sexual_dimorphism * Freq_partner_sexual_violence +
+                (1 + Sexual_dimorphism | ID) + (1 | Stimulus), 
+              data = dat_m1)
+
+mod1d <- lmer(DFF ~
+                Condition * Relationship * Sexual_dimorphism * Freq_partner_infidelity +
+                (1 + Sexual_dimorphism | ID) + (1 | Stimulus), 
+              data = dat_m1)
+
+mod1e <- lmer(DFF ~
+                Condition * Relationship * Sexual_dimorphism * Perceived_home_safety +
+                (1 + Sexual_dimorphism | ID) + (1 | Stimulus), 
+              data = dat_m1)
+```
+
+### Model comparison
+
+```{r comp-m1}
+comp_m1_cov <- mods.comp(base.model = "mod1")
+comp_m1_cov$kab
+```
+
+### Best model
+
+#### Table of fixed effects
+
+```{r tab-best-mod1}
+best_m1_cov <- eval(parse(text = rownames(data.frame(comp_m1_cov$comp))[1]))
+tab_m1_cov <- lmer.anova.tab(model = best_m1_cov)
+tab_m1_cov$kab
+```
+
+#### Figure for the best model predicting DFF
+
+```{r fig-mod1-cov, results = "hold", fig.cap = "Differences in the Duration of First Fixations (DFF) to masculinized and feminized stimuli, by relationship (short term, ling term), condition (low, high), and the frequency of partner physycal violence, which was the covariate included in the best-supported model. To illustrate the effect of the physycal violence interaction, estimated marginal means are shown at minimum and maximum levels of this covariate. Dots and bars represent estimated marginal means ± standard errors. For detailed results, see Tables \\@ref(tab:comp-m1) and \\@ref(tab:tab-best-mod1)). In all cases, significant effects are represented with lines and stars: \\**p* < 0.05.", warning = FALSE, message = FALSE}
+pm1f <- plot.best.mod(best_model = best_m1_cov, y.pos = c(300, NA, 280, 300,NA, NA, 300, NA))
+pm1f
+```
+
 
 ```{=latex}
 \closesupplement
@@ -2481,9 +2716,9 @@ bind_cols(tab_m1$tab,
   are from linear mixed models; for PCF, however, results are from a linear model without 
   random effects, so $\\\\omega^2_p$ effect sizes are reported for each term. For further 
   details, including full model effect sizes (Nakagawa's conditional and marginal $R^2$ for 
-  linear mixed models, and unadjusted and adjuster $R^2$ for the PCF linear model), see tables
-  \\@ref(tab:tab-mod1), \\@ref(tab:tab-mod2), \\@ref(tab:tab-mod3) and \\@ref(tab:tab-mod4) in 
-  the Supplementary Material. Significant effects are in bold.",
+  linear mixed models, and unadjusted and adjusted $R^2$ for the PCF linear model), 
+  see tables \\@ref(tab:tab-mod1), \\@ref(tab:tab-mod2), \\@ref(tab:tab-mod3) and 
+  \\@ref(tab:tab-mod4) in the Supplementary Material. Significant effects are in bold.",
            threeparttable = TRUE, 
            footnote_as_chunk = TRUE, 
            escape = FALSE)
