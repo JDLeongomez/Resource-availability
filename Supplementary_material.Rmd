@@ -168,6 +168,7 @@ library(gtools)
 library(bbmle)
 library(effectsize)
 library(insight)
+library(magick)
 ```
 
 ## Custom functions
@@ -594,8 +595,8 @@ mods.comp <- function(base.model) {
                             weights = TRUE,
                             mnames = c("(No covariate)",
                                        "Men perceived as dangerous",
-                                       "Physical violence",
-                                       "Sexual violence",
+                                       "IPPV",
+                                       "IPSV",
                                        "Infidelity",
                                        "Perceived home safety"))) |> 
     rownames_to_column(var = "Model (by covariate)") |> 
@@ -619,7 +620,9 @@ mods.comp <- function(base.model) {
                caption = caption,
                escape = FALSE) |>
     kable_styling(latex_options = c("HOLD_position")) |> 
-    footnote(general = "Models are sorted according tho their $AICc$ values, increasingly, 
+    footnote(general = "IPPV = Intimate Partner Physical Violence; 
+             IPSV = Intimate Partner Sexual Violence.
+             Models are sorted according tho their $AICc$ values, increasingly, 
              so that the best model (lowest $AICc$) is always at the top. 
              $\\Delta(AICc)$ is the $AICc$ difference from each model to the best (top) model. 
              $w(AICc)$, are Akaike weights, which represent the 'weight of evidence'
@@ -2668,7 +2671,7 @@ full.contr(model = mod4,
 
 ### Figure for the NF model
 
-This figure summarizes the the NF model results.
+This figure summarizes the the PCF model results.
 
 ```{r fig-mod4, results = "hold", fig.cap = "Differences in the proportion of masculinized and feminized chosen faces (PCF), by relationship (short term, ling term) and condition (low, high). Dots and bars represent estimated marginal means ± standard errors. For detailed results, see Tables \\@ref(tab:tab-mod4) and \\@ref(tab:tab-contr-mod4)). In all cases, significant effects are represented with lines and stars: \\*\\*\\**p* < 0.001.", warning = FALSE, message = FALSE, fig.height = 5}
 pm4 <- plot.exp(model = mod4, 
@@ -2682,9 +2685,9 @@ pm4
 In each case (i.e. for each dependent variable), we fitted five competing models, each one interacting with a different numeric variable related to the frequency of the current/last partner violent behaviors of perceived safety:
 
 * Perception of men as dangerous
-* Sexual violence 
-* Physical violence
-* Infidelity
+* Intimate partner sexual violence 
+* Intimate partner physical violence
+* Partner infidelity
 * Perceived home safety
 
 Then, the model without covariates (fitted in section \@ref(experiment-models)) and these five models with a covariate were compared using AIC scores [@akaikeInformationTheoryExtension1998; @akaikeNewLookStatistical1974], and Akaike weights [see e.g., @wagenmakersAICModelSelection2004; @portetPrimerModelSelection2020] to measure the relative probability of each compared model of being the *best* model within that set of compared models, for the collected data.
@@ -2700,13 +2703,13 @@ mod1a <- lmer(DFF ~
                 (1 + Sexual_dimorphism | ID) + (1 | Stimulus), 
               data = dat_m1)
 
-# Model b: interaction with Frequency of Partner Physical Violence
+# Model b: interaction with Frequency of Intimate Partner Physical Violence
 mod1b <- lmer(DFF ~
                 Condition * Relationship * Sexual_dimorphism * Freq_partner_physical_violence +
                 (1 + Sexual_dimorphism | ID) + (1 | Stimulus), 
               data = dat_m1)
 
-# Model c: interaction with Frequency of Partner Sexual Violence
+# Model c: interaction with Frequency of Intimate Partner Sexual Violence
 mod1c <- lmer(DFF ~
                 Condition * Relationship * Sexual_dimorphism * Freq_partner_sexual_violence +
                 (1 + Sexual_dimorphism | ID) + (1 | Stimulus), 
@@ -2762,13 +2765,13 @@ mod2a <- lmer(TFD ~
                 (1 + Sexual_dimorphism | ID) + (1 | Stimulus), 
               data = dat_m2)
 
-# Model b: interaction with Frequency of Partner Physical Violence
+# Model b: interaction with Frequency of Intimate Partner Physical Violence
 mod2b <- lmer(TFD ~
                 Condition * Relationship * Sexual_dimorphism * Freq_partner_physical_violence +
                 (1 + Sexual_dimorphism | ID) + (1 | Stimulus), 
               data = dat_m2)
 
-# Model c: interaction with Frequency of Partner Sexual Violence
+# Model c: interaction with Frequency of Intimate Partner Sexual Violence
 mod2c <- lmer(TFD ~
                 Condition * Relationship * Sexual_dimorphism * Freq_partner_sexual_violence +
                 (1 + Sexual_dimorphism | ID) + (1 | Stimulus), 
@@ -2825,14 +2828,14 @@ mod3a <- glmer(NF ~
               data = dat_m3,
               family = poisson)
 
-# Model b: interaction with Frequency of Partner Physical Violence
+# Model b: interaction with Frequency of Intimate Partner Physical Violence
 mod3b <- glmer(NF ~
                 Condition * Relationship * Sexual_dimorphism * Freq_partner_physical_violence +
                 (1 + Sexual_dimorphism | ID) + (1 | Stimulus), 
               data = dat_m3,
               family = poisson)
 
-# Model c: interaction with Frequency of Partner Sexual Violence
+# Model c: interaction with Frequency of Intimate Partner Sexual Violence
 mod3c <- glmer(NF ~
                 Condition * Relationship * Sexual_dimorphism * Freq_partner_sexual_violence +
                 (1 + Sexual_dimorphism | ID) + (1 | Stimulus), 
@@ -2890,12 +2893,12 @@ mod4a <- lm(PCF ~
               Condition * Relationship * Sexual_dimorphism * Men_perceived_as_dangerous,
             data = dat_m4)
 
-# Model b: interaction with Frequency of Partner Physical Violence
+# Model b: interaction with Frequency of Intimate Partner Physical Violence
 mod4b <- lm(PCF ~
               Condition * Relationship * Sexual_dimorphism * Freq_partner_physical_violence,
             data = dat_m4)
 
-# Model c: interaction with Frequency of Partner Sexual Violence
+# Model c: interaction with Frequency of Intimate Partner Sexual Violence
 mod4c <- lm(PCF ~
               Condition * Relationship * Sexual_dimorphism * Freq_partner_sexual_violence,
             data = dat_m4)
@@ -2941,6 +2944,22 @@ pm4f
 
 ```{=latex}
 \closesupplement
+```
+
+## Figure with example of sexual dimorphism manipulation
+
+```{r results = "hold", fig.cap = "Example of sexual dimorphism manipulation.", warning = FALSE, message = FALSE}
+fig1a <- ggplot() +
+  background_image(image_read("Images/01M.jpg")) +
+  labs(title = "Masculinized") +
+  theme(plot.margin = margin(t = 0.2, l = 1, r = 0, b = 0, unit = "cm"))
+
+fig1b <- ggplot() +
+  background_image(image_read("Images/01F.jpg")) +
+  labs(title = "Feminized") +
+  theme(plot.margin = margin(t = 0.2, l = 1, r = 0, b = 0, unit = "cm"))
+
+ggarrange(fig1a, fig1b)
 ```
 
 ## Table of fixed effects for experimental design models
@@ -2998,7 +3017,7 @@ tab_m1_cov$tab |>
   left_join(tab_m2_cov$tab, by = "Fixed effect") |> 
   left_join(tab_m3_cov$tab, by = "Fixed effect") |> 
   left_join(tab_m4_cov$tab, by = "Fixed effect") |> 
-  slice_head(n = 13) |> 
+  slice_head(n = 15) |> 
   kable(digits = 2,
         booktabs = TRUE,
         align = c("l", rep("c", 13)),

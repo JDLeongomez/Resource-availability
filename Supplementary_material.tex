@@ -147,7 +147,7 @@
 \makeatother
 \subtitle{Code and analyses}
 \author{Milena Vásquez-Amézquita \orcidlink{0000-0001-7317-8430}\textsuperscript{3,1,*} \and Wendy Medina-Sarmiento\textsuperscript{1} \and Valentina Cepeda\textsuperscript{1} \and Andrés Castellanos-Chacón \orcidlink{0000-0003-1684-9319}\textsuperscript{2} \and Marina Begoña Martínez-González \orcidlink{0000-0002-5840-6383}\textsuperscript{3} \and Juan David Leongómez \orcidlink{0000-0002-0092-6298}\textsuperscript{2}}
-\date{25 September, 2024}
+\date{01 October, 2024}
 
 \begin{document}
 \maketitle
@@ -223,6 +223,7 @@ All packages used in this file can be directly installed from the Comprehensive 
 \FunctionTok{library}\NormalTok{(bbmle)}
 \FunctionTok{library}\NormalTok{(effectsize)}
 \FunctionTok{library}\NormalTok{(insight)}
+\FunctionTok{library}\NormalTok{(magick)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -662,8 +663,8 @@ This function takes a group of comparable models, and creates an table \(AICc\) 
                             \AttributeTok{weights =} \ConstantTok{TRUE}\NormalTok{,}
                             \AttributeTok{mnames =} \FunctionTok{c}\NormalTok{(}\StringTok{"(No covariate)"}\NormalTok{,}
                                        \StringTok{"Men perceived as dangerous"}\NormalTok{,}
-                                       \StringTok{"Physical violence"}\NormalTok{,}
-                                       \StringTok{"Sexual violence"}\NormalTok{,}
+                                       \StringTok{"IPPV"}\NormalTok{,}
+                                       \StringTok{"IPSV"}\NormalTok{,}
                                        \StringTok{"Infidelity"}\NormalTok{,}
                                        \StringTok{"Perceived home safety"}\NormalTok{))) }\SpecialCharTok{|\textgreater{}} 
     \FunctionTok{rownames\_to\_column}\NormalTok{(}\AttributeTok{var =} \StringTok{"Model (by covariate)"}\NormalTok{) }\SpecialCharTok{|\textgreater{}} 
@@ -687,7 +688,9 @@ This function takes a group of comparable models, and creates an table \(AICc\) 
                \AttributeTok{caption =}\NormalTok{ caption,}
                \AttributeTok{escape =} \ConstantTok{FALSE}\NormalTok{) }\SpecialCharTok{|\textgreater{}}
     \FunctionTok{kable\_styling}\NormalTok{(}\AttributeTok{latex\_options =} \FunctionTok{c}\NormalTok{(}\StringTok{"HOLD\_position"}\NormalTok{)) }\SpecialCharTok{|\textgreater{}} 
-    \FunctionTok{footnote}\NormalTok{(}\AttributeTok{general =} \StringTok{"Models are sorted according tho their $AICc$ values, increasingly, }
+    \FunctionTok{footnote}\NormalTok{(}\AttributeTok{general =} \StringTok{"IPPV = Intimate Partner Physical Violence; }
+\StringTok{             IPSV = Intimate Partner Sexual Violence.}
+\StringTok{             Models are sorted according tho their $AICc$ values, increasingly, }
 \StringTok{             so that the best model (lowest $AICc$) is always at the top. }
 \StringTok{             $}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{Delta(AICc)$ is the $AICc$ difference from each model to the best (top) model. }
 \StringTok{             $w(AICc)$, are Akaike weights, which represent the \textquotesingle{}weight of evidence\textquotesingle{}}
@@ -3633,7 +3636,7 @@ Low & Short term & Masculinized & 0.68 & 0.02 & 0.64 & 0.73 & 0.39 & 0.03 & 12.2
 
 \subsubsection{Figure for the NF model}\label{figure-for-the-nf-model-1}
 
-This figure summarizes the the NF model results.
+This figure summarizes the the PCF model results.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -3659,11 +3662,11 @@ In each case (i.e.~for each dependent variable), we fitted five competing models
 \item
   Perception of men as dangerous
 \item
-  Sexual violence
+  Intimate partner sexual violence
 \item
-  Physical violence
+  Intimate partner physical violence
 \item
-  Infidelity
+  Partner infidelity
 \item
   Perceived home safety
 \end{itemize}
@@ -3682,13 +3685,13 @@ Then, the model without covariates (fitted in section \ref{experiment-models}) a
 \NormalTok{                (}\DecValTok{1} \SpecialCharTok{+}\NormalTok{ Sexual\_dimorphism }\SpecialCharTok{|}\NormalTok{ ID) }\SpecialCharTok{+}\NormalTok{ (}\DecValTok{1} \SpecialCharTok{|}\NormalTok{ Stimulus), }
               \AttributeTok{data =}\NormalTok{ dat\_m1)}
 
-\CommentTok{\# Model b: interaction with Frequency of Partner Physical Violence}
+\CommentTok{\# Model b: interaction with Frequency of Intimate Partner Physical Violence}
 \NormalTok{mod1b }\OtherTok{\textless{}{-}} \FunctionTok{lmer}\NormalTok{(DFF }\SpecialCharTok{\textasciitilde{}}
 \NormalTok{                Condition }\SpecialCharTok{*}\NormalTok{ Relationship }\SpecialCharTok{*}\NormalTok{ Sexual\_dimorphism }\SpecialCharTok{*}\NormalTok{ Freq\_partner\_physical\_violence }\SpecialCharTok{+}
 \NormalTok{                (}\DecValTok{1} \SpecialCharTok{+}\NormalTok{ Sexual\_dimorphism }\SpecialCharTok{|}\NormalTok{ ID) }\SpecialCharTok{+}\NormalTok{ (}\DecValTok{1} \SpecialCharTok{|}\NormalTok{ Stimulus), }
               \AttributeTok{data =}\NormalTok{ dat\_m1)}
 
-\CommentTok{\# Model c: interaction with Frequency of Partner Sexual Violence}
+\CommentTok{\# Model c: interaction with Frequency of Intimate Partner Sexual Violence}
 \NormalTok{mod1c }\OtherTok{\textless{}{-}} \FunctionTok{lmer}\NormalTok{(DFF }\SpecialCharTok{\textasciitilde{}}
 \NormalTok{                Condition }\SpecialCharTok{*}\NormalTok{ Relationship }\SpecialCharTok{*}\NormalTok{ Sexual\_dimorphism }\SpecialCharTok{*}\NormalTok{ Freq\_partner\_sexual\_violence }\SpecialCharTok{+}
 \NormalTok{                (}\DecValTok{1} \SpecialCharTok{+}\NormalTok{ Sexual\_dimorphism }\SpecialCharTok{|}\NormalTok{ ID) }\SpecialCharTok{+}\NormalTok{ (}\DecValTok{1} \SpecialCharTok{|}\NormalTok{ Stimulus), }
@@ -3726,9 +3729,9 @@ Then, the model without covariates (fitted in section \ref{experiment-models}) a
 \toprule
 Model (by covariate) & $AICc$ & $\Delta(AICc)$ & $w(AICc)$ & $Prob.$\\
 \midrule
-Physical violence & 415,840.86 & 0.00 & 0.98 & 1 / 1\\
+IPPV & 415,840.86 & 0.00 & 0.98 & 1 / 1\\
 Men perceived as dangerous & 415,849.22 & 8.36 & 0.0151 & 1 / 65\\
-Sexual violence & 415,863.44 & 22.57 & < 0.0001 & 1 / 79,746\\
+IPSV & 415,863.44 & 22.57 & < 0.0001 & 1 / 79,746\\
 Infidelity & 415,863.87 & 23.00 & < 0.00001 & 1 / 98,948\\
 (No covariate) & 415,869.67 & 28.80 & < 0.00001 & 1 / 1,797,626\\
 Perceived home safety & 415,869.88 & 29.01 & < 0.00001 & 1 / 1,997,454\\
@@ -3736,7 +3739,9 @@ Perceived home safety & 415,869.88 & 29.01 & < 0.00001 & 1 / 1,997,454\\
 \end{tabular}
 \begin{tablenotes}[para]
 \item \textit{Note: } 
-\item Models are sorted according tho their $AICc$ values, increasingly, 
+\item IPPV = Intimate Partner Physical Violence; 
+             IPSV = Intimate Partner Sexual Violence.
+             Models are sorted according tho their $AICc$ values, increasingly, 
              so that the best model (lowest $AICc$) is always at the top. 
              $Delta(AICc)$ is the $AICc$ difference from each model to the best (top) model. 
              $w(AICc)$, are Akaike weights, which represent the 'weight of evidence'
@@ -3825,13 +3830,13 @@ Condition × Relationship × Sexual dimorphism × Physical violence & 0.79 & 1, 
 \NormalTok{                (}\DecValTok{1} \SpecialCharTok{+}\NormalTok{ Sexual\_dimorphism }\SpecialCharTok{|}\NormalTok{ ID) }\SpecialCharTok{+}\NormalTok{ (}\DecValTok{1} \SpecialCharTok{|}\NormalTok{ Stimulus), }
               \AttributeTok{data =}\NormalTok{ dat\_m2)}
 
-\CommentTok{\# Model b: interaction with Frequency of Partner Physical Violence}
+\CommentTok{\# Model b: interaction with Frequency of Intimate Partner Physical Violence}
 \NormalTok{mod2b }\OtherTok{\textless{}{-}} \FunctionTok{lmer}\NormalTok{(TFD }\SpecialCharTok{\textasciitilde{}}
 \NormalTok{                Condition }\SpecialCharTok{*}\NormalTok{ Relationship }\SpecialCharTok{*}\NormalTok{ Sexual\_dimorphism }\SpecialCharTok{*}\NormalTok{ Freq\_partner\_physical\_violence }\SpecialCharTok{+}
 \NormalTok{                (}\DecValTok{1} \SpecialCharTok{+}\NormalTok{ Sexual\_dimorphism }\SpecialCharTok{|}\NormalTok{ ID) }\SpecialCharTok{+}\NormalTok{ (}\DecValTok{1} \SpecialCharTok{|}\NormalTok{ Stimulus), }
               \AttributeTok{data =}\NormalTok{ dat\_m2)}
 
-\CommentTok{\# Model c: interaction with Frequency of Partner Sexual Violence}
+\CommentTok{\# Model c: interaction with Frequency of Intimate Partner Sexual Violence}
 \NormalTok{mod2c }\OtherTok{\textless{}{-}} \FunctionTok{lmer}\NormalTok{(TFD }\SpecialCharTok{\textasciitilde{}}
 \NormalTok{                Condition }\SpecialCharTok{*}\NormalTok{ Relationship }\SpecialCharTok{*}\NormalTok{ Sexual\_dimorphism }\SpecialCharTok{*}\NormalTok{ Freq\_partner\_sexual\_violence }\SpecialCharTok{+}
 \NormalTok{                (}\DecValTok{1} \SpecialCharTok{+}\NormalTok{ Sexual\_dimorphism }\SpecialCharTok{|}\NormalTok{ ID) }\SpecialCharTok{+}\NormalTok{ (}\DecValTok{1} \SpecialCharTok{|}\NormalTok{ Stimulus), }
@@ -3869,17 +3874,19 @@ Condition × Relationship × Sexual dimorphism × Physical violence & 0.79 & 1, 
 \toprule
 Model (by covariate) & $AICc$ & $\Delta(AICc)$ & $w(AICc)$ & $Prob.$\\
 \midrule
-Physical violence & 260,523.3 & 0.00 & 1 & 1 / 1\\
+IPPV & 260,523.3 & 0.00 & 1 & 1 / 1\\
 Men perceived as dangerous & 260,536.3 & 13.04 & 0.0015 & 1 / 677\\
 Infidelity & 260,540.2 & 16.88 & < 0.001 & 1 / 4,637\\
-Sexual violence & 260,545.6 & 22.33 & < 0.0001 & 1 / 70,620\\
+IPSV & 260,545.6 & 22.33 & < 0.0001 & 1 / 70,620\\
 Perceived home safety & 260,552.2 & 28.91 & < 0.00001 & 1 / 1,894,416\\
 (No covariate) & 260,575.4 & 52.08 & < 0.00001 & 1 / 203,242,630,637\\
 \bottomrule
 \end{tabular}
 \begin{tablenotes}[para]
 \item \textit{Note: } 
-\item Models are sorted according tho their $AICc$ values, increasingly, 
+\item IPPV = Intimate Partner Physical Violence; 
+             IPSV = Intimate Partner Sexual Violence.
+             Models are sorted according tho their $AICc$ values, increasingly, 
              so that the best model (lowest $AICc$) is always at the top. 
              $Delta(AICc)$ is the $AICc$ difference from each model to the best (top) model. 
              $w(AICc)$, are Akaike weights, which represent the 'weight of evidence'
@@ -3969,14 +3976,14 @@ Condition × Relationship × Sexual dimorphism × Physical violence & 1.11 & 1, 
               \AttributeTok{data =}\NormalTok{ dat\_m3,}
               \AttributeTok{family =}\NormalTok{ poisson)}
 
-\CommentTok{\# Model b: interaction with Frequency of Partner Physical Violence}
+\CommentTok{\# Model b: interaction with Frequency of Intimate Partner Physical Violence}
 \NormalTok{mod3b }\OtherTok{\textless{}{-}} \FunctionTok{glmer}\NormalTok{(NF }\SpecialCharTok{\textasciitilde{}}
 \NormalTok{                Condition }\SpecialCharTok{*}\NormalTok{ Relationship }\SpecialCharTok{*}\NormalTok{ Sexual\_dimorphism }\SpecialCharTok{*}\NormalTok{ Freq\_partner\_physical\_violence }\SpecialCharTok{+}
 \NormalTok{                (}\DecValTok{1} \SpecialCharTok{+}\NormalTok{ Sexual\_dimorphism }\SpecialCharTok{|}\NormalTok{ ID) }\SpecialCharTok{+}\NormalTok{ (}\DecValTok{1} \SpecialCharTok{|}\NormalTok{ Stimulus), }
               \AttributeTok{data =}\NormalTok{ dat\_m3,}
               \AttributeTok{family =}\NormalTok{ poisson)}
 
-\CommentTok{\# Model c: interaction with Frequency of Partner Sexual Violence}
+\CommentTok{\# Model c: interaction with Frequency of Intimate Partner Sexual Violence}
 \NormalTok{mod3c }\OtherTok{\textless{}{-}} \FunctionTok{glmer}\NormalTok{(NF }\SpecialCharTok{\textasciitilde{}}
 \NormalTok{                Condition }\SpecialCharTok{*}\NormalTok{ Relationship }\SpecialCharTok{*}\NormalTok{ Sexual\_dimorphism }\SpecialCharTok{*}\NormalTok{ Freq\_partner\_sexual\_violence }\SpecialCharTok{+}
 \NormalTok{                (}\DecValTok{1} \SpecialCharTok{+}\NormalTok{ Sexual\_dimorphism }\SpecialCharTok{|}\NormalTok{ ID) }\SpecialCharTok{+}\NormalTok{ (}\DecValTok{1} \SpecialCharTok{|}\NormalTok{ Stimulus), }
@@ -4017,17 +4024,19 @@ Condition × Relationship × Sexual dimorphism × Physical violence & 1.11 & 1, 
 \toprule
 Model (by covariate) & $AICc$ & $\Delta(AICc)$ & $w(AICc)$ & $Prob.$\\
 \midrule
-Physical violence & 128,814.70 & 0.00 & 0.52 & 1 / 1.00\\
+IPPV & 128,814.70 & 0.00 & 0.52 & 1 / 1.00\\
 (No covariate) & 128,816.11 & 1.41 & 0.26 & 1 / 2.02\\
 Perceived home safety & 128,816.58 & 1.87 & 0.2 & 1 / 2.55\\
 Men perceived as dangerous & 128,821.09 & 6.38 & 0.0212 & 1 / 24.32\\
-Sexual violence & 128,825.27 & 10.57 & 0.0026 & 1 / 197.34\\
+IPSV & 128,825.27 & 10.57 & 0.0026 & 1 / 197.34\\
 Infidelity & 128,826.33 & 11.62 & 0.0015 & 1 / 334.18\\
 \bottomrule
 \end{tabular}
 \begin{tablenotes}[para]
 \item \textit{Note: } 
-\item Models are sorted according tho their $AICc$ values, increasingly, 
+\item IPPV = Intimate Partner Physical Violence; 
+             IPSV = Intimate Partner Sexual Violence.
+             Models are sorted according tho their $AICc$ values, increasingly, 
              so that the best model (lowest $AICc$) is always at the top. 
              $Delta(AICc)$ is the $AICc$ difference from each model to the best (top) model. 
              $w(AICc)$, are Akaike weights, which represent the 'weight of evidence'
@@ -4115,12 +4124,12 @@ Condition × Relationship × Sexual dimorphism × Physical violence & 1.39 & 1 &
 \NormalTok{              Condition }\SpecialCharTok{*}\NormalTok{ Relationship }\SpecialCharTok{*}\NormalTok{ Sexual\_dimorphism }\SpecialCharTok{*}\NormalTok{ Men\_perceived\_as\_dangerous,}
             \AttributeTok{data =}\NormalTok{ dat\_m4)}
 
-\CommentTok{\# Model b: interaction with Frequency of Partner Physical Violence}
+\CommentTok{\# Model b: interaction with Frequency of Intimate Partner Physical Violence}
 \NormalTok{mod4b }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(PCF }\SpecialCharTok{\textasciitilde{}}
 \NormalTok{              Condition }\SpecialCharTok{*}\NormalTok{ Relationship }\SpecialCharTok{*}\NormalTok{ Sexual\_dimorphism }\SpecialCharTok{*}\NormalTok{ Freq\_partner\_physical\_violence,}
             \AttributeTok{data =}\NormalTok{ dat\_m4)}
 
-\CommentTok{\# Model c: interaction with Frequency of Partner Sexual Violence}
+\CommentTok{\# Model c: interaction with Frequency of Intimate Partner Sexual Violence}
 \NormalTok{mod4c }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(PCF }\SpecialCharTok{\textasciitilde{}}
 \NormalTok{              Condition }\SpecialCharTok{*}\NormalTok{ Relationship }\SpecialCharTok{*}\NormalTok{ Sexual\_dimorphism }\SpecialCharTok{*}\NormalTok{ Freq\_partner\_sexual\_violence,}
             \AttributeTok{data =}\NormalTok{ dat\_m4)}
@@ -4155,17 +4164,19 @@ Condition × Relationship × Sexual dimorphism × Physical violence & 1.39 & 1 &
 \toprule
 Model (by covariate) & $AICc$ & $\Delta(AICc)$ & $w(AICc)$ & $Prob.$\\
 \midrule
-Physical violence & 139.95 & 0.00 & 0.97 & 1 / 1\\
+IPPV & 139.95 & 0.00 & 0.97 & 1 / 1\\
 (No covariate) & 147.19 & 7.24 & 0.026 & 1 / 37\\
 Perceived home safety & 153.89 & 13.93 & < 0.001 & 1 / 1,061\\
 Men perceived as dangerous & 154.22 & 14.26 & < 0.001 & 1 / 1,251\\
 Infidelity & 156.61 & 16.66 & < 0.001 & 1 / 4,147\\
-Sexual violence & 163.12 & 23.17 & < 0.00001 & 1 / 107,471\\
+IPSV & 163.12 & 23.17 & < 0.00001 & 1 / 107,471\\
 \bottomrule
 \end{tabular}
 \begin{tablenotes}[para]
 \item \textit{Note: } 
-\item Models are sorted according tho their $AICc$ values, increasingly, 
+\item IPPV = Intimate Partner Physical Violence; 
+             IPSV = Intimate Partner Sexual Violence.
+             Models are sorted according tho their $AICc$ values, increasingly, 
              so that the best model (lowest $AICc$) is always at the top. 
              $Delta(AICc)$ is the $AICc$ difference from each model to the best (top) model. 
              $w(AICc)$, are Akaike weights, which represent the 'weight of evidence'
@@ -4246,6 +4257,30 @@ Condition × Relationship × Sexual dimorphism × Physical violence & 0.06 & 1, 
 
 \closesupplement
 
+\subsection{Figure with example of sexual dimorphism manipulation}\label{figure-with-example-of-sexual-dimorphism-manipulation}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{fig1a }\OtherTok{\textless{}{-}} \FunctionTok{ggplot}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{background\_image}\NormalTok{(}\FunctionTok{image\_read}\NormalTok{(}\StringTok{"Images/01M.jpg"}\NormalTok{)) }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{title =} \StringTok{"Masculinized"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{theme}\NormalTok{(}\AttributeTok{plot.margin =} \FunctionTok{margin}\NormalTok{(}\AttributeTok{t =} \FloatTok{0.2}\NormalTok{, }\AttributeTok{l =} \DecValTok{1}\NormalTok{, }\AttributeTok{r =} \DecValTok{0}\NormalTok{, }\AttributeTok{b =} \DecValTok{0}\NormalTok{, }\AttributeTok{unit =} \StringTok{"cm"}\NormalTok{))}
+
+\NormalTok{fig1b }\OtherTok{\textless{}{-}} \FunctionTok{ggplot}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{background\_image}\NormalTok{(}\FunctionTok{image\_read}\NormalTok{(}\StringTok{"Images/01F.jpg"}\NormalTok{)) }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{title =} \StringTok{"Feminized"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{theme}\NormalTok{(}\AttributeTok{plot.margin =} \FunctionTok{margin}\NormalTok{(}\AttributeTok{t =} \FloatTok{0.2}\NormalTok{, }\AttributeTok{l =} \DecValTok{1}\NormalTok{, }\AttributeTok{r =} \DecValTok{0}\NormalTok{, }\AttributeTok{b =} \DecValTok{0}\NormalTok{, }\AttributeTok{unit =} \StringTok{"cm"}\NormalTok{))}
+
+\FunctionTok{ggarrange}\NormalTok{(fig1a, fig1b)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}
+\centering
+\includegraphics{Supplementary_material_files/figure-latex/unnamed-chunk-48-1.pdf}
+\caption{\label{fig:unnamed-chunk-48}Example of sexual dimorphism manipulation.}
+\end{figure}
+
 \subsection{Table of fixed effects for experimental design models}\label{table-of-fixed-effects-for-experimental-design-models}
 
 \begin{Shaded}
@@ -4289,7 +4324,7 @@ Condition × Relationship × Sexual dimorphism × Physical violence & 0.06 & 1, 
 
 \begin{table}[H]
 \centering
-\caption{\label{tab:unnamed-chunk-48}Pattern of gaze and choice of face by resource availability condition, 
+\caption{\label{tab:unnamed-chunk-49}Pattern of gaze and choice of face by resource availability condition, 
         relationship context and sexual dimorphism }
 \centering
 \resizebox{\ifdim\width>\linewidth\linewidth\else\width\fi}{!}{
@@ -4336,8 +4371,8 @@ Condition × Relationship × Sexual dimorphism & 1.25 & 1, 33424.51 & 0.26 & 0.0
 
 \begin{figure}
 \centering
-\includegraphics{Supplementary_material_files/figure-latex/unnamed-chunk-49-1.pdf}
-\caption{\label{fig:unnamed-chunk-49}Differences in responses to masculinized and feminized stimuli, by relationship (short term, ling term), condition (low, high), and the frequency of partner physycal violence, which was the covariate included in all best-supported models. To illustrate the effect of the physycal violence interaction, estimated marginal means are shown at minimum and maximum levels of this covariate. \textbf{a.} Duration of First Fixations (DFF). \textbf{b.} Total Fixation Duration (TFD). \textbf{c.} Number of Fixations (NF). \textbf{d.} Proportion of Chosen Faces (PCF). Black dots and bars represent estimated marginal means ± standard errors. For detailed results, see Tables \ref{tab:tab-mod1} to \ref{tab:tab-contr-mod4} in the Supplementary Material. In all cases, significant effects are represented with lines and stars: *\emph{p} \textless{} 0.05, **\emph{p} \textless{} 0.01, ***\emph{p} \textless{} 0.001.}
+\includegraphics{Supplementary_material_files/figure-latex/unnamed-chunk-50-1.pdf}
+\caption{\label{fig:unnamed-chunk-50}Differences in responses to masculinized and feminized stimuli, by relationship (short term, ling term), condition (low, high), and the frequency of partner physycal violence, which was the covariate included in all best-supported models. To illustrate the effect of the physycal violence interaction, estimated marginal means are shown at minimum and maximum levels of this covariate. \textbf{a.} Duration of First Fixations (DFF). \textbf{b.} Total Fixation Duration (TFD). \textbf{c.} Number of Fixations (NF). \textbf{d.} Proportion of Chosen Faces (PCF). Black dots and bars represent estimated marginal means ± standard errors. For detailed results, see Tables \ref{tab:tab-mod1} to \ref{tab:tab-contr-mod4} in the Supplementary Material. In all cases, significant effects are represented with lines and stars: *\emph{p} \textless{} 0.05, **\emph{p} \textless{} 0.01, ***\emph{p} \textless{} 0.001.}
 \end{figure}
 
 \subsection{Table of fixed effects for best-supported models}\label{table-of-fixed-effects-for-best-supported-models}
@@ -4348,7 +4383,7 @@ Condition × Relationship × Sexual dimorphism & 1.25 & 1, 33424.51 & 0.26 & 0.0
   \FunctionTok{left\_join}\NormalTok{(tab\_m2\_cov}\SpecialCharTok{$}\NormalTok{tab, }\AttributeTok{by =} \StringTok{"Fixed effect"}\NormalTok{) }\SpecialCharTok{|\textgreater{}} 
   \FunctionTok{left\_join}\NormalTok{(tab\_m3\_cov}\SpecialCharTok{$}\NormalTok{tab, }\AttributeTok{by =} \StringTok{"Fixed effect"}\NormalTok{) }\SpecialCharTok{|\textgreater{}} 
   \FunctionTok{left\_join}\NormalTok{(tab\_m4\_cov}\SpecialCharTok{$}\NormalTok{tab, }\AttributeTok{by =} \StringTok{"Fixed effect"}\NormalTok{) }\SpecialCharTok{|\textgreater{}} 
-  \FunctionTok{slice\_head}\NormalTok{(}\AttributeTok{n =} \DecValTok{13}\NormalTok{) }\SpecialCharTok{|\textgreater{}} 
+  \FunctionTok{slice\_head}\NormalTok{(}\AttributeTok{n =} \DecValTok{15}\NormalTok{) }\SpecialCharTok{|\textgreater{}} 
   \FunctionTok{kable}\NormalTok{(}\AttributeTok{digits =} \DecValTok{2}\NormalTok{,}
         \AttributeTok{booktabs =} \ConstantTok{TRUE}\NormalTok{,}
         \AttributeTok{align =} \FunctionTok{c}\NormalTok{(}\StringTok{"l"}\NormalTok{, }\FunctionTok{rep}\NormalTok{(}\StringTok{"c"}\NormalTok{, }\DecValTok{13}\NormalTok{)),}
@@ -4384,7 +4419,7 @@ Condition × Relationship × Sexual dimorphism & 1.25 & 1, 33424.51 & 0.26 & 0.0
 
 \begin{table}[H]
 \centering
-\caption{\label{tab:unnamed-chunk-50}Best-supported models predicting pattern of gaze and choice}
+\caption{\label{tab:unnamed-chunk-51}Best-supported models predicting pattern of gaze and choice}
 \centering
 \resizebox{\ifdim\width>\linewidth\linewidth\else\width\fi}{!}{
 \begin{threeparttable}
@@ -4407,6 +4442,8 @@ Sexual dimorphism × Physical violence & 2.87 & 1, 289.65 & 0.09 & 2.95 & 1, 305
 Condition × Relationship × Sexual dimorphism & 0.82 & 1, 33424.99 & 0.37 & 0.04 & 1, 18761.5 & 0.84 & 0.33 & 1 & 0.57 & 1.14 & 1, 1148 & 0.29 & 0.00\\
 Condition × Relationship × Physical violence & 0.33 & 1, 33349.7 & 0.57 & 0.02 & 1, 18897.98 & 0.88 & 0.35 & 1 & 0.56 & 0.02 & 1, 1148 & 0.88 & 0.00\\
 Condition × Sexual dimorphism × Physical violence & 2.12 & 1, 289.64 & 0.15 & 4.25 & 1, 305.16 & \textbf{0.04} & 4.83 & 1 & \textbf{0.0279} & 16.45 & 1, 1148 & \textbf{< 0.0001} & 0.01\\
+Relationship × Sexual dimorphism × Physical violence & 0.31 & 1, 33366.93 & 0.58 & 9.62 & 1, 18842.46 & \textbf{0.0019} & 0.65 & 1 & 0.42 & 4.62 & 1, 1148 & \textbf{0.0318} & 0.00\\
+Condition × Relationship × Sexual dimorphism × Physical violence & 0.79 & 1, 33366.95 & 0.37 & 1.11 & 1, 18840.84 & 0.29 & 1.39 & 1 & 0.24 & 0.06 & 1, 1148 & 0.8 & 0.00\\
 \bottomrule
 \end{tabular}
 \begin{tablenotes}[para]
@@ -4438,8 +4475,8 @@ Condition × Sexual dimorphism × Physical violence & 2.12 & 1, 289.64 & 0.15 & 
 
 \begin{figure}
 \centering
-\includegraphics{Supplementary_material_files/figure-latex/unnamed-chunk-51-1.pdf}
-\caption{\label{fig:unnamed-chunk-51}Differences in responses to masculinized and feminized stimuli, by relationship (short term, ling term) and condition (low, high). \textbf{a.} Duration of First Fixations (DFF). \textbf{b.} Total Fixation Duration (TFD). \textbf{c.} Number of Fixations (NF). \textbf{d.} Proportion of Chosen Faces (PCF). Black dots and bars represent estimated marginal means ± standard errors. For detailed results, see Tables \ref{tab:tab-mod1} to \ref{tab:tab-best-mod4} in the Supplementary Material. In all cases, significant effects are represented with lines and stars: *\emph{p} \textless{} 0.05, **\emph{p} \textless{} 0.01, ***\emph{p} \textless{} 0.001.}
+\includegraphics{Supplementary_material_files/figure-latex/unnamed-chunk-52-1.pdf}
+\caption{\label{fig:unnamed-chunk-52}Differences in responses to masculinized and feminized stimuli, by relationship (short term, ling term) and condition (low, high). \textbf{a.} Duration of First Fixations (DFF). \textbf{b.} Total Fixation Duration (TFD). \textbf{c.} Number of Fixations (NF). \textbf{d.} Proportion of Chosen Faces (PCF). Black dots and bars represent estimated marginal means ± standard errors. For detailed results, see Tables \ref{tab:tab-mod1} to \ref{tab:tab-best-mod4} in the Supplementary Material. In all cases, significant effects are represented with lines and stars: *\emph{p} \textless{} 0.05, **\emph{p} \textless{} 0.01, ***\emph{p} \textless{} 0.001.}
 \end{figure}
 
 \section{Session info (for reproducibility)}\label{session}
@@ -4459,10 +4496,10 @@ Condition × Sexual dimorphism × Physical violence & 2.12 & 1, 289.64 & 0.15 & 
 \emph{stats4}, \emph{stats}, \emph{graphics}, \emph{grDevices}, \emph{utils}, \emph{datasets}, \emph{methods} and \emph{base}
 
 \textbf{other attached packages:}
-\emph{pander(v.0.6.5)}, \emph{Hmisc(v.5.1-3)}, \emph{insight(v.0.20.4)}, \emph{effectsize(v.0.8.9)}, \emph{bbmle(v.1.0.25.1)}, \emph{gtools(v.3.9.5)}, \emph{FactoMineR(v.2.11)}, \emph{factoextra(v.1.0.7)}, \emph{scales(v.1.3.0)}, \emph{GGally(v.2.2.1)}, \emph{performance(v.0.12.3)}, \emph{kableExtra(v.1.4.0)}, \emph{emmeans(v.1.10.3)}, \emph{lmerTest(v.3.1-3)}, \emph{lme4(v.1.1-35.5)}, \emph{Matrix(v.1.7-0)}, \emph{readxl(v.1.4.3)}, \emph{ggpubr(v.0.6.0)}, \emph{lubridate(v.1.9.3)}, \emph{forcats(v.1.0.0)}, \emph{stringr(v.1.5.1)}, \emph{dplyr(v.1.1.4)}, \emph{purrr(v.1.0.2)}, \emph{readr(v.2.1.5)}, \emph{tidyr(v.1.3.1)}, \emph{tibble(v.3.2.1)}, \emph{ggplot2(v.3.5.1)}, \emph{tidyverse(v.2.0.0)}, \emph{ggstats(v.0.6.0)}, \emph{MASS(v.7.3-61)}, \emph{car(v.3.1-2)}, \emph{carData(v.3.0-5)} and \emph{knitr(v.1.48)}
+\emph{pander(v.0.6.5)}, \emph{Hmisc(v.5.1-3)}, \emph{magick(v.2.8.5)}, \emph{insight(v.0.20.4)}, \emph{effectsize(v.0.8.9)}, \emph{bbmle(v.1.0.25.1)}, \emph{gtools(v.3.9.5)}, \emph{FactoMineR(v.2.11)}, \emph{factoextra(v.1.0.7)}, \emph{scales(v.1.3.0)}, \emph{GGally(v.2.2.1)}, \emph{performance(v.0.12.3)}, \emph{kableExtra(v.1.4.0)}, \emph{emmeans(v.1.10.3)}, \emph{lmerTest(v.3.1-3)}, \emph{lme4(v.1.1-35.5)}, \emph{Matrix(v.1.7-0)}, \emph{readxl(v.1.4.3)}, \emph{ggpubr(v.0.6.0)}, \emph{lubridate(v.1.9.3)}, \emph{forcats(v.1.0.0)}, \emph{stringr(v.1.5.1)}, \emph{dplyr(v.1.1.4)}, \emph{purrr(v.1.0.2)}, \emph{readr(v.2.1.5)}, \emph{tidyr(v.1.3.1)}, \emph{tibble(v.3.2.1)}, \emph{ggplot2(v.3.5.1)}, \emph{tidyverse(v.2.0.0)}, \emph{ggstats(v.0.6.0)}, \emph{MASS(v.7.3-61)}, \emph{car(v.3.1-2)}, \emph{carData(v.3.0-5)} and \emph{knitr(v.1.48)}
 
 \textbf{loaded via a namespace (and not attached):}
-\emph{RColorBrewer(v.1.1-3)}, \emph{rstudioapi(v.0.16.0)}, \emph{datawizard(v.0.12.3)}, \emph{magrittr(v.2.0.3)}, \emph{TH.data(v.1.1-2)}, \emph{estimability(v.1.5.1)}, \emph{farver(v.2.1.2)}, \emph{nloptr(v.2.1.1)}, \emph{rmarkdown(v.2.28)}, \emph{vctrs(v.0.6.5)}, \emph{minqa(v.1.2.7)}, \emph{base64enc(v.0.1-3)}, \emph{rstatix(v.0.7.2)}, \emph{htmltools(v.0.5.8.1)}, \emph{broom(v.1.0.6)}, \emph{cellranger(v.1.1.0)}, \emph{Formula(v.1.2-5)}, \emph{htmlwidgets(v.1.6.4)}, \emph{pbkrtest(v.0.5.3)}, \emph{plyr(v.1.8.9)}, \emph{sandwich(v.3.1-1)}, \emph{zoo(v.1.8-12)}, \emph{lifecycle(v.1.0.4)}, \emph{pkgconfig(v.2.0.3)}, \emph{R6(v.2.5.1)}, \emph{fastmap(v.1.2.0)}, \emph{digest(v.0.6.37)}, \emph{numDeriv(v.2016.8-1.1)}, \emph{colorspace(v.2.1-1)}, \emph{patchwork(v.1.3.0)}, \emph{labeling(v.0.4.3)}, \emph{fansi(v.1.0.6)}, \emph{timechange(v.0.3.0)}, \emph{abind(v.1.4-5)}, \emph{mgcv(v.1.9-1)}, \emph{compiler(v.4.4.1)}, \emph{withr(v.3.0.1)}, \emph{htmlTable(v.2.4.3)}, \emph{backports(v.1.5.0)}, \emph{highr(v.0.11)}, \emph{ggsignif(v.0.6.4)}, \emph{scatterplot3d(v.0.3-44)}, \emph{flashClust(v.1.01-2)}, \emph{tools(v.4.4.1)}, \emph{foreign(v.0.8-86)}, \emph{nnet(v.7.3-19)}, \emph{glue(v.1.7.0)}, \emph{nlme(v.3.1-165)}, \emph{grid(v.4.4.1)}, \emph{checkmate(v.2.3.2)}, \emph{cluster(v.2.1.6)}, \emph{see(v.0.8.5)}, \emph{generics(v.0.1.3)}, \emph{gtable(v.0.3.5)}, \emph{tzdb(v.0.4.0)}, \emph{data.table(v.1.15.4)}, \emph{hms(v.1.1.3)}, \emph{xml2(v.1.3.6)}, \emph{utf8(v.1.2.4)}, \emph{ggrepel(v.0.9.5)}, \emph{pillar(v.1.9.0)}, \emph{splines(v.4.4.1)}, \emph{lattice(v.0.22-5)}, \emph{survival(v.3.7-0)}, \emph{tidyselect(v.1.2.1)}, \emph{gridExtra(v.2.3)}, \emph{bookdown(v.0.40)}, \emph{svglite(v.2.1.3)}, \emph{xfun(v.0.47)}, \emph{DT(v.0.33)}, \emph{stringi(v.1.8.4)}, \emph{yaml(v.2.3.10)}, \emph{boot(v.1.3-30)}, \emph{evaluate(v.0.24.0)}, \emph{codetools(v.0.2-20)}, \emph{multcompView(v.0.1-10)}, \emph{cli(v.3.6.3)}, \emph{rpart(v.4.1.23)}, \emph{xtable(v.1.8-4)}, \emph{parameters(v.0.22.2)}, \emph{systemfonts(v.1.1.0)}, \emph{munsell(v.0.5.1)}, \emph{Rcpp(v.1.0.13)}, \emph{coda(v.0.19-4.1)}, \emph{bdsmatrix(v.1.3-7)}, \emph{parallel(v.4.4.1)}, \emph{leaps(v.3.2)}, \emph{bayestestR(v.0.13.2)}, \emph{viridisLite(v.0.4.2)}, \emph{mvtnorm(v.1.2-5)}, \emph{rlang(v.1.1.4)}, \emph{cowplot(v.1.1.3)} and \emph{multcomp(v.1.4-26)}
+\emph{gridExtra(v.2.3)}, \emph{sandwich(v.3.1-1)}, \emph{rlang(v.1.1.4)}, \emph{magrittr(v.2.0.3)}, \emph{multcomp(v.1.4-26)}, \emph{compiler(v.4.4.1)}, \emph{systemfonts(v.1.1.0)}, \emph{vctrs(v.0.6.5)}, \emph{pkgconfig(v.2.0.3)}, \emph{fastmap(v.1.2.0)}, \emph{backports(v.1.5.0)}, \emph{labeling(v.0.4.3)}, \emph{utf8(v.1.2.4)}, \emph{rmarkdown(v.2.28)}, \emph{tzdb(v.0.4.0)}, \emph{nloptr(v.2.1.1)}, \emph{xfun(v.0.47)}, \emph{flashClust(v.1.01-2)}, \emph{highr(v.0.11)}, \emph{parallel(v.4.4.1)}, \emph{broom(v.1.0.6)}, \emph{cluster(v.2.1.6)}, \emph{R6(v.2.5.1)}, \emph{stringi(v.1.8.4)}, \emph{RColorBrewer(v.1.1-3)}, \emph{rpart(v.4.1.23)}, \emph{boot(v.1.3-30)}, \emph{cellranger(v.1.1.0)}, \emph{numDeriv(v.2016.8-1.1)}, \emph{estimability(v.1.5.1)}, \emph{Rcpp(v.1.0.13)}, \emph{bookdown(v.0.40)}, \emph{zoo(v.1.8-12)}, \emph{base64enc(v.0.1-3)}, \emph{parameters(v.0.22.2)}, \emph{nnet(v.7.3-19)}, \emph{splines(v.4.4.1)}, \emph{timechange(v.0.3.0)}, \emph{tidyselect(v.1.2.1)}, \emph{rstudioapi(v.0.16.0)}, \emph{abind(v.1.4-5)}, \emph{yaml(v.2.3.10)}, \emph{codetools(v.0.2-20)}, \emph{lattice(v.0.22-5)}, \emph{plyr(v.1.8.9)}, \emph{bayestestR(v.0.13.2)}, \emph{withr(v.3.0.1)}, \emph{coda(v.0.19-4.1)}, \emph{evaluate(v.0.24.0)}, \emph{foreign(v.0.8-86)}, \emph{survival(v.3.7-0)}, \emph{xml2(v.1.3.6)}, \emph{pillar(v.1.9.0)}, \emph{checkmate(v.2.3.2)}, \emph{DT(v.0.33)}, \emph{generics(v.0.1.3)}, \emph{hms(v.1.1.3)}, \emph{munsell(v.0.5.1)}, \emph{minqa(v.1.2.7)}, \emph{xtable(v.1.8-4)}, \emph{leaps(v.3.2)}, \emph{glue(v.1.7.0)}, \emph{scatterplot3d(v.0.3-44)}, \emph{tools(v.4.4.1)}, \emph{data.table(v.1.15.4)}, \emph{ggsignif(v.0.6.4)}, \emph{mvtnorm(v.1.2-5)}, \emph{cowplot(v.1.1.3)}, \emph{grid(v.4.4.1)}, \emph{datawizard(v.0.12.3)}, \emph{bdsmatrix(v.1.3-7)}, \emph{colorspace(v.2.1-1)}, \emph{nlme(v.3.1-165)}, \emph{htmlTable(v.2.4.3)}, \emph{Formula(v.1.2-5)}, \emph{cli(v.3.6.3)}, \emph{fansi(v.1.0.6)}, \emph{viridisLite(v.0.4.2)}, \emph{svglite(v.2.1.3)}, \emph{gtable(v.0.3.5)}, \emph{rstatix(v.0.7.2)}, \emph{digest(v.0.6.37)}, \emph{pbkrtest(v.0.5.3)}, \emph{ggrepel(v.0.9.5)}, \emph{TH.data(v.1.1-2)}, \emph{farver(v.2.1.2)}, \emph{htmlwidgets(v.1.6.4)}, \emph{htmltools(v.0.5.8.1)}, \emph{lifecycle(v.1.0.4)} and \emph{multcompView(v.0.1-10)}
 
 \section{Supplementary references}\label{refs}
 
