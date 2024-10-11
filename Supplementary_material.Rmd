@@ -18,6 +18,9 @@ author:
   - name: Marina Begoña Martínez-González \orcidlink{0000-0002-5840-6383}
     correspondence: false
     institute: costa
+  - name: Meredith L. Chivers \orcidlink{0000-0002-5495-9263}
+    correspondence: false
+    institute: queen
   - name: Juan David Leongómez \orcidlink{0000-0002-0092-6298}
     correspondence: false
     institute: evoco
@@ -25,13 +28,14 @@ institute:
   - ueb: "Faculty of Psychology, Universidad El Bosque, Bogota, Colombia."
   - evoco: "EvoCo: Human Behaviour and Evolution Lab, Faculty of Psychology, Universidad El Bosque, Bogota, Colombia"
   - costa: "Faculty of Psychology, Universidad de la Costa, Barranquilla, Colombia."
+  - queen: "Department of Psychology, Queen’s University, Kingston, Ontario, Canada."
 date: "`r Sys.setlocale('LC_TIME','en_GB.UTF-8');format(Sys.Date(),'%d %B, %Y')`"
 output:
   bookdown::pdf_document2:
     citation_package: biblatex
     highlight: zenburn
     number_sections: yes
-    keep_tex:  true
+    keep_tex: false
     toc: no
     pandoc_args:
       - '--lua-filter=lua/scholarly-metadata.lua'
