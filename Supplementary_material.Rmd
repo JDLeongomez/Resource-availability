@@ -109,11 +109,11 @@ This document contains all code, and step by step explanations for all analyses,
 
 ```{=latex}
 \begin{hangparas}{.25in}{1}
-Vásquez-Amézquita, M., Castellanos-Chacón, A., Medina-Sarmiento, W., Cepeda, V., Martínez-González, M. B., \& Leongómez, J. D.,  (in prep). \textit{How do experiences of violence affect women's preferences for facial masculinity according to resource availability? An exploratory study using eye-tracking.}
+Vásquez-Amézquita, M., Castellanos-Chacón, A., Medina-Sarmiento, W., Cepeda, V., Martínez-González, M. B., Chivers, M. L., \& Leongómez, J. D.,  (in prep). \textit{How do experiences of violence affect women's preferences for facial masculinity according to resource availability? An exploratory study using eye-tracking.}
 \end{hangparas}
 ```
 
-Data available from the Open Science Framework (OSF): <https://doi.org/10.XXXXX/OSF.IO/XXXXX>. All analyses were planned by Milena Vásquez-Amézquita and Juan David Leongómez. This document and its underlying code were created in `R Markdown` by Juan David Leongómez using \LaTeX.
+Data available from the Open Science Framework (OSF): <https://doi.org/10.17605/OSF.IO/P2WSC>. All analyses were planned by Milena Vásquez-Amézquita and Juan David Leongómez. This document and its underlying code were created in `R Markdown` by Juan David Leongómez using \LaTeX.
 
 ------------------------------------------------------------------------
 
