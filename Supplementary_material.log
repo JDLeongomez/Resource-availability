@@ -1,11 +1,11 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.10.10)  11 OCT 2024 19:07
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.10.25)  25 OCT 2024 11:28
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
 **Supplementary_material.tex
 (./Supplementary_material.tex
 LaTeX2e <2024-06-01> patch level 2
-L3 programming layer <2024-09-10>
+L3 programming layer <2024-10-09>
 (/home/jdl/.TinyTeX/texmf-dist/tex/latex/base/article.cls
 Document Class: article 2024/02/08 v1.4n Standard LaTeX document class
 (/home/jdl/.TinyTeX/texmf-dist/tex/latex/base/size10.clo
@@ -331,7 +331,7 @@ Package: hanging 2009/09/02 v1.2b hanging paragraphs and punctuation
 \h@ngcolonwd=\skip79
 \h@ngscolonwd=\skip80
 ) (/home/jdl/.TinyTeX/texmf-dist/tex/generic/babel/babel.sty
-Package: babel 2024/10/05 v24.11 The Babel package
+Package: babel 2024/10/20 v24.12 The multilingual framework for pdfLaTeX, LuaLaTeX and XeLaTeX
 \babel@savecnt=\count302
 \U@D=\dimen192
 \l@unhyphenated=\language8
@@ -618,14 +618,14 @@ File: biblatex.cfg
 Package biblatex Info: Input encoding 'utf8' detected.
 Package biblatex Info: Document encoding is UTF8 ....
 (/home/jdl/.TinyTeX/texmf-dist/tex/latex/l3kernel/expl3.sty
-Package: expl3 2024-09-10 L3 programming layer (loader) 
+Package: expl3 2024-10-09 L3 programming layer (loader) 
 (/home/jdl/.TinyTeX/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def
 File: l3backend-pdftex.def 2024-05-08 L3 backend support: PDF output (pdfTeX)
 \l__color_backend_stack_int=\count446
 \l__pdf_internal_box=\box65
 ))
 Package biblatex Info: ... and expl3
-(biblatex)             2024-09-10 L3 programming layer (loader) 
+(biblatex)             2024-10-09 L3 programming layer (loader) 
 (biblatex)             is new enough (at least 2020/04/06),
 (biblatex)             setting 'casechanger=expl3'.
 (/home/jdl/.TinyTeX/texmf-dist/tex/latex/biblatex/blx-case-expl3.sty (/home/jdl/.TinyTeX/texmf-dist/tex/latex/l3packages/xparse/xparse.sty
@@ -1706,48 +1706,38 @@ Package pdftex.def Info: Supplementary_material_files/figure-latex/unnamed-chunk
 
 
 [81]
-Underfull \hbox (badness 2409) in paragraph at lines 4502--4504
-[]\T1/lmr/bx/n/10 loaded via a names-pace (and not at-tached): \T1/lmr/m/it/10 gridEx-tra(v.2.3)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 sandwich(v.3.1-1)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 rlang(v.1.1.4)\T1/lmr/m/n/10 ,
+Underfull \hbox (badness 5431) in paragraph at lines 4502--4504
+\T1/lmr/m/it/10 piler(v.4.4.1)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 sys-tem-fonts(v.1.1.0)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 vc-trs(v.0.6.5)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 pkg-con-fig(v.2.0.3)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 fastmap(v.1.2.0)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 back-ports(v.1.5.0)\T1/lmr/m/n/10 ,
  []
 
 
-Overfull \hbox (6.40103pt too wide) in paragraph at lines 4502--4504
-\T1/lmr/m/it/10 fastmap(v.1.2.0)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 back-ports(v.1.5.0)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 la-bel-ing(v.0.4.3)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 utf8(v.1.2.4)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 rmark-down(v.2.28)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 tzdb(v.0.4.0)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 nloptr(v.2.1.1)\T1/lmr/m/n/10 ,
+Overfull \hbox (2.20647pt too wide) in paragraph at lines 4502--4504
+\T1/lmr/m/it/10 3)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 rpart(v.4.1.23)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 boot(v.1.3-30)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 cell-ranger(v.1.1.0)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 numDeriv(v.2016.8-1.1)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 es-tima-bil-ity(v.1.5.1)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 Rcpp(v.1.0.13)\T1/lmr/m/n/10 ,
  []
 
 
-Underfull \hbox (badness 5563) in paragraph at lines 4502--4504
-\T1/lmr/m/it/10 1.1)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 es-tima-bil-ity(v.1.5.1)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 Rcpp(v.1.0.13)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 book-down(v.0.40)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 zoo(v.1.8-12)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 base64enc(v.0.1-3)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 pa-ram-e-
+Overfull \hbox (3.20639pt too wide) in paragraph at lines 4502--4504
+\T1/lmr/m/it/10 tidys-e-lect(v.1.2.1)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 rstu-dioapi(v.0.17.1)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 abind(v.1.4-8)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 yaml(v.2.3.10)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 lattice(v.0.22-5)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 plyr(v.1.8.9)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 withr(v.3.0.1)\T1/lmr/m/n/10 ,
  []
 
 
-Underfull \hbox (badness 2875) in paragraph at lines 4502--4504
-\T1/lmr/m/it/10 ters(v.0.22.2)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 nnet(v.7.3-19)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 splines(v.4.4.1)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 timechange(v.0.3.0)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 tidys-e-lect(v.1.2.1)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 rstu-dioapi(v.0.16.0)\T1/lmr/m/n/10 ,
+Underfull \hbox (badness 3407) in paragraph at lines 4502--4504
+\T1/lmr/m/it/10 mate(v.2.3.2)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 DT(v.0.33)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 gener-ics(v.0.1.3)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 hms(v.1.1.3)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 mun-sell(v.0.5.1)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 minqa(v.1.2.8)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 xtable(v.1.8-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 4502--4504
-\T1/lmr/m/it/10 abind(v.1.4-5)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 yaml(v.2.3.10)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 codetools(v.0.2-20)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 lattice(v.0.22-5)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 plyr(v.1.8.9)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 bayestestR(v.0.13.2)\T1/lmr/m/n/10 ,
+Underfull \hbox (badness 2799) in paragraph at lines 4502--4504
+\T1/lmr/m/it/10 4)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 leaps(v.3.2)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 glue(v.1.8.0)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 scatterplot3d(v.0.3-44)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 tools(v.4.4.1)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 data.table(v.1.16.2)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 ggsig-nif(v.0.6.4)\T1/lmr/m/n/10 ,
  []
 
 
-Underfull \hbox (badness 3323) in paragraph at lines 4502--4504
-\T1/lmr/m/it/10 withr(v.3.0.1)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 coda(v.0.19-4.1)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 eval-u-ate(v.0.24.0)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 foreign(v.0.8-86)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 survival(v.3.7-0)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 xml2(v.1.3.6)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 pil-
+Underfull \hbox (badness 2080) in paragraph at lines 4502--4504
+\T1/lmr/m/it/10 mvtnorm(v.1.3-1)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 cow-plot(v.1.1.3)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 grid(v.4.4.1)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 bdsmatrix(v.1.3-7)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 datawiz-ard(v.0.13.0)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 colorspace(v.2.1-
  []
 
 
-Underfull \hbox (badness 1803) in paragraph at lines 4502--4504
-\T1/lmr/m/it/10 xtable(v.1.8-4)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 leaps(v.3.2)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 glue(v.1.8.0)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 scatterplot3d(v.0.3-44)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 tools(v.4.4.1)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 data.table(v.1.15.4)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 ggsig-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 4502--4504
-\T1/lmr/m/it/10 nif(v.0.6.4)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 mvtnorm(v.1.2-5)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 cow-plot(v.1.1.3)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 grid(v.4.4.1)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 datawiz-ard(v.0.13.0)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 bdsmatrix(v.1.3-7)\T1/lmr/m/n/10 ,
- []
-
-
-Overfull \hbox (13.66133pt too wide) in paragraph at lines 4502--4504
-\T1/lmr/m/it/10 TH.data(v.1.1-2)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 farver(v.2.1.2)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 html-wid-gets(v.1.6.4)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 html-tools(v.0.5.8.1)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 life-cy-cle(v.1.0.4) \T1/lmr/m/n/10 and \T1/lmr/m/it/10 multcompView(v.0.1-
+Underfull \hbox (badness 3623) in paragraph at lines 4502--4504
+\T1/lmr/m/it/10 1)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 nlme(v.3.1-165)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 htmlTable(v.2.4.3)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 Formula(v.1.2-5)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 cli(v.3.6.3)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 fansi(v.1.0.6)\T1/lmr/m/n/10 , \T1/lmr/m/it/10 viridis-Lite(v.0.4.2)\T1/lmr/m/n/10 ,
  []
 
 
@@ -1757,7 +1747,7 @@ Overfull \hbox (13.66133pt too wide) in paragraph at lines 4502--4504
 [83] (./Supplementary_material.aux)
  ***********
 LaTeX2e <2024-06-01> patch level 2
-L3 programming layer <2024-09-10>
+L3 programming layer <2024-10-09>
  ***********
 
 LaTeX Warning: There were undefined references.
@@ -1767,15 +1757,15 @@ Package logreq Info: Writing requests to 'Supplementary_material.run.xml'.
 
  ) 
 Here is how much of TeX's memory you used:
- 37188 strings out of 475480
- 713124 string characters out of 5775840
- 1839791 words of memory out of 5000000
- 58901 multiletter control sequences out of 15000+600000
+ 37192 strings out of 475478
+ 713314 string characters out of 5775802
+ 1838718 words of memory out of 5000000
+ 58907 multiletter control sequences out of 15000+600000
  627674 words of font info for 87 fonts, out of 8000000 for 9000
  36 hyphenation exceptions out of 8191
- 84i,14n,92p,2330b,5237s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 84i,14n,92p,2175b,5237s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </home/jdl/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx10.pfb></home/jdl/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx12.pfb></home/jdl/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmbxi10.pfb></home/jdl/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmmi10.pfb></home/jdl/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmmi7.pfb></home/jdl/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmr10.pfb></home/jdl/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmr12.pfb></home/jdl/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmr17.pfb></home/jdl/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmr6.pfb></home/jdl/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmr7.pfb></home/jdl/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmr8.pfb></home/jdl/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmri10.pfb></home/jdl/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmri8.pfb></home/jdl/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmsy7.pfb></home/jdl/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmtk10.pfb></home/jdl/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmtt10.pfb>
-Output written on Supplementary_material.pdf (83 pages, 19885675 bytes).
+Output written on Supplementary_material.pdf (83 pages, 19885698 bytes).
 PDF statistics:
  1610 PDF objects out of 1728 (max. 8388607)
  1413 compressed objects within 15 object streams

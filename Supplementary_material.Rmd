@@ -2994,7 +2994,7 @@ tab_m1$tab |>
                      "Proportion of Chosen Faces (PCF)" = 4)) |> 
   footnote(general = "For models predicting fixation measurements (DFF, TFD, and NF) results 
   are from linear mixed models (general, in the case of DFF, TFD, generalized with a poisson
-  distributuion in the case of NF); for PCF, results are from a linear model without 
+  distribution in the case of NF); for PCF, results are from a linear model without 
   random effects, and $\\\\omega^2_p$ effect sizes are reported for each term. For further 
   details, including full model effect sizes (Nakagawa's conditional and marginal $R^2$ for 
   linear mixed models, and unadjusted and adjusted $R^2$ for the PCF linear model), 
@@ -3007,7 +3007,7 @@ tab_m1$tab |>
 
 ## Figure of experimental design models
 
-```{r results = "hold", fig.cap = "Differences in responses to masculinized and feminized stimuli, by relationship (short term, ling term), condition (low, high), and the frequency of partner physycal violence, which was the covariate included in all best-supported models. To illustrate the effect of the physycal violence interaction, estimated marginal means are shown at minimum and maximum levels of this covariate. \\textbf{a.} Duration of First Fixations (DFF). \\textbf{b.} Total Fixation Duration (TFD). \\textbf{c.} Number of Fixations (NF). \\textbf{d.} Proportion of Chosen Faces (PCF). Black dots and bars represent estimated marginal means ± standard errors. For detailed results, see Tables \\@ref(tab:tab-mod1) to \\@ref(tab:tab-contr-mod4) in the Supplementary Material. In all cases, significant effects are represented with lines and stars: \\**p* < 0.05, \\*\\**p* < 0.01, \\*\\*\\**p* < 0.001.", warning = FALSE, message = FALSE}
+```{r results = "hold", fig.cap = "Differences in responses to masculinized and feminized stimuli, by relationship (short term, long term), condition (low, high), and the frequency of partner physical violence, which was the covariate included in all best-supported models. To illustrate the effect of the physycal violence interaction, estimated marginal means are shown at minimum and maximum levels of this covariate. \\textbf{a.} Duration of First Fixations (DFF). \\textbf{b.} Total Fixation Duration (TFD). \\textbf{c.} Number of Fixations (NF). \\textbf{d.} Proportion of Chosen Faces (PCF). Black dots and bars represent estimated marginal means ± standard errors. For detailed results, see Tables \\@ref(tab:tab-mod1) to \\@ref(tab:tab-contr-mod4) in the Supplementary Material. In all cases, significant effects are represented with lines and stars: \\**p* < 0.05, \\*\\**p* < 0.01, \\*\\*\\**p* < 0.001.", warning = FALSE, message = FALSE}
 ggarrange(pm1, pm2,pm3, pm4,
           common.legend = TRUE,
           legend = "bottom",
@@ -3039,10 +3039,10 @@ tab_m1_cov$tab |>
                      "Total Fixation Duration (TFD)" = 3,
                      "Number of Fixations (NF)" = 3,
                      "Proportion of Chosen Faces (PCF)" = 4)) |> 
-  footnote(general = "Best-supported model for predicting each dependen variable. 
+  footnote(general = "Best-supported model for predicting each dependent variable. 
   For models predicting fixation measurements (DFF, TFD, and NF) results 
   are from linear mixed models (general, in the case of DFF, TFD, generalized with a poisson
-  distributuion in the case of NF); for PCF, results are from a linear model without 
+  distribution in the case of NF); for PCF, results are from a linear model without 
   random effects, and $\\\\omega^2_p$ effect sizes are reported for each term. For further 
   details, including full model effect sizes (Nakagawa's conditional and marginal $R^2$ for 
   linear mixed models, and unadjusted and adjusted $R^2$ for the PCF linear model), 
