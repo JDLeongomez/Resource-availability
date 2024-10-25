@@ -1,5 +1,5 @@
 ---
-title: "How do experiences of violence affect women's preferences for facial masculinity according to resource availability? An exploratory study using eye-tracking"
+title: "Resource availability and experiences of partner violence shape facial masculinity preferences in women"
 subtitle: Code and analyses
 author:
   - name: Milena Vásquez-Amézquita \orcidlink{0000-0001-7317-8430}
@@ -18,9 +18,9 @@ author:
   - name: Marina Begoña Martínez-González \orcidlink{0000-0002-5840-6383}
     correspondence: false
     institute: costa
-  - name: Meredith L. Chivers \orcidlink{0000-0002-5495-9263}
-    correspondence: false
-    institute: queen
+#  - name: Meredith L. Chivers \orcidlink{0000-0002-5495-9263}
+#    correspondence: false
+#    institute: queen
   - name: Juan David Leongómez \orcidlink{0000-0002-0092-6298}
     correspondence: false
     institute: evoco
@@ -28,7 +28,7 @@ institute:
   - ueb: "Faculty of Psychology, Universidad El Bosque, Bogota, Colombia."
   - evoco: "EvoCo: Human Behaviour and Evolution Lab, Faculty of Psychology, Universidad El Bosque, Bogota, Colombia"
   - costa: "Faculty of Psychology, Universidad de la Costa, Barranquilla, Colombia."
-  - queen: "Department of Psychology, Queen’s University, Kingston, Ontario, Canada."
+#  - queen: "Department of Psychology, Queen’s University, Kingston, Ontario, Canada."
 date: "`r Sys.setlocale('LC_TIME','en_GB.UTF-8');format(Sys.Date(),'%d %B, %Y')`"
 output:
   bookdown::pdf_document2:
@@ -109,7 +109,7 @@ This document contains all code, and step by step explanations for all analyses,
 
 ```{=latex}
 \begin{hangparas}{.25in}{1}
-Vásquez-Amézquita, M., Castellanos-Chacón, A., Medina-Sarmiento, W., Cepeda, V., Martínez-González, M. B., Chivers, M. L., \& Leongómez, J. D.,  (in prep). \textit{How do experiences of violence affect women's preferences for facial masculinity according to resource availability? An exploratory study using eye-tracking.}
+Vásquez-Amézquita, M., Castellanos-Chacón, A., Medina-Sarmiento, W., Cepeda, V., Martínez-González, M. B., \& Leongómez, J. D.,  (in prep). \textit{Resource availability and experiences of partner violence shape facial masculinity preferences in women.}
 \end{hangparas}
 ```
 
