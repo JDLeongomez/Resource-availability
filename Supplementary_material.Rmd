@@ -4,17 +4,17 @@ subtitle: Code and analyses
 author:
   - name: Milena Vásquez-Amézquita \orcidlink{0000-0001-7317-8430}
     correspondence: true
-    institute: [costa, ueb]
+    institute: [labpsiexp, costa]
     email: mvasquezam@unbosque.edu.co
-  - name: Wendy Medina-Sarmiento
-    correspondence: false
-    institute: ueb
-  - name: Valentina Cepeda
-    correspondence: false
-    institute: ueb
   - name: Andrés Castellanos-Chacón \orcidlink{0000-0003-1684-9319}
     correspondence: false
     institute: evoco
+  - name: Wendy Medina-Sarmiento \orcidlink{0000-0001-9695-4703}
+    correspondence: false
+    institute: costa
+  - name: Valentina Cepeda \orcidlink{0009-0007-2620-6743}
+    correspondence: false
+    institute: labpsiexp
   - name: Marina Begoña Martínez-González \orcidlink{0000-0002-5840-6383}
     correspondence: false
     institute: costa
@@ -25,9 +25,10 @@ author:
     correspondence: false
     institute: evoco
 institute:
-  - ueb: "Faculty of Psychology, Universidad El Bosque, Bogota, Colombia."
-  - evoco: "EvoCo: Human Behaviour and Evolution Lab, Faculty of Psychology, Universidad El Bosque, Bogota, Colombia"
+  - labpsiexp: "Experimental Psychology Lab, Faculty of Psychology, Universidad El Bosque, Bogota, Colombia"
   - costa: "Faculty of Psychology, Universidad de la Costa, Barranquilla, Colombia."
+  - evoco: "EvoCo: Human Behaviour and Evolution Lab, Faculty of Psychology, Universidad El Bosque, Bogota, Colombia"
+#  - ueb: "Faculty of Psychology, Universidad El Bosque, Bogota, Colombia."
 #  - queen: "Department of Psychology, Queen’s University, Kingston, Ontario, Canada."
 date: "`r Sys.setlocale('LC_TIME','en_GB.UTF-8');format(Sys.Date(),'%d %B, %Y')`"
 output:
@@ -38,8 +39,8 @@ output:
     keep_tex: false
     toc: no
     pandoc_args:
-      - '--lua-filter=lua/scholarly-metadata.lua'
-      - '--lua-filter=lua/author-info-blocks.lua'
+      - '--lua-filter=lua/scholarly-metadata-letters.lua'
+      - '--lua-filter=lua/author-info-blocks-letters.lua'
 classoption: 
       - bookmarksnumbered
 editor_options:
@@ -953,8 +954,9 @@ dat_et <- read_excel("Data/BD-ET-CUC-UB.xlsx",
 This was loaded without calculating total instrument scores (for now), to test internal consistency
 
 ```{r}
-quests <- read_excel("Data/Cuestionario Datos Sociodemográficos  (Disponibilidad) (respuestas) (1).xlsx",
-                     sheet = "Respuestas de formulario 1"
+quests <- read_excel(
+  "Data/Cuestionario Datos Sociodemográficos  (Disponibilidad) (respuestas) (1).xlsx",
+  sheet = "Respuestas de formulario 1"
 ) |>
   # Drop unnecessary columns (such as 'Invitado', 'Servicios ayuda', and 'Correos cierre')
   select(-c(Invitado, `Servicios ayuda`, `Correos cierre`)) |>
@@ -1026,15 +1028,16 @@ quests <- read_excel("Data/Cuestionario Datos Sociodemográficos  (Disponibilida
       "Universitario",
       "Posgrado"
     )),
-    Sexual_orientation = factor(Sexual_orientation,
-                                levels = c(
-                                  "Exclusivamente heterosexual",
-                                  "Principalmente heterosexual, con contactos homosexuales esporádicos",
-                                  "Predominantemente heterosexual, aunque con contactos homosexuales más que esporádicos",
-                                  "Bisexual",
-                                  "Pansexual",
-                                  "Demisexual"
-                                )
+    Sexual_orientation = 
+      factor(Sexual_orientation,
+             levels = c(
+               "Exclusivamente heterosexual",
+               "Principalmente heterosexual, con contactos homosexuales esporádicos",
+               "Predominantemente heterosexual, aunque con contactos homosexuales más que esporádicos",
+               "Bisexual",
+               "Pansexual",
+               "Demisexual"
+               )
     ),
     Relationship_status = factor(Relationship_status,
                                  levels = c(
@@ -1286,7 +1289,7 @@ ggarrange(
 )
 ```
 
-When including all socio-ecological factors, the only variables that strongly correlate between them and with the PCA dimension (Table \@ref(tab:pca-sef-plot); Fig. \@ref(fig:pca-sef-plot)), are the two variables that evaluate participant's perception of men as dangerous to children and to their partner.
+When including all socio-ecological factors, the only variables that strongly correlate between them and with the PCA dimension (Table \@ref(tab:pca-sef-tab); Fig. \@ref(fig:pca-sef-plot)), are the two variables that evaluate participant's perception of men as dangerous to children and to their partner.
 
 Because of this, a new PCA was performed or only these two variables, to calculate a score of Men perceived as dangerous.  All remaining socio-ecological variables were kept.
 
