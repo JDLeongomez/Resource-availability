@@ -1,5 +1,5 @@
 ---
-title: "Resource availability and experiences of partner violence shape facial masculinity preferences in women"
+title: "Resource availability and experiences of partner violence shape facial masculinity preferences in Colombian women"
 subtitle: Code and analyses
 author:
   - name: '[Name masked for peer review]'
@@ -105,7 +105,7 @@ This document contains all code, and step by step explanations for all analyses,
 
 ```{=latex}
 \begin{hangparas}{.25in}{1}
-[Authors masked for peer review] (in prep). \textit{Resource availability and experiences of partner violence shape facial masculinity preferences in women.}
+[Authors masked for peer review] (in prep). \textit{Resource availability and experiences of partner violence shape facial masculinity preferences in Colombian women.}
 \end{hangparas}
 ```
 
