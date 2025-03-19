@@ -758,7 +758,6 @@ plot.best.mod <- function(best_model, y.pos, y.lab) {
 }
 ```
 
-
 ## Independent stimuli evaluation
 
 The sex typicality of all stimuli was manipulated to either enhance or reduce their sex-typical characteristics. Since all the stimuli were male faces, this involved masculinizing them to increase their typical sex characteristics and feminizing them to reduce those characteristics. Masculinized and feminized versions were independently rated for masculinity and estimated age by a panel of raters (not participants).
@@ -879,6 +878,55 @@ ggplot(age_dat, aes(x = Age)) +
     y = "Count"
   ) + # Y-axis label
   scale_x_continuous(breaks = seq(15, 40, 5)) # X-axis scale with breaks every 5 units
+```
+
+### Effects of sexual dimorphism manipulation on perceived age
+
+Lastly, we tested whether perceived age ratings given to the masculinized and feminized versions of each stimuli differed. This was in fact the case for all stimuli; in all cases masculinized versions were rated as significantly older than feminized versions.
+
+```{r}
+# Group by stimulus and perform t-tests for age ratings across
+# sexual dimorphism categories
+t_age <- age_dat |>
+  group_by(Stimulus) |>
+  summarise(
+    t = round(t.test(Age ~ Sexual_dimorphism)$statistic, 2), # Compute t values
+    p = pval.lev(t.test(Age ~ Sexual_dimorphism)$p.value)
+  ) |> # Compute p-value
+  ungroup()
+
+# Select the first 10 rows of the data 't_age'
+t_age[1:10, ] |>
+  # Add the next 10 rows (11 to 20) as additional columns
+  cbind(t_age[11:20, ]) |>
+  # Add the next 10 rows (21 to 30) as additional columns
+  cbind(t_age[21:30, ]) |>
+  # Create a table using the 'kable' function
+  kable(
+    booktabs = TRUE, # Use 'booktabs' style for better-looking tables in LaTeX
+    digits = 2, # Round numerical values to 2 decimal places
+    align = "c", # Center align all columns
+    linesep = "", # No lines between rows
+    caption = "Difference in independent age ratings given to each stimulus,
+               according to its sexual dimorphism manipulation (feminized - masculinized)",
+    # Caption for the table
+    escape = FALSE, # Allow LaTeX commands in the table (e.g., italic or bold)
+    col.names = rep(c("Stimulus", "$t$", "$p$"), times = 3) # Column names
+  ) |>
+  # Apply additional LaTeX styling to the table using 'kable_styling'
+  kable_styling(
+    latex_options = c("HOLD_position", "scale_down") # Keep table position
+  ) |>
+  # Add vertical lines after the 3rd and 6th columns using 'column_spec'
+  column_spec(c(3, 6), border_right = TRUE) |>
+  # Add a footnote with specific formatting
+  footnote(
+    general = "Tests are Welch's \\\\textit{t}-test. Significant effects are in bold.",
+    # General footnote text with LaTeX formatting
+    threeparttable = TRUE, # Enable three-part table for better layout
+    footnote_as_chunk = TRUE, # Render footnote as a chunk
+    escape = FALSE # Allow LaTeX commands in the footnote
+  )
 ```
 
 ## Load and wrangle main experiment data
